@@ -1,0 +1,35 @@
+<h1>Homepage</h1>
+
+<% if (isLoggedIn) { %>
+    <form action="/logout" method="POST">
+        <button type="submit">Log Out</button>
+    </form>
+
+
+    <form action="/import" method="POST">
+        <div>
+            <h3>Imports Remaining: <%= user.imports %></h3>
+            <% if (messages.error) { %>
+                <div class="error-messages">
+                    <%= messages.error %>
+                </div>
+            <% } %>
+            <input type="text" id="deckLink" name="deckLink" placeholder="Deck Link" required>
+            <button type="submit">Import Deck</button>
+        </div>
+    </form>
+    
+    <form action="/mydecks" method="GET"><!--IMPLEMENT-->
+        <button type="submit">My Decks</button>
+    </form>
+<% } else {%>
+    <form action="/login" method="GET">
+        <button type="submit">Login</button>
+    </form>
+<% } %>
+
+  
+<h1></h1>
+<h2>Top Decks-----------------Most Recent</h2>
+<h2>Set Analysis</h2>
+<h2>House Analysis</h2>
