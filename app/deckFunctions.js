@@ -4,7 +4,7 @@ const Deck = require('./models/deck.js')(sequelize, DataTypes)
 const Pod = require('./models/pod.js')(sequelize, DataTypes)
 const deckFunctions = Object();
 
-async function addDeck(deck_info, pod_info, user_id) {
+async function addDeck(deck_info, pod_info, user_id, hidden) {
     // check if deck exist by hash, redirect user to page if exists
     var houseStrings = Object.keys(pod_info);
     var houses = [];
@@ -14,16 +14,19 @@ async function addDeck(deck_info, pod_info, user_id) {
         }
     };
 
+    // check if deck should be hidden
+
     return sequelize.transaction(function (t) {
         return Deck.create({
             deck_code: deck_info["code"],
             owner_id: user_id,
             deck_name: deck_info["name"],
-            hidden: 0,
+            hidden: hidden,
             score: deck_info["score"],
             house1: houses[0],
             house2: houses[1],
             house3: houses[2],
+            set_id: deck_info["set"]
         }, {transaction: t}).then(async function (deck) {
             for (i in houses) {
                 house = houses[i]
@@ -53,7 +56,7 @@ async function addDeck(deck_info, pod_info, user_id) {
                     pod_d: pod["d"],
                     pod_r: pod["r"],
                     pod_bob: pod["bob"],
-                    pod_scaling_a: pod["scalinngA"],
+                    pod_scaling_a: pod["scalingA"],
                     pod_wipes: pod["wipes"],
                     pod_cheats: pod["cheats"],
                     pod_tokens: pod["tokens"],
@@ -65,6 +68,7 @@ async function addDeck(deck_info, pod_info, user_id) {
             }
 
             // add the adjustment house (no cards)
+            var pod = pod_info["1"]
             await Pod.create({
                 deck_id: deck.deck_id,
                 house_id: 1,
@@ -86,14 +90,34 @@ async function addDeck(deck_info, pod_info, user_id) {
                 pod_upgrades: pod["upgades"]
             });
         }).catch(function (err) {
+            console.log(err)
             throw new Error("Error importing Deck")
         });
     }).then(function (result) {
         // transaction successful
+        return deck_info["code"]
     }).catch(function (err) {
         throw new Error("Deck already imported");
     });
 }
 
 
+async function hideDeck(path, bool) {
+    await Deck.update(
+        { hidden: bool },
+        { where: { deck_code: path } }
+    )
+}
+
+
+async function updateAlpha(path, score) {
+    await Deck.update(
+        { alpha_score: score, updatedAt: sequelize.literal('CURRENT_TIMESTAMP') },
+        { where: { deck_code: path } }
+    )
+}
+
+
 module.exports.addDeck = addDeck
+module.exports.hideDeck = hideDeck
+module.exports.updateAlpha = updateAlpha

@@ -1,0 +1,87 @@
+<h1>Alpha Score Hub</h1>
+<table id="deck_table">
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    <% for (var i = 0; i < query.length; i++) { %>
+        <tr id=<%= "row_" + i %>>
+            <td><%= query[i].dataValues.score %></td>
+            <td><a href=<%= "/deck/" + query[i].dataValues.deck_code %> id=<%= "deck_" + i %> class=<%= query[i].dataValues.deck_code %>><%= query[i].dataValues.deck_name %></a></td>
+            <td><img src=<%= "/set_" + query[i].dataValues.set_id + ".png" %> width="32px" height="32px" /></td>
+            <td><img src=<%= "/house_" + query[i].dataValues.house1 + ".png" %> width="48px" height="48px" />
+                <img src=<%= "/house_" + query[i].dataValues.house2 + ".png" %> width="48px" height="48px" />
+                <img src=<%= "/house_" + query[i].dataValues.house3 + ".png" %> width="48px" height="48px" /></td>
+            <td><form>
+                <select id=<%= 'list_' + i %> >
+                <option> ---- </option>
+                <option> F </option>
+                <option> D </option>
+                <option> C- </option>
+                <option> C </option>
+                <option> C+ </option>
+                <option> B- </option>
+                <option> B </option>
+                <option> B+ </option>
+                <option> A- </option>
+                <option> A </option>
+                <option> A+ </option>
+                </select>
+            </form></td>
+            <td><input type="button" class="score" value="Submit" onclick="seti(<%= i %>)"></td>
+        </tr>
+    <% } %>
+</tbody>
+</table>
+
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script type="text/javascript">
+    var i = 0;
+
+    function seti(i_value) {
+        i = i_value
+    };
+
+    $(document).ready(function() {
+        $(".score").click(function(){
+            var id_name = "score_" + i;
+            var list_name = "list_" + i;
+            var mylist = document.getElementById(list_name);
+            var score = mylist.options[mylist.selectedIndex].text
+            
+            // If value is selected, post score update
+            if (score != "----") {
+                postScore(score, document.getElementById("deck_" + i).className, i)
+            }
+        }); 
+    });
+
+
+    function postScore(score, deck_code, row_index) {
+        // post score
+        $.ajax({
+            method: "POST",
+            url: "/deck/" + deck_code  + "/alpha",
+            headers: {},
+            data: {
+                alpha_score: score
+            },
+            dataType: 'json',
+            cache: false,
+            success: function(data) {
+                document.getElementById("deck_table").deleteRow( $("tr").index($("#row_" + i)) );
+            },
+            error: function(data) {
+                console.log("Something went wrong!")
+                document.getElementById("deck_table").deleteRow( $("tr").index($("#row_" + i)) );
+            }
+        });
+    }
+</script>

@@ -47,6 +47,10 @@ module.exports = function(sequelize, Sequelize) {
       type: DataTypes.SMALLINT,
       allowNull: false
     },
+    set_id: {
+      type: DataTypes.SMALLINT,
+      allowNull: false
+    },
     attributes: {
       type: DataTypes.JSONB,
       defaultValue: null

@@ -1,0 +1,296 @@
+<table>
+    <tr>
+        <form action="/" method="GET">
+            <button type="submit">Home</button>
+        </form>
+        <% if (isLoggedIn) { %>
+            <form action="/mydecks" method="GET">
+                <button type="submit">My Decks</button>
+            </form>
+        <% } else { %>
+            <form action="/login" method="GET">
+                <button type="submit">Login</button>
+            </form>
+        <% } %>
+    </tr>
+</table>
+<!--Handle ordering the pods-->
+<% query.dataValues.Pods.sort(function(a, b){return a.house_id - b.house_id}) %>
+<h1><img src=<%= "/set_" + query.dataValues.set_id + ".png" %> width="4%" height="4%" />  <%= query.dataValues.deck_name %></h1>
+
+<table>
+    <tr>
+        <!--Check if user is logged in-->
+        <% if (isLoggedIn) { %>
+            <!--Check if user is owner-->
+            <% if (query.dataValues.owner_id == user.id) { %>
+                <!--Hide/Unhide deck buttons-->
+                    
+                <td>
+                    <% if (query.dataValues.hidden == false) { %>
+                        <form action=<%= "/deck/" + query.dataValues.deck_code + "/hide" %> method="POST">
+                            <button type="submit">Hide Deck</button>
+                        </form>
+                        <!--<input id="hide-deck" type="submit" value="Hide Deck">-->
+                    <% } else { %>
+                        <form action=<%= "/deck/" + query.dataValues.deck_code + "/hide" %> method="POST">
+                            <button type="submit">Unhide Deck</button>
+                        </form>
+                        <!--<input id="hide-deck" type="submit" value="Unhide Deck">-->
+                    <% } %>
+                </td>
+
+                <td></td>
+                <!--If deck has no alpha displays requests and button-->
+                <% if (query.dataValues.alpha_score == null) { %>
+                    <td>Alpha Scores Remaining:</td>
+                    <td><%= user.alpha_requests %></td>
+                    <!--Request alpha score button-->
+                    <% if (user.alpha_requests > 0) { %>
+                        <td>
+                            <form action=<%= "/deck/" + query.dataValues.deck_code + "/alpha" %> method="POST">
+                                <button type="submit">Request Alpha Score</button>
+                            </form>
+                        </td>
+                    <% } %>
+                <!--If alpha is pending, say is pending-->
+                <% } else if (query.dataValues.alpha_score == "P") { %>
+                    <td>Alpha score is pending...</td>
+                <% } else { %>
+                    <td>Alpha Score: <%= query.dataValues.alpha_score %></td>
+                <% } %>
+            <% } %>
+        <% } %>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <th></th>
+        <th><img src=<%= "/house_" + query.dataValues.house1 + ".png" %> width="40" height="40" /></th>
+        <th><img src=<%= "/house_" + query.dataValues.house2 + ".png" %> width="40" height="40" /></th>
+        <th><img src=<%= "/house_" + query.dataValues.house3 + ".png" %> width="40" height="40" /></th>
+    </tr>
+    <tr>
+        <th></th>
+        <th><%= query.dataValues.house_1.house_name %></th>
+        <th><%= query.dataValues.house_2.house_name %></th>
+        <th><%= query.dataValues.house_3.house_name %></th>
+        <th>Score</th>
+    </tr>
+
+    <tr>
+        <td></td>
+        <td><%= query.dataValues.Pods[1].card_1.card_name %></td>
+        <td><%= query.dataValues.Pods[2].card_1.card_name %></td>
+        <td><%= query.dataValues.Pods[3].card_1.card_name %></td>
+        <th><%= query.dataValues.score %></th>
+    </tr>
+    <tr>
+        <td></td>
+        <td><%= query.dataValues.Pods[1].card_2.card_name %></td>
+        <td><%= query.dataValues.Pods[2].card_2.card_name %></td>
+        <td><%= query.dataValues.Pods[3].card_2.card_name %></td>
+        <th>Creatures</th>
+    </tr>
+    <tr>
+        <td></td>
+        <td><%= query.dataValues.Pods[1].card_3.card_name %></td>
+        <td><%= query.dataValues.Pods[2].card_3.card_name %></td>
+        <td><%= query.dataValues.Pods[3].card_3.card_name %></td>
+        <th><%= query.dataValues.Pods[1].dataValues.pod_creatures + query.dataValues.Pods[2].dataValues.pod_creatures + query.dataValues.Pods[3].dataValues.pod_creatures %></th>
+    </tr>
+    <tr>
+        <td></td>
+        <td><%= query.dataValues.Pods[1].card_4.card_name %></td>
+        <td><%= query.dataValues.Pods[2].card_4.card_name %></td>
+        <td><%= query.dataValues.Pods[3].card_4.card_name %></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><%= query.dataValues.Pods[1].card_5.card_name %></td>
+        <td><%= query.dataValues.Pods[2].card_5.card_name %></td>
+        <td><%= query.dataValues.Pods[3].card_5.card_name %></td>
+        <th>Actions</th>
+    </tr>
+    <tr>
+        <td></td>
+        <td><%= query.dataValues.Pods[1].card_6.card_name %></td>
+        <td><%= query.dataValues.Pods[2].card_6.card_name %></td>
+        <td><%= query.dataValues.Pods[3].card_6.card_name %></td>
+        
+        <th><%= query.dataValues.Pods[1].dataValues.pod_actions + query.dataValues.Pods[2].dataValues.pod_actions + query.dataValues.Pods[3].dataValues.pod_actions %></th>
+    </tr>
+    <tr>
+        <td></td>
+        <td><%= query.dataValues.Pods[1].card_7.card_name %></td>
+        <td><%= query.dataValues.Pods[2].card_7.card_name %></td>
+        <td><%= query.dataValues.Pods[3].card_7.card_name %></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><%= query.dataValues.Pods[1].card_8.card_name %></td>
+        <td><%= query.dataValues.Pods[2].card_8.card_name %></td>
+        <td><%= query.dataValues.Pods[3].card_8.card_name %></td>
+        <th>Artifacts</th>
+    </tr>
+    <tr>
+        <td></td>
+        <td><%= query.dataValues.Pods[1].card_9.card_name %></td>
+        <td><%= query.dataValues.Pods[2].card_9.card_name %></td>
+        <td><%= query.dataValues.Pods[3].card_9.card_name %></td>
+        <th><%= query.dataValues.Pods[1].dataValues.pod_artifacts + query.dataValues.Pods[2].dataValues.pod_artifacts + query.dataValues.Pods[3].dataValues.pod_artifacts %></th>
+    </tr>
+    <tr>
+        <td></td>
+        <td><%= query.dataValues.Pods[1].card_10.card_name %></td>
+        <td><%= query.dataValues.Pods[2].card_10.card_name %></td>
+        <td><%= query.dataValues.Pods[3].card_10.card_name %></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><%= query.dataValues.Pods[1].card_11.card_name %></td>
+        <td><%= query.dataValues.Pods[2].card_11.card_name %></td>
+        <td><%= query.dataValues.Pods[3].card_11.card_name %></td>
+        <th>Upgrades</th>
+    </tr>
+    <tr>
+        <td></td>
+        <td><%= query.dataValues.Pods[1].card_12.card_name %></td>
+        <td><%= query.dataValues.Pods[2].card_12.card_name %></td>
+        <td><%= query.dataValues.Pods[3].card_12.card_name %></td>
+        <th><%= query.dataValues.Pods[1].dataValues.pod_upgrades + query.dataValues.Pods[2].dataValues.pod_upgrades + query.dataValues.Pods[3].dataValues.pod_upgrades %></th>
+    </tr>
+
+    <tr><th> </th></tr>
+    <tr>
+        <th>Values</th>
+        <th><%= query.dataValues.house_1.house_name %> score</th>
+        <th><%= query.dataValues.house_2.house_name %> score</th>
+        <th><%= query.dataValues.house_3.house_name %> score</th>
+        <th>Totals</th>
+    </tr>
+    <tr>
+        <th>Score</th>
+        <th><%= query.dataValues.Pods[1].dataValues.pod_score %></th>
+        <th><%= query.dataValues.Pods[2].dataValues.pod_score %></th>
+        <th><%= query.dataValues.Pods[3].dataValues.pod_score %></th>
+        <th></th>
+        <th style="text-align:left">Score</th>
+    </tr>
+    <tr>
+        <th>E</th>
+        <th><%= query.dataValues.Pods[1].dataValues.pod_e %></th>
+        <th><%= query.dataValues.Pods[2].dataValues.pod_e %></th>
+        <th><%= query.dataValues.Pods[3].dataValues.pod_e %></th>
+        <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_e) + parseInt(query.dataValues.Pods[2].dataValues.pod_e) + parseInt(query.dataValues.Pods[3].dataValues.pod_e) %></th>
+        <th style="text-align:left">E</th>
+    </tr>
+    <tr>
+        <th>A</th>
+        <th><%= query.dataValues.Pods[1].dataValues.pod_a %></th>
+        <th><%= query.dataValues.Pods[2].dataValues.pod_a %></th>
+        <th><%= query.dataValues.Pods[3].dataValues.pod_a %></th>
+        <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_a) + parseInt(query.dataValues.Pods[2].dataValues.pod_a) + parseInt(query.dataValues.Pods[3].dataValues.pod_a) %></th>
+        <th style="text-align:left">A</th>
+    </tr>
+    <tr>
+        <th>C</th>
+        <th><%= query.dataValues.Pods[1].dataValues.pod_c %></th>
+        <th><%= query.dataValues.Pods[2].dataValues.pod_c %></th>
+        <th><%= query.dataValues.Pods[3].dataValues.pod_c %></th>
+        <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_c) + parseInt(query.dataValues.Pods[2].dataValues.pod_c) + parseInt(query.dataValues.Pods[3].dataValues.pod_c) %></th>
+        <th style="text-align:left">C</th>
+    </tr>
+    <tr>
+        <th>F</th>
+        <th><%= query.dataValues.Pods[1].dataValues.pod_f %></th>
+        <th><%= query.dataValues.Pods[2].dataValues.pod_f %></th>
+        <th><%= query.dataValues.Pods[3].dataValues.pod_f %></th>
+        <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_f) + parseInt(query.dataValues.Pods[2].dataValues.pod_f) + parseInt(query.dataValues.Pods[3].dataValues.pod_f) %></th>
+        <th style="text-align:left">F</th>
+    </tr>
+    <tr>
+        <th>D</th>
+        <th><%= query.dataValues.Pods[1].dataValues.pod_d %></th>
+        <th><%= query.dataValues.Pods[2].dataValues.pod_d %></th>
+        <th><%= query.dataValues.Pods[3].dataValues.pod_d %></th>
+        <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_d) + parseInt(query.dataValues.Pods[2].dataValues.pod_d) + parseInt(query.dataValues.Pods[3].dataValues.pod_d) %></th>
+        <th style="text-align:left">D</th>
+    </tr>
+    <tr>
+        <th>R</th>
+        <th><%= query.dataValues.Pods[1].dataValues.pod_r %></th>
+        <th><%= query.dataValues.Pods[2].dataValues.pod_r %></th>
+        <th><%= query.dataValues.Pods[3].dataValues.pod_r %></th>
+        <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_r) + parseInt(query.dataValues.Pods[2].dataValues.pod_r) + parseInt(query.dataValues.Pods[3].dataValues.pod_r) %></th>
+        <th style="text-align:left">R</th>
+    </tr>
+    <tr>
+        <th>BoB</th>
+        <th><%= query.dataValues.Pods[1].dataValues.pod_bob %></th>
+        <th><%= query.dataValues.Pods[2].dataValues.pod_bob %></th>
+        <th><%= query.dataValues.Pods[3].dataValues.pod_bob %></th>
+        <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_bob) + parseInt(query.dataValues.Pods[2].dataValues.pod_bob) + parseInt(query.dataValues.Pods[3].dataValues.pod_bob) %></th>
+        <th style="text-align:left">BoB</th>
+    </tr>
+    <tr>
+        <th>Scaling A</th>
+        <th><%= query.dataValues.Pods[1].dataValues.pod_scaling_a %></th>
+        <th><%= query.dataValues.Pods[2].dataValues.pod_scaling_a %></th>
+        <th><%= query.dataValues.Pods[3].dataValues.pod_scaling_a %></th>
+        <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_scaling_a) + parseInt(query.dataValues.Pods[2].dataValues.pod_scaling_a) + parseInt(query.dataValues.Pods[3].dataValues.pod_scaling_a) %></th>
+        <th style="text-align:left">Scaling A</th>
+    </tr>
+    <tr>
+        <th>Wipes</th>
+        <th><%= query.dataValues.Pods[1].dataValues.pod_wipes %></th>
+        <th><%= query.dataValues.Pods[2].dataValues.pod_wipes %></th>
+        <th><%= query.dataValues.Pods[3].dataValues.pod_wipes %></th>
+        <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_wipes) + parseInt(query.dataValues.Pods[2].dataValues.pod_wipes) + parseInt(query.dataValues.Pods[3].dataValues.pod_wipes) %></th>
+        <th style="text-align:left">Wipes</td>
+    </tr>
+    <tr>
+        <th>Cheats</th>
+        <th><%= query.dataValues.Pods[1].dataValues.pod_cheats %></th>
+        <th><%= query.dataValues.Pods[2].dataValues.pod_cheats %></th>
+        <th><%= query.dataValues.Pods[3].dataValues.pod_cheats %></th>
+        <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_cheats) + parseInt(query.dataValues.Pods[2].dataValues.pod_cheats) + parseInt(query.dataValues.Pods[3].dataValues.pod_cheats) %></th>
+        <th style="text-align:left">Cheats</td>
+    </tr>
+    <tr>
+        <th>Tokens</th>
+        <th><%= query.dataValues.Pods[1].dataValues.pod_tokens %></th>
+        <th><%= query.dataValues.Pods[2].dataValues.pod_tokens %></th>
+        <th><%= query.dataValues.Pods[3].dataValues.pod_tokens %></th>
+        <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_tokens) + parseInt(query.dataValues.Pods[2].dataValues.pod_tokens) + parseInt(query.dataValues.Pods[3].dataValues.pod_tokens) %></th>
+        <th style="text-align:left">Tokens</th>
+    </tr>
+</table>
+
+
+<!--
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script type="text/javascript">
+    var deck_code = window.location.pathname.replace('/deck/', "")
+    var url = "/hide/" + deck_code
+
+    $(document).ready(function() {
+        $("#hide-deck").click(function(){
+            hideDeck()
+        }); 
+    });
+
+
+    function hideDeck(clickCount) {
+        $.ajax({
+            method: "POST",
+            url: url,
+            dataType: 'json',
+            cache: false,
+            success: function(data) {},
+            error: function(data) { console.log("Something went wrong!") }
+        });
+    }
+ </script>
+-->

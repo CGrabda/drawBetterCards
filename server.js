@@ -11,9 +11,17 @@ const bcrypt = require('bcrypt')
 const passport = require('passport')
 const flash = require('express-flash')
 const session = require('express-session')
+const moment = require('moment')
+
+// db models
 const sequelize = require('./app/db.js')
-const { DataTypes, json } = require("sequelize")
+const { DataTypes, Op, json, or } = require("sequelize")
 const User = require('./app/models/user.js')(sequelize, DataTypes)
+const Decks = require('./app/models/deck.js')(sequelize, DataTypes)
+const Houses = require('./app/models/house.js')(sequelize, DataTypes)
+const Pods = require('./app/models/pod.js')(sequelize, DataTypes)
+const Cards = require('./app/models/card.js')(sequelize, DataTypes)
+const Sets = require('./app/models/set.js')(sequelize, DataTypes)
 const {PythonShell} = require('python-shell')
 const deckFunctions = require('./app/deckFunctions.js')
 
@@ -33,17 +41,68 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }))
+app.use(express.static('public'));
 app.use(passport.initialize())
 app.use(passport.session())
-
 app.disable('x-powered-by')
 
+
+
+// SQL relationships
+// Associate deck houses with house ids
+Decks.belongsTo(Houses, { as: "house_1", foreignKey: "house1", targetKey: "house_id" })
+Decks.belongsTo(Houses, { as: "house_2", foreignKey: "house2", targetKey: "house_id" })
+Decks.belongsTo(Houses, { as: "house_3", foreignKey: "house3", targetKey: "house_id" })
+Pods.belongsTo(Houses, { foreignKey: "house_id", targetKey: "house_id" })
+
+// Associate each card in a deck with its information
+Pods.belongsTo(Cards, { as: "card_1", foreignKey: "card1", targetKey: "card_id" })
+Pods.belongsTo(Cards, { as: "card_2", foreignKey: "card2", targetKey: "card_id" })
+Pods.belongsTo(Cards, { as: "card_3", foreignKey: "card3", targetKey: "card_id" })
+Pods.belongsTo(Cards, { as: "card_4", foreignKey: "card4", targetKey: "card_id" })
+Pods.belongsTo(Cards, { as: "card_5", foreignKey: "card5", targetKey: "card_id" })
+Pods.belongsTo(Cards, { as: "card_6", foreignKey: "card6", targetKey: "card_id" })
+Pods.belongsTo(Cards, { as: "card_7", foreignKey: "card7", targetKey: "card_id" })
+Pods.belongsTo(Cards, { as: "card_8", foreignKey: "card8", targetKey: "card_id" })
+Pods.belongsTo(Cards, { as: "card_9", foreignKey: "card9", targetKey: "card_id" })
+Pods.belongsTo(Cards, { as: "card_10", foreignKey: "card10", targetKey: "card_id" })
+Pods.belongsTo(Cards, { as: "card_11", foreignKey: "card11", targetKey: "card_id" })
+Pods.belongsTo(Cards, { as: "card_12", foreignKey: "card12", targetKey: "card_id" })
+
+// Associate deck hash between pods and decks
+Decks.hasMany(Pods, { foreignKey: "deck_id", targetKey: "deck_id" })
+
+// Associate sets between Deck and Set
+Decks.belongsTo(Sets, { foreignKey: "set_id" } )
+
+
+// Misc variables declared for functions
+const ALPHA_SCORES = ['F', 'D', 'C-', 'C', 'C+', 'B-', 'B', 'B+', 'A-', 'A', 'A+']
 
 
 // Routes
 // landing page
 app.get('/', (req, res) => {
-    res.render('index.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user })
+    Promise.all([
+        Decks.findAll({
+            where: { hidden: false },
+            limit: 5,
+            order: [['score', 'DESC' ]],
+        }), 
+        Decks.findAll({
+            where: {
+                [Op.and]: [
+                    { createdAt: {[Op.gte]: moment().subtract(30, 'days').toDate()} },
+                    { hidden: false }
+                ]
+            },
+            limit: 5,
+            order: [['createdAt', 'DESC' ]]
+        })
+    ])
+    .then(queries=> {
+        res.render('index.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user, queryTop: queries[0], queryRecent: queries[1] })
+    });
 })
 
 
@@ -59,7 +118,7 @@ app.post('/login', isNOTAuthenticated, passport.authenticate('local', {
     failureFlash: true
     }),
     (req, res) => {
-        res.status(200).send({ message: 'Successful Authentication' })    
+        res.status(200).send({ message: 'Successful Authentication' })
     }
 )
 
@@ -70,16 +129,18 @@ app.get('/register', isNOTAuthenticated, (req, res, next) => {
 })
 
 // Post register
-app.post('/register', isNOTAuthenticated, validateInputLength, async (req, res) => {
+app.post('/register', isNOTAuthenticated, validateInput, async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
-        await User.create({
+        User.create({
             username: req.body.name,
             email: req.body.email,
             password: hashedPassword
         })
-        console.log(`Created User ${req.body.name}`)
-        res.redirect('/login')
+        .then(results=> {
+            console.log(`Created User ${req.body.name}`)
+            res.redirect('/login')
+        })
     }
     catch (e) {
         console.log(e)
@@ -98,41 +159,240 @@ app.post('/logout', isAuthenticated, (req, res, next) => {
 
 
 // Import post
-app.post('/import', isAuthenticated, (req, res, next) => {
+app.post('/import', isAuthenticated, doesDeckExist, (req, res, next) => {
     var options = {
         mode: 'text',
         pythonPath: process.env.PYTHON_PATH,
         args: [req.body.deckLink]
     }
 
-    try {
-        PythonShell.run(process.env.SCRIPT_PATH, options).then(messages=>{
-            // messages is an array of the output from execution
-            // console.log(messages[0])
-            var output = JSON.parse(messages[0])
+    // If user has imports remaining, runs import script
+    if (req.user.imports > 0) {
+        try {
+            var output = ""
+            // Run python script
+            PythonShell.run(process.env.SCRIPT_PATH, options)
+            .then(messages=>{
+                // messages is an array of the output from execution
+                // console.log(messages[0])
+                if (messages[0] instanceof Error) {
+                    return new Error('Deck import error')
+                }
+                output = JSON.parse(messages[0])
 
-            // Add deck to database
-            deckFunctions.addDeck(output["deck_info"], output["pod_info"], req.user.id).catch(e => {
-                req.flash('error', e.message)
-                res.redirect('/')
+                // Add deck to database
+                console.log('Importing ' + output["deck_info"]["name"])
+                return deckFunctions.addDeck(output["deck_info"], output["pod_info"], req.user.id, req.body.hidden).catch(e => {
+                    console.log(e)
+                    return new Error('Deck add Error')
+                });
             })
-            console.log("Importing " + output["deck_info"]["name"])
-        }).catch(e => { console.log(e) });
-    }
-    catch (PythonShellError) {
-        req.flash('error', 'Error importing deck, contact a team member')
-        console.log('Error importing deck, contact a team member')
-    }
+            .then(output=> {
+                if (output instanceof Error) {
+                    throw output
+                }
 
+                // Decrement Imports by 1
+                req.user.importedDeck()
+                res.redirect('/deck/' + output)
+            }).catch(e => { console.log(e); req.flash('error', 'Error importing deck, contact a team member'); res.redirect('/'); });
+        }
+        catch (PythonShellError) {
+            req.flash('error', 'Error importing deck, contact a team member')
+            console.log('Error importing deck')
+            console.log(PythonShellError)
+            res.redirect('/')
+            return
+        }
+    }
+    else {
+        req.flash('error', 'No imports available')
+        res.redirect('/')
+    }
 })
 
 
 // Mydecks page
 app.get('/mydecks', isAuthenticated, (req, res) => {
+    // Visit mydecks page, deck rendering is handled by /load/mydecks
     res.render('mydecks.ejs', { user: req.user })
-    console.log(req)
 })
 
+
+// Search/All Decks page
+app.get('/search', (req, res) => {
+    // Visit search page, deck rendering is handled by /load/search
+    res.render('search.ejs', { isLoggedIn: req.isAuthenticated() })
+})
+
+
+// Load post, for search pagination
+app.post('/load/:search', (req, res, next) => {
+    // if loading mydecks page
+    if (req.params.search == "mydecks") {
+        return Decks.findAll({
+            // Request originating from mydecks page
+            limit: 15,
+            offset: 15 * req.body.page,
+            where: { owner_id: req.user.id },
+            order: [['score', 'DESC' ]]
+        })
+        .then(results=> {
+            return res.json({ html: queryToHTML(results) })
+        })
+    }
+    else if (req.params.search == "search") {
+        // Request originating from search page
+        return Decks.findAll({
+            // Request originating from mydecks page
+            limit: 15,
+            offset: 15 * req.body.page,
+            where: { hidden: false },
+            order: [['score', 'DESC' ]]
+        })
+        .then(results=> {
+            return res.json({ html: queryToHTML(results) })
+        })
+    }
+    else {
+        //error
+        return
+    }
+})
+
+
+// deck pages
+app.get("/deck/:deck_code", isValidCode, function(req, res) {
+    // retrieve deck code from subdomain
+    var path = req.params.deck_code
+
+    // retrieve deck
+    Decks.findOne({
+        where: { deck_code: path },
+        include: { all: true , nested: true }
+    })
+    .then(results=> {
+        if (results == null) {
+            throw new Error();
+        }
+
+        // If deck is hidden
+        if (results.dataValues.hidden) {
+            // See if user is authenticated
+            if (typeof req.user === 'undefined') {
+                req.flash('error', 'Error viewing deck, contact a team member')
+                return res.redirect('/')
+            }
+            // Check that the authenticated user is the deck owner
+            else if (req.user.id == results.owner_id) {
+                return res.render('deck.ejs', { query: results, isLoggedIn: req.isAuthenticated(), user: req.user })
+            }
+            // Else, error the person trying to view is not the owner
+            else {
+                req.flash('error', 'Error viewing deck, contact a team member')
+                return res.redirect('/')
+            }
+        }
+        else {
+            // If deck is not hidden, display
+            return res.render('deck.ejs', { query: results, isLoggedIn: req.isAuthenticated(), user: req.user })
+        }
+    }).catch(e=> { req.flash('error', 'Error viewing deck, contact a team member'); res.redirect('/'); })
+})
+
+
+// Post deckaction, hide/unhide toggle or alpha scoring
+app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res, next) => {
+    // Hide a deck
+    var path = req.params.deck_code
+    var deckAction = req.params.deckAction
+
+    if (deckAction === 'hide') {
+        // Get the requested deck
+        Decks.findOne({
+            where: { deck_code: path }
+        }).then(results=> {
+            try {
+                // Check if the deck owner is the requester
+                if (req.user.id == results.owner_id) {
+                    if (results.hidden) {
+                        deckFunctions.hideDeck(path, false)
+                        return res.redirect('/deck/' + results.deck_code)
+                    }
+                    else {
+                        deckFunctions.hideDeck(path, true)
+                        return res.redirect('/deck/' + results.deck_code) 
+                    }
+                }
+                else {
+                    throw new Error('Deck owner is not the requesting user')
+                }
+            }
+            catch (e) {
+                console.log(e)
+                req.flash('error', 'Nice try ;)')
+                return res.redirect('/')
+            }
+        })
+    }
+    else if (deckAction === 'alpha') {
+        // Update the alpha status
+        // Get the requested deck
+        Decks.findOne({ where: { deck_code: path } })
+        .then(query=> {
+            try {
+                // if no score
+                if (query.alpha_score == null) {
+                    // Check if the deck owner is the requester
+                    if (req.user.id == query.owner_id) {
+                        deckFunctions.updateAlpha(path, "P")
+                        // Decrement alpha_requests by 1
+                        .then(results=> { req.user.requestedAlpha(); return results })
+                        .then(results=> { return res.redirect('/deck/' + query.deck_code) })
+                    }
+                    else {
+                        throw new Error('Deck owner is not the requesting user')
+                    }
+                }
+                else if (req.user.is_admin) {
+                    // validate that the alpha score is a valid alpha score
+                    if (ALPHA_SCORES.includes(req.body.alpha_score)) {
+                        deckFunctions.updateAlpha(path, req.body.alpha_score)
+                        .then(results=> { return res.status(200).send({ message: "Ok" }) })
+                    }
+                    else {
+                        throw new Error('Invalid Alpha Score')
+                    }
+                }
+                else {
+                    throw new Error('Requesting user is not admin')
+                }
+            }
+            catch (e) {
+                console.log(e)
+                req.flash('error', 'Nice try ;)')
+                return res.redirect('/')
+            }
+        })
+    }
+})
+
+
+app.get("/admin/:path", isAuthenticated, isAdmin, function(req, res) {
+    var path = req.params.path
+
+    // render the paths
+    if (path == 'landing') {
+        res.render('admin.ejs')
+    }
+    else if (path == 'alpha') {
+        Decks.findAll({
+            where: { alpha_score: "P" },
+            order: [['updatedAt', 'ASC' ]],
+        })
+        .then(results=> { res.render('alpha.ejs', { query: results }) })
+    }
+})
 
 // 404 page
 app.use(function(req, res){
@@ -143,7 +403,13 @@ app.use(function(req, res){
 
 
 
+
+
+
 // Middleware
+const code_re = /^\w{8}\-(\w{4}\-){3}\w{12}$/;
+const link_re = /\w{8}\-(\w{4}\-){3}\w{12}/
+
 function isAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next()
@@ -160,11 +426,11 @@ function isNOTAuthenticated(req, res, next) {
     next()
 }
 
-function validateInputLength(req, res, next) {
+function validateInput(req, res, next) {
     error_messages =  []
 
     if (req.body.name.length < 4) {
-        error_messages.push('Username should be at least 4 characters long')
+        error_messages.push('Usersname should be at least 4 characters long')
     }
     if (req.body.password.length < 10) {
         error_messages.push('Password should be at least 10 characters long')
@@ -180,6 +446,74 @@ function validateInputLength(req, res, next) {
     
     next();
 }
+
+function isValidCode(req, res, next) {
+    if (code_re.test(req.params.deck_code)) {
+        return next()
+    }
+    else {
+        res.status(404).render('404.ejs');
+    }
+}
+
+function doesDeckExist(req, res, next) {
+    // Check that the deck is not already imported
+    var deck_code = link_re.exec(req.body.deckLink)[0]
+
+    if (code_re.test(deck_code)) {
+        Decks.findOne({
+            where: { deck_code: deck_code }
+        }).then(results=> {
+            if (results != null) {
+                // Deck already exists, redirect to deck page
+                return res.redirect('/deck/' + results.dataValues.deck_code)
+            }
+            else {
+                // Deck does not exist
+                return next()
+            }
+        })
+    }
+    else {
+        // Invalid deck code provided
+        req.flash('error', 'Error importing deck, invalid deck code')
+        return res.redirect('/')
+    }
+}
+
+function isAdmin (req, res, next) {
+    if (req.user.is_admin === true) {
+        return next()
+    }
+
+    res.status(404).redirect('404.ejs')
+}
+
+function queryToHTML(query) {
+    var output = ''
+    var alpha = ''
+
+    for (var i = 0; i < Object.keys(query).length; i++) {
+        alpha = query[i]["dataValues"]["alpha_score"]
+        if (alpha ==='P' || alpha == null) {
+            alpha = '-'
+        }
+
+        output += '<tr>'
+        output += '<td>' + query[i]["dataValues"]["score"] + '</td>'
+        output += '<td>' + alpha + '</td>'
+        output += '<td><a href= "/deck/' + query[i]["dataValues"]["deck_code"] + '">' + query[i]["dataValues"]["deck_name"] + '</a></td>'
+        output += '<th><img src= "/set_' + query[i]["dataValues"]["set_id"] + '.png" width="32px" height="32px" /></th>'
+        output += '<td><img src= "/house_' + query[i]["dataValues"]["house1"] + '.png" width="48px" height="48px" />'
+        output += '<img src= "/house_' + query[i]["dataValues"]["house2"] + '.png" width="48px" height="48px" />'
+        output += '<img src= "/house_' + query[i]["dataValues"]["house3"] + '.png" width="48px" height="48px" /></td>'
+        output += '</tr>'
+    }
+
+
+    return output
+}
+
 
 
 

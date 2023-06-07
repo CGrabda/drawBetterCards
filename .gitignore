@@ -1,5 +1,6 @@
 .env
 node_modules
+scripts/config.py
 scripts/test.py
 scripts/scoring/KF Card Analysis - Card Scores.csv
 scripts/scoring/csvToScoreObject.py

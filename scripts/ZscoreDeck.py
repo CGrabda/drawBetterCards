@@ -45,8 +45,11 @@ IDENTIFY_SET = {
         "341": ("COTA", 1),
         "435": ("AOA", 2),
         "452": ("WC", 3),
+        "453": ("Anomaly", 1000),
         "479": ("MM", 4),
         "496": ("DT", 5),
+        "600": ("WOE", 6),
+        "601": ("U23", 1001),
     }
 
 def validateLink(deckLink):
@@ -173,6 +176,11 @@ def getScore(decklist, pods):
                 # Attempt to handle special characters æ and Æ in names
                 # (which are omitted from the spreadsheet)
                 cardName = cardName.replace("Æ", "AE").replace("æ", "ae").replace("’", "'")
+
+                # Replace Ekwidon unicode characters with the standard letter
+                if not cardName.isascii():
+                    cardName = cardName.replace(u"\u0103", "a").replace(u"\u0115", "e").replace(u"\u012d", "i").replace(u"\u014f", "o").replace(u"\u016d", "u")
+
                 cardDetails = scoreDict[cardSet][cardName]
 
         except KeyError as e:
@@ -250,7 +258,7 @@ def getScore(decklist, pods):
         for i in range(card[1]):
             # Add the card score
             tempScore = float(cardDetails["score"]) \
-                + float(scoreDict[cardSet][cardName]["multiples"][i])
+                + float(scoreDict[cardSet][cardName]["multiples"][i if i<5 else 4])
             cardScore += tempScore
 
             # Add each of the pod scores
@@ -259,14 +267,43 @@ def getScore(decklist, pods):
             pods[cardHouse]["e"] += float(cardDetails["e"])
             pods[cardHouse]["a"] += float(cardDetails["a"])
             pods[cardHouse]["c"] += float(cardDetails["c"])
-            pods[cardHouse]["f"] += float(cardDetails["f"])
-            pods[cardHouse]["d"] += float(cardDetails["d"])
-            pods[cardHouse]["r"] += float(cardDetails["r"])
             pods[cardHouse]["bob"] += float(cardDetails["bob"])
-            pods[cardHouse]["scalingA"] += cardDetails["scalingA"]
-            pods[cardHouse]["wipes"] += cardDetails["wipes"]
-            pods[cardHouse]["cheats"] += cardDetails["cheats"]
-            pods[cardHouse]["tokens"] += cardDetails["tokens"]
+
+            # Handles adding values which may be null
+            try:
+                pods[cardHouse]["f"] += float(cardDetails["f"])
+            except:
+                pods[cardHouse]["f"] = float(cardDetails["f"])
+
+            try:
+                pods[cardHouse]["d"] += float(cardDetails["d"])
+            except:
+                pods[cardHouse]["d"] = float(cardDetails["d"])
+
+            try:
+                pods[cardHouse]["r"] += float(cardDetails["r"])
+            except:
+                pods[cardHouse]["r"] = float(cardDetails["r"])
+
+            try:
+                pods[cardHouse]["scalingA"] += cardDetails["scalingA"]
+            except:
+                pods[cardHouse]["scalingA"] = cardDetails["scalingA"]
+            
+            try:
+                pods[cardHouse]["wipes"] += cardDetails["wipes"]
+            except:
+                pods[cardHouse]["wipes"] = cardDetails["wipes"]
+            
+            try:
+                pods[cardHouse]["cheats"] += cardDetails["cheats"]
+            except:
+                pods[cardHouse]["cheats"] = cardDetails["cheats"]
+            
+            try:
+                pods[cardHouse]["tokens"] += cardDetails["tokens"]
+            except:
+                pods[cardHouse]["tokens"] = cardDetails["tokens"]
 
             # Add to the count of card types
             cardType = cardDetails["type"]
@@ -275,9 +312,15 @@ def getScore(decklist, pods):
             elif cardType == "Action":
                 pods[cardHouse]["actions"] += 1
             elif cardType == "Artifact":
-                pods[cardHouse]["artifacts"] += 1
+                try:
+                    pods[cardHouse]["artifacts"] += 1
+                except:
+                    pods[cardHouse]["artifacts"] = 1
             elif cardType == "Upgrade":
-                pods[cardHouse]["upgrades"] += 1
+                try:
+                    pods[cardHouse]["upgrades"] += 1
+                except:
+                    pods[cardHouse]["upgrades"] = 1
 
             # Add the card to the house
             pods[cardHouse]["cards"].append(cardID)
@@ -369,14 +412,17 @@ def analyzeDeck(deckLink):
     decklist, enhancements = parseDecklist(cardIdList, deckResponse)
 
     # Creates the pod list
-    pods = {str(IDENTIFY_HOUSE[deckResponse["_linked"]["houses"][0]["id"]]):{"score":0, "e":0, "a":0, "c":0, "f":0, "d":0, "r":0, "bob":0, "scalingA":0, "wipes":0, "cheats":0, "tokens":0, "creatures":0, "actions":0, "artifacts":0, "upgrades":0, "cards":[], "enhancements":[]}, \
-            str(IDENTIFY_HOUSE[deckResponse["_linked"]["houses"][1]["id"]]):{"score":0, "e":0, "a":0, "c":0, "f":0, "d":0, "r":0, "bob":0, "scalingA":0, "wipes":0, "cheats":0, "tokens":0, "creatures":0, "actions":0, "artifacts":0, "upgrades":0, "cards":[], "enhancements":[]}, \
-            str(IDENTIFY_HOUSE[deckResponse["_linked"]["houses"][2]["id"]]):{"score":0, "e":0, "a":0, "c":0, "f":0, "d":0, "r":0, "bob":0, "scalingA":0, "wipes":0, "cheats":0, "tokens":0, "creatures":0, "actions":0, "artifacts":0, "upgrades":0, "cards":[], "enhancements":[]}, \
-            "1":{"score":0, "e":0, "a":0, "c":0, "f":0, "d":0, "r":0, "bob":0, "scalingA":0, "wipes":0, "cheats":0, "tokens":0, "creatures":0, "actions":0, "artifacts":0, "upgrades":0}}
+    pods = {str(IDENTIFY_HOUSE[deckResponse["_linked"]["houses"][0]["id"]]):{"score":0, "e":0, "a":0, "c":0, "f":None, "d":None, "r":None, "bob":0, "scalingA":None, "wipes":None, "cheats":None, "tokens":None, "creatures":0, "actions":0, "artifacts":None, "upgrades":None, "cards":[], "enhancements":[]}, \
+            str(IDENTIFY_HOUSE[deckResponse["_linked"]["houses"][1]["id"]]):{"score":0, "e":0, "a":0, "c":0, "f":None, "d":None, "r":None, "bob":0, "scalingA":None, "wipes":None, "cheats":None, "tokens":None, "creatures":0, "actions":0, "artifacts":None, "upgrades":None, "cards":[], "enhancements":[]}, \
+            str(IDENTIFY_HOUSE[deckResponse["_linked"]["houses"][2]["id"]]):{"score":0, "e":0, "a":0, "c":0, "f":None, "d":None, "r":None, "bob":0, "scalingA":None, "wipes":None, "cheats":None, "tokens":None, "creatures":0, "actions":0, "artifacts":None, "upgrades":None, "cards":[], "enhancements":[]}, \
+            "1":{"score":0, "e":0, "a":0, "c":0, "f":None, "d":None, "r":None, "bob":0, "scalingA":None, "wipes":None, "cheats":None, "tokens":None, "creatures":0, "actions":0, "artifacts":None, "upgrades":None}}
 
-    # Return the score of deck
+    # Add the score of deck
     score, scoredPods =  getScore(decklist, pods)
     deckInfo["score"] = score
+
+    # Add the set of the house
+    deckInfo["set"] = IDENTIFY_SET[str(deckResponse["data"]["expansion"])][1]
 
     # Add the enhancements to the pods
     # Adjust scores for good/bad enhancements, adds related attribute NOT IMPLEMENTED YET<------------------------
@@ -454,8 +500,9 @@ def main():
 
             # Analyze a single deck
             else:
-                deckInfo, podInfo = analyzeDeck(deckLink)
-                print("\nThe Z-Score of " + deckInfo["name"] + " is " + str(round(deckInfo["score"], 2)) + "\n")
+                deckInfo = analyzeDeck(deckLink)
+                print(deckInfo["deck_info"])
+                print("\nThe Z-Score of " + deckInfo["deck_info"]["name"] + " is " + str(round(deckInfo["deck_info"]["score"], 2)) + "\n")
 
         
 

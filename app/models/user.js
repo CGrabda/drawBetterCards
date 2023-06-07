@@ -14,6 +14,7 @@ module.exports = function(sequelize, Sequelize) {
       allowNull: false,
       unique: true,
       validate: {
+        is: /^[a-zA-Z0-9_]+$/i,
         notEmpty: true,
         len: [4, 30]
       }
@@ -44,10 +45,22 @@ module.exports = function(sequelize, Sequelize) {
       type: DataTypes.SMALLINT,
       defaultValue: 0
     },
+    is_admin: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: null
+    },
   })
   
   User.prototype.validPassword = async function (password) {
     return this.password === await bcrypt.hash(password, 10)
+  }
+
+  User.prototype.importedDeck = async function () {
+    this.decrement('imports', { by: 1 })
+  }
+
+  User.prototype.requestedAlpha = async function () {
+    this.decrement('alpha_requests', { by: 1 })
   }
 
   return User

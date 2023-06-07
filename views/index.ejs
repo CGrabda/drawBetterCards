@@ -8,28 +8,104 @@
 
     <form action="/import" method="POST">
         <div>
+            <h3>Alpha Scores Remaining: <%= user.alpha_requests %></h3>
             <h3>Imports Remaining: <%= user.imports %></h3>
-            <% if (messages.error) { %>
-                <div class="error-messages">
-                    <%= messages.error %>
-                </div>
-            <% } %>
             <input type="text" id="deckLink" name="deckLink" placeholder="Deck Link" required>
             <button type="submit">Import Deck</button>
+            <h4>Hide on import: <input type="checkbox" id="hidden" name="hidden" value="1"></h4>
         </div>
     </form>
-    
-    <form action="/mydecks" method="GET"><!--IMPLEMENT-->
-        <button type="submit">My Decks</button>
-    </form>
+    <% if (user.is_admin === true) { %>
+        <form action="/admin/landing" method="GET">
+            <button type="submit">Admin Page</button>
+        </form>
+    <% } %>
 <% } else {%>
     <form action="/login" method="GET">
         <button type="submit">Login</button>
     </form>
 <% } %>
 
+<table>
+    <tr>
+        <td><form action="/search" method="GET">
+            <button type="submit">All Decks</button>
+        </form></td>
+        <% if (isLoggedIn) { %>
+        <td><form action="/mydecks" method="GET">
+            <button type="submit">My Decks</button>
+        </form></td>
+        <% } %>
+    </tr>
+</table>
+
+<% if (messages.error) { %>
+    <div class="error-messages">
+        <%= messages.error %>
+    </div>
+<% } %>
   
 <h1></h1>
-<h2>Top Decks-----------------Most Recent</h2>
-<h2>Set Analysis</h2>
-<h2>House Analysis</h2>
+<h2>Top Decks This Month</h2>
+<table>
+    <thead>
+        <th>Score</th>
+        <th>Alpha</th>
+        <th>Name</th>
+        <th></th>
+        <th></th>
+    </thead>
+    <% for (var i = 0; i < queryTop.length; i++) { %>
+        <tr>
+            <td><%= queryTop[i].dataValues.score %></td>
+            <td><% if (queryTop[i].dataValues.alpha_score ==='P' || queryTop[i].dataValues.alpha_score == null) { %>
+                -
+            <% } else { %>
+                <%= queryTop[i].dataValues.alpha_score %>
+            <% } %></td>
+            <td><a href=<%= "/deck/" + queryTop[i].dataValues.deck_code %>><%= queryTop[i].dataValues.deck_name %></a></td>
+            <td><img src=<%= "/set_" + queryTop[i].dataValues.set_id + ".png" %> width="32px" height="32px" /></td>
+            <td><img src=<%= "/house_" + queryTop[i].dataValues.house1 + ".png" %> width="48px" height="48px" />
+                <img src=<%= "/house_" + queryTop[i].dataValues.house2 + ".png" %> width="48px" height="48px" />
+                <img src=<%= "/house_" + queryTop[i].dataValues.house3 + ".png" %> width="48px" height="48px" /></td>
+        </tr>
+    <% } %>
+</table>
+<h2>Most Recent</h2>
+<table>
+    <thead>
+        <th>Score</th>
+        <th>Alpha</th>
+        <th>Name</th>
+        <th></th>
+        <th></th>
+    </thead>
+    <% for (var i = 0; i < queryRecent.length; i++) { %>
+        <tr>
+            <td><%= queryRecent[i].dataValues.score %></td>
+            <td><% if (queryRecent[i].dataValues.alpha_score ==='P' || queryRecent[i].dataValues.alpha_score == null) { %>
+                -
+            <% } else { %>
+                <%= queryRecent[i].dataValues.alpha_score %>
+            <% } %></td>
+            <td><a href=<%= "/deck/" + queryRecent[i].dataValues.deck_code %>><%= queryRecent[i].dataValues.deck_name %></a></td>
+            <td><img src=<%= "/set_" + queryRecent[i].dataValues.set_id + ".png" %> width="32px" height="32px" /></td>
+            <td><img src=<%= "/house_" + queryRecent[i].dataValues.house1 + ".png" %> width="48px" height="48px" />
+                <img src=<%= "/house_" + queryRecent[i].dataValues.house2 + ".png" %> width="48px" height="48px" />
+                <img src=<%= "/house_" + queryRecent[i].dataValues.house3 + ".png" %> width="48px" height="48px" /></td>
+        </tr>
+    <% } %>
+</table>
+
+<script>
+    $('#commentForm').submit(function(){ //listen for submit event
+    $.each(params, function(i, param) {
+        $('<input />').attr('type', 'hidden')
+            .attr('name', param.name)
+            .attr('value', param.value)
+            .appendTo('#commentForm');
+    });
+
+        return true;
+    }); 
+</script>
