@@ -39,20 +39,22 @@
                 <th></th>
                 <th></th>
             </thead>
-            <% for (var i = 0; i < queryTop.length; i++) { %>
-                <tr>
-                    <td><%= queryTop[i].dataValues.score %></td>
-                    <td><% if (queryTop[i].dataValues.alpha_score ==='P' || queryTop[i].dataValues.alpha_score == null) { %>
-                        -
-                    <% } else { %>
-                        <%= queryTop[i].dataValues.alpha_score %>
-                    <% } %></td>
-                    <td><a href=<%= "/deck/" + queryTop[i].dataValues.deck_code %>><%= queryTop[i].dataValues.deck_name %></a></td>
-                    <td><img src=<%= "rsrc/set_" + queryTop[i].dataValues.set_id + ".png" %> width="32px" height="32px" /></td>
-                    <td><img src=<%= "rsrc/house_" + queryTop[i].dataValues.house1 + ".png" %> width="48px" height="48px" />
-                        <img src=<%= "rsrc/house_" + queryTop[i].dataValues.house2 + ".png" %> width="48px" height="48px" />
-                        <img src=<%= "rsrc/house_" + queryTop[i].dataValues.house3 + ".png" %> width="48px" height="48px" /></td>
-                </tr>
+            <% if (queryTop) { %>
+                <% for (var i = 0; i < queryTop.length; i++) { %>
+                    <tr>
+                        <td><%= queryTop[i].dataValues.score %></td>
+                        <td><% if (queryTop[i].dataValues.alpha_score ==='P' || queryTop[i].dataValues.alpha_score == null) { %>
+                            -
+                        <% } else { %>
+                            <%= queryTop[i].dataValues.alpha_score %>
+                        <% } %></td>
+                        <td><a href=<%= "/deck/" + queryTop[i].dataValues.deck_code %>><%= queryTop[i].dataValues.deck_name %></a></td>
+                        <td><img src=<%= "rsrc/set_" + queryTop[i].dataValues.set_id + ".png" %> width="32px" height="32px" /></td>
+                        <td><img src=<%= "rsrc/house_" + queryTop[i].dataValues.house1 + ".png" %> width="48px" height="48px" />
+                            <img src=<%= "rsrc/house_" + queryTop[i].dataValues.house2 + ".png" %> width="48px" height="48px" />
+                            <img src=<%= "rsrc/house_" + queryTop[i].dataValues.house3 + ".png" %> width="48px" height="48px" /></td>
+                    </tr>
+                <% } %>
             <% } %>
         </table>
         <h2>Most Recent</h2>
@@ -64,20 +66,22 @@
                 <th></th>
                 <th></th>
             </thead>
-            <% for (var i = 0; i < queryRecent.length; i++) { %>
-                <tr>
-                    <td><%= queryRecent[i].dataValues.score %></td>
-                    <td><% if (queryRecent[i].dataValues.alpha_score ==='P' || queryRecent[i].dataValues.alpha_score == null) { %>
-                        -
-                    <% } else { %>
-                        <%= queryRecent[i].dataValues.alpha_score %>
-                    <% } %></td>
-                    <td><a href=<%= "/deck/" + queryRecent[i].dataValues.deck_code %>><%= queryRecent[i].dataValues.deck_name %></a></td>
-                    <td><img src=<%= "rsrc/set_" + queryRecent[i].dataValues.set_id + ".png" %> width="32px" height="32px" /></td>
-                    <td><img src=<%= "rsrc/house_" + queryRecent[i].dataValues.house1 + ".png" %> width="48px" height="48px" />
-                        <img src=<%= "rsrc/house_" + queryRecent[i].dataValues.house2 + ".png" %> width="48px" height="48px" />
-                        <img src=<%= "rsrc/house_" + queryRecent[i].dataValues.house3 + ".png" %> width="48px" height="48px" /></td>
-                </tr>
+            <% if (queryRecent) { %>
+                <% for (var i = 0; i < queryRecent.length; i++) { %>
+                    <tr>
+                        <td><%= queryRecent[i].dataValues.score %></td>
+                        <td><% if (queryRecent[i].dataValues.alpha_score ==='P' || queryRecent[i].dataValues.alpha_score == null) { %>
+                            -
+                        <% } else { %>
+                            <%= queryRecent[i].dataValues.alpha_score %>
+                        <% } %></td>
+                        <td><a href=<%= "/deck/" + queryRecent[i].dataValues.deck_code %>><%= queryRecent[i].dataValues.deck_name %></a></td>
+                        <td><img src=<%= "rsrc/set_" + queryRecent[i].dataValues.set_id + ".png" %> width="32px" height="32px" /></td>
+                        <td><img src=<%= "rsrc/house_" + queryRecent[i].dataValues.house1 + ".png" %> width="48px" height="48px" />
+                            <img src=<%= "rsrc/house_" + queryRecent[i].dataValues.house2 + ".png" %> width="48px" height="48px" />
+                            <img src=<%= "rsrc/house_" + queryRecent[i].dataValues.house3 + ".png" %> width="48px" height="48px" /></td>
+                    </tr>
+                <% } %>
             <% } %>
         </table>
     </div>

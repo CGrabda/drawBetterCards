@@ -130,8 +130,8 @@ app.get('/', (req, res) => {
         })
     ])
     .then(queries=> {
-        res.render('index.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user, queryTop: queries[0], queryRecent: queries[1] })
-    });
+        return res.render('index.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user, queryTop: queries[0], queryRecent: queries[1] })
+    }).catch(e=>{ console.log(e); return res.render('index.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user, queryTop: null, queryRecent: null }) });
 })
 
 
@@ -620,7 +620,7 @@ else if (process.env.NODE_ENV == "production") {
         }
     );
 
-    server.setTimeout(6000, (socket) => {
+    server.setTimeout(30000, (socket) => {
         socket.destroy();
     });
 }
