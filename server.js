@@ -165,7 +165,7 @@ app.get('/register', isNOTAuthenticated, (req, res) => {
     
     res.render('register.ejs', { captcha_image: captcha.data, isLoggedIn: req.isAuthenticated() })
 })
-
+/*
 // Post register
 app.post('/register', isNOTAuthenticated, passedCaptcha, validateInput, async (req, res) => {
     try {
@@ -187,7 +187,7 @@ app.post('/register', isNOTAuthenticated, passedCaptcha, validateInput, async (r
         console.log(e)
         res.redirect('/register')
     }
-})
+})*/
 
 
 // Logout post
