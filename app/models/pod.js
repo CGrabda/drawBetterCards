@@ -5,10 +5,12 @@ module.exports = function(sequelize, Sequelize) {
   const Pod = sequelize.define('Pod', {
     deck_id: {
       type: DataTypes.INTEGER,
+      primaryKey: true,
       allowNull: false
     },
     house_id: {
       type: DataTypes.SMALLINT,
+      primaryKey: true,
       allowNull: false
     },
     card1: {
