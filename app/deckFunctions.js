@@ -64,7 +64,7 @@ async function addDeck(deck_info, pod_info, user_id, hidden) {
                     pod_creatures: pod["creatures"],
                     pod_artifacts: pod["artifacts"],
                     pod_actions: pod["actions"],
-                    pod_upgrades: pod["upgades"]
+                    pod_upgrades: pod["upgrades"]
                 }, {transaction: t})
             }
 
