@@ -1,44 +1,63 @@
-<h1>Alpha Score Hub</h1>
-<table id="deck_table">
-    <thead>
-        <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-    <% for (var i = 0; i < query.length; i++) { %>
-        <tr id=<%= "row_" + i %>>
-            <td><%= query[i].dataValues.score %></td>
-            <td><a href=<%= "/deck/" + query[i].dataValues.deck_code %> id=<%= "deck_" + i %> class=<%= query[i].dataValues.deck_code %>><%= query[i].dataValues.deck_name %></a></td>
-            <td><img src=<%= "/set_" + query[i].dataValues.set_id + ".png" %> width="32px" height="32px" /></td>
-            <td><img src=<%= "/house_" + query[i].dataValues.house1 + ".png" %> width="48px" height="48px" />
-                <img src=<%= "/house_" + query[i].dataValues.house2 + ".png" %> width="48px" height="48px" />
-                <img src=<%= "/house_" + query[i].dataValues.house3 + ".png" %> width="48px" height="48px" /></td>
-            <td><form>
-                <select id=<%= 'list_' + i %> >
-                <option> ---- </option>
-                <option> F </option>
-                <option> D </option>
-                <option> C- </option>
-                <option> C </option>
-                <option> C+ </option>
-                <option> B- </option>
-                <option> B </option>
-                <option> B+ </option>
-                <option> A- </option>
-                <option> A </option>
-                <option> A+ </option>
-                </select>
-            </form></td>
-            <td><input type="button" class="score" value="Submit" onclick="seti(<%= i %>)"></td>
-        </tr>
-    <% } %>
-</tbody>
-</table>
+<!doctype html>
+<html lang="en">
+<head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Draw Better Cards</title>
+
+    <link rel="stylesheet" href ="/assets/css/bootstrap.min.css">
+</head>
+<body>
+    <%- include('partials/navbar.ejs') %>
+
+    <div class="bg-dark text-white">
+        <h1>Alpha Score Hub</h1>
+        <table id="deck_table" class="table table-striped" data-bs-theme="dark">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            <% for (var i = 0; i < query.length; i++) { %>
+                <tr id=<%= "row_" + i %>>
+                    <td><%= query[i].dataValues.score %></td>
+                    <td><a href=<%= "/deck/" + query[i].dataValues.deck_code %> id=<%= "deck_" + i %> class=<%= query[i].dataValues.deck_code %>><%= query[i].dataValues.deck_name %></a></td>
+                    <td><img src=<%= "/rsrc/set_" + query[i].dataValues.set_id + ".png" %> width="32px" height="32px" /></td>
+                    <td><img src=<%= "/rsrc/house_" + query[i].dataValues.house1 + ".png" %> width="48px" height="48px" />
+                        <img src=<%= "/rsrc/house_" + query[i].dataValues.house2 + ".png" %> width="48px" height="48px" />
+                        <img src=<%= "/rsrc/house_" + query[i].dataValues.house3 + ".png" %> width="48px" height="48px" /></td>
+                    <td><form>
+                        <select id=<%= 'list_' + i %> >
+                        <option> ---- </option>
+                        <option> F </option>
+                        <option> D </option>
+                        <option> C- </option>
+                        <option> C </option>
+                        <option> C+ </option>
+                        <option> B- </option>
+                        <option> B </option>
+                        <option> B+ </option>
+                        <option> A- </option>
+                        <option> A </option>
+                        <option> A+ </option>
+                        </select>
+                    </form></td>
+                    <td><input type="button" class="score" value="Submit" onclick="seti(<%= i %>)"></td>
+                </tr>
+            <% } %>
+        </tbody>
+        </table>
+    </div>
+
+    <script src="/assets/js/bootstrap.js"></script>
+</body>
+</html>
 
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>

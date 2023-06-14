@@ -1,38 +1,41 @@
-<table>
-    <tr>
-        <form action="/" method="GET">
-            <button type="submit">Home</button>
-        </form>
-    </tr>
-</table>
+<!doctype html>
+<html lang="en">
+<head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Draw Better Cards</title>
 
-<h1><%= user.username %>'s decks</h1>
-<table>
-    <tr>
-        <th>Score</th>
-        <th>Alpha</th>
-        <th>Name</th>
-        <th></th>
-    </tr>
+    <link rel="stylesheet" href ="/assets/css/bootstrap.min.css">
+</head>
+<body>
+    <%- include('partials/navbar.ejs') %>
 
-    <tbody id="data"></tbody>
-</table>
+    <div class="bg-dark text-white">
+        <h1><%= user.username %>'s decks</h1>
+        <table class="table table-striped" data-bs-theme="dark">
+            <tr>
+                <th>Score</th>
+                <th>Alpha</th>
+                <th>Name</th>
+                <th></th>
+                <th></th>
+            </tr>
+
+            <tbody id="data"></tbody>
+        </table>
 
 
-<input id="load-more" type="submit" value="Load More">
+        <input class="btn btn-warning" id="load-more" type="submit" value="Load More">
+    </div>
+
+    <script src="/assets/js/bootstrap.js"></script>
+</body>
+</html>
+
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script type="text/javascript">
     var clicks = 0;
-    /*
-    $(window).scroll(function () {
-        var scrollHeight = $(document).height();
-        var scrollPos = $(window).height() + $(window).scrollTop();
-        if ((scrollHeight - scrollPos) / scrollHeight == 0) {
-            $("#load-more").trigger("click");
-        }
-    });
-    */
 
     $(document).ready(function() {
         loadMore(clicks)

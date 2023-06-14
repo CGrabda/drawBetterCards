@@ -1,32 +1,57 @@
-<h1>Register</h1>
+<!doctype html>
+<html lang="en">
+<head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Draw Better Cards</title>
 
-<% if (messages.error) { %>
-    <div class="error-messages">
-        <% messages.error.forEach(function(error) { %>
-            <div class="error-message">
-                <%= error %>
+    <link rel="stylesheet" href ="/assets/css/bootstrap.min.css">
+</head>
+<body>
+    <%- include('partials/navbar.ejs') %>
+
+    
+    <div class="container mt-5" data-bs-theme="dark">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-6">
+                <div class="card px-5 py-5" id="form1">
+                    <div class="form-data" v-if="!submitted">
+                        <form action="/register" method="POST">
+                            <div class="forms-inputs mb-4"> <label for="user">Username</label> <input id="username" name="username" autocomplete="off" type="text" v-bind:class="{'form-control':true, 'is-invalid' : !validEmail(email) && emailBlured}" v-on:blur="emailBlured = true" required>
+                                <div class="invalid-feedback">
+                                    <% if (messages.error) { %>
+                                        <div class="error-messages">
+                                            <% messages.error.forEach(function(error) { %>
+                                                    <%= error %>
+                                            <% }); %>
+                                        </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                            <div class="forms-inputs mb-4"> <label for="email">Email</label> <input id="password" name="email" autocomplete="off" type="email" v-model="email"  required> </div>
+                            <div class="forms-inputs mb-4"> <label for="password">Password</label> <input id="password" name="password" autocomplete="off" type="password" v-model="password" v-bind:class="{'form-control':true, 'is-invalid' : !validPassword(password) && passwordBlured}" v-on:blur="passwordBlured = true" required> </div>
+                            
+                        
+                            <div>
+                                <%-captcha_image %>
+                                <a href='/register'>refresh captcha</a>
+                            </div>
+                        
+                            <div class="mb-3"> <label for="captcha">Captcha</label> <input type="text" name="captcha"/> </div>
+                            <div class="mb-3"> <button v-on:click.stop.prevent="submit" class="btn btn-warning w-100">Register</button> </div>
+                        </form>
+
+                        <form action="/login" method="GET">
+                            <div>
+                                <button v-on:click.stop.prevent="submit" class="btn btn-outline-light w-100">Login Page</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-        <% }); %>
-    </div>
-<% } %>
-
-<form action="/register" method="POST">
-    <div>
-        <label for="user">Username</label>
-        <input type="text" id="name" name="name" required>
+        </div>
     </div>
 
-    <div>
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required>
-    </div>
-
-    <div>
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required>
-    </div>
-
-    <button type="submit">Register</button>
-</form>
-
-<a href="/login">Login</a>
+    <script src="/assets/js/bootstrap.js"></script>
+</body>
+</html>

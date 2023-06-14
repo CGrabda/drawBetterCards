@@ -175,7 +175,7 @@ def getScore(decklist, pods):
             except:
                 # Attempt to handle special characters æ and Æ in names
                 # (which are omitted from the spreadsheet)
-                cardName = cardName.replace("Æ", "AE").replace("æ", "ae").replace("’", "'")
+                cardName = cardName.replace("Æ", "AE").replace("æ", "ae").replace("’", "'").replace("”", "\"").replace("“", "\"")
 
                 # Replace Ekwidon unicode characters with the standard letter
                 if not cardName.isascii():
@@ -501,6 +501,8 @@ def main():
             # Analyze a single deck
             else:
                 deckInfo = analyzeDeck(deckLink)
+                #with open("deck.json", "w") as file:
+                #    file.write(dumps(deckInfo))
                 print(deckInfo["deck_info"])
                 print("\nThe Z-Score of " + deckInfo["deck_info"]["name"] + " is " + str(round(deckInfo["deck_info"]["score"], 2)) + "\n")
 

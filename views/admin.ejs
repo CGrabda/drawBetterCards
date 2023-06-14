@@ -1,4 +1,21 @@
-<h1>Admin Page</h1>
-<form action=<%= "/admin/alpha" %> method="GET">
-    <button type="submit">Alpha Score Hub</button>
-</form>
+<!doctype html>
+<html lang="en">
+<head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Draw Better Cards</title>
+
+    <link rel="stylesheet" href ="/assets/css/bootstrap.min.css">
+</head>
+<body>
+    <%- include('partials/navbar.ejs') %>
+    <div class="bg-dark text-white">
+        <h1>Admin Page</h1>
+        <form action=<%= "/admin/alpha" %> method="GET">
+            <button class="btn btn-outline-light w-10" type="submit">Alpha Score Hub</button>
+        </form>
+    </div>
+
+    <script src="/assets/js/bootstrap.js"></script>
+</body>
+</html>

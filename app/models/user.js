@@ -52,7 +52,7 @@ module.exports = function(sequelize, Sequelize) {
   })
   
   User.prototype.validPassword = async function (password) {
-    return this.password === await bcrypt.hash(password, 10)
+    return bcrypt.compare(password, this.password);
   }
 
   User.prototype.importedDeck = async function () {

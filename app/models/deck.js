@@ -11,7 +11,10 @@ module.exports = function(sequelize, Sequelize) {
     deck_code: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true
+      unique: true,
+      validate: {
+        len: 36
+      }
     },
     owner_id: {
       type: DataTypes.BIGINT,

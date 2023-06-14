@@ -1,111 +1,88 @@
-<h1>Homepage</h1>
+<!doctype html>
+<html lang="en">
+<head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Draw Better Cards</title>
 
-<% if (isLoggedIn) { %>
-    <form action="/logout" method="POST">
-        <button type="submit">Log Out</button>
-    </form>
+    <link rel="stylesheet" href ="/assets/css/bootstrap.min.css">
+</head>
+<body>
+    <%- include('partials/navbar.ejs') %>
 
-
-    <form action="/import" method="POST">
-        <div>
-            <h3>Alpha Scores Remaining: <%= user.alpha_requests %></h3>
-            <h3>Imports Remaining: <%= user.imports %></h3>
-            <input type="text" id="deckLink" name="deckLink" placeholder="Deck Link" required>
-            <button type="submit">Import Deck</button>
-            <h4>Hide on import: <input type="checkbox" id="hidden" name="hidden" value="1"></h4>
-        </div>
-    </form>
-    <% if (user.is_admin === true) { %>
-        <form action="/admin/landing" method="GET">
-            <button type="submit">Admin Page</button>
-        </form>
-    <% } %>
-<% } else {%>
-    <form action="/login" method="GET">
-        <button type="submit">Login</button>
-    </form>
-<% } %>
-
-<table>
-    <tr>
-        <td><form action="/search" method="GET">
-            <button type="submit">All Decks</button>
-        </form></td>
+    <div class="bg-dark text-white">
         <% if (isLoggedIn) { %>
-        <td><form action="/mydecks" method="GET">
-            <button type="submit">My Decks</button>
-        </form></td>
+            <form action="/import" method="POST">
+                <div>
+                    <h3 class="text-warning">Alpha Scores Remaining: <%= user.alpha_requests %></h3>
+                    <h3 class="text-warning">Imports Remaining: <%= user.imports %></h3>
+                    <input type="text" id="deckLink" name="deckLink" placeholder="Deck Link" required>
+                    <button class="btn btn-outline-light" type="submit">Import Deck</button>
+                    <h4 class="text-light">Hide on import: <input class="form-check-input" type="checkbox" id="hidden" name="hidden" value="1"></h4>
+                </div>
+            </form>
         <% } %>
-    </tr>
-</table>
-
-<% if (messages.error) { %>
-    <div class="error-messages">
-        <%= messages.error %>
+            
+        <% if (messages.error) { %>
+        <div class="text-danger">
+                <%= messages.error %>
+            </div>
+        <% } %>
+            
+            
+        <h2>Top Decks This Month</h2>
+        <table class="table table-striped" data-bs-theme="dark">
+            <thead>
+                <th>Score</th>
+                <th>Alpha</th>
+                <th>Name</th>
+                <th></th>
+                <th></th>
+            </thead>
+            <% for (var i = 0; i < queryTop.length; i++) { %>
+                <tr>
+                    <td><%= queryTop[i].dataValues.score %></td>
+                    <td><% if (queryTop[i].dataValues.alpha_score ==='P' || queryTop[i].dataValues.alpha_score == null) { %>
+                        -
+                    <% } else { %>
+                        <%= queryTop[i].dataValues.alpha_score %>
+                    <% } %></td>
+                    <td><a href=<%= "/deck/" + queryTop[i].dataValues.deck_code %>><%= queryTop[i].dataValues.deck_name %></a></td>
+                    <td><img src=<%= "rsrc/set_" + queryTop[i].dataValues.set_id + ".png" %> width="32px" height="32px" /></td>
+                    <td><img src=<%= "rsrc/house_" + queryTop[i].dataValues.house1 + ".png" %> width="48px" height="48px" />
+                        <img src=<%= "rsrc/house_" + queryTop[i].dataValues.house2 + ".png" %> width="48px" height="48px" />
+                        <img src=<%= "rsrc/house_" + queryTop[i].dataValues.house3 + ".png" %> width="48px" height="48px" /></td>
+                </tr>
+            <% } %>
+        </table>
+        <h2>Most Recent</h2>
+        <table class="table table-striped" data-bs-theme="dark">
+            <thead>
+                <th>Score</th>
+                <th>Alpha</th>
+                <th>Name</th>
+                <th></th>
+                <th></th>
+            </thead>
+            <% for (var i = 0; i < queryRecent.length; i++) { %>
+                <tr>
+                    <td><%= queryRecent[i].dataValues.score %></td>
+                    <td><% if (queryRecent[i].dataValues.alpha_score ==='P' || queryRecent[i].dataValues.alpha_score == null) { %>
+                        -
+                    <% } else { %>
+                        <%= queryRecent[i].dataValues.alpha_score %>
+                    <% } %></td>
+                    <td><a href=<%= "/deck/" + queryRecent[i].dataValues.deck_code %>><%= queryRecent[i].dataValues.deck_name %></a></td>
+                    <td><img src=<%= "rsrc/set_" + queryRecent[i].dataValues.set_id + ".png" %> width="32px" height="32px" /></td>
+                    <td><img src=<%= "rsrc/house_" + queryRecent[i].dataValues.house1 + ".png" %> width="48px" height="48px" />
+                        <img src=<%= "rsrc/house_" + queryRecent[i].dataValues.house2 + ".png" %> width="48px" height="48px" />
+                        <img src=<%= "rsrc/house_" + queryRecent[i].dataValues.house3 + ".png" %> width="48px" height="48px" /></td>
+                </tr>
+            <% } %>
+        </table>
     </div>
-<% } %>
-  
-<h1></h1>
-<h2>Top Decks This Month</h2>
-<table>
-    <thead>
-        <th>Score</th>
-        <th>Alpha</th>
-        <th>Name</th>
-        <th></th>
-        <th></th>
-    </thead>
-    <% for (var i = 0; i < queryTop.length; i++) { %>
-        <tr>
-            <td><%= queryTop[i].dataValues.score %></td>
-            <td><% if (queryTop[i].dataValues.alpha_score ==='P' || queryTop[i].dataValues.alpha_score == null) { %>
-                -
-            <% } else { %>
-                <%= queryTop[i].dataValues.alpha_score %>
-            <% } %></td>
-            <td><a href=<%= "/deck/" + queryTop[i].dataValues.deck_code %>><%= queryTop[i].dataValues.deck_name %></a></td>
-            <td><img src=<%= "/set_" + queryTop[i].dataValues.set_id + ".png" %> width="32px" height="32px" /></td>
-            <td><img src=<%= "/house_" + queryTop[i].dataValues.house1 + ".png" %> width="48px" height="48px" />
-                <img src=<%= "/house_" + queryTop[i].dataValues.house2 + ".png" %> width="48px" height="48px" />
-                <img src=<%= "/house_" + queryTop[i].dataValues.house3 + ".png" %> width="48px" height="48px" /></td>
-        </tr>
-    <% } %>
-</table>
-<h2>Most Recent</h2>
-<table>
-    <thead>
-        <th>Score</th>
-        <th>Alpha</th>
-        <th>Name</th>
-        <th></th>
-        <th></th>
-    </thead>
-    <% for (var i = 0; i < queryRecent.length; i++) { %>
-        <tr>
-            <td><%= queryRecent[i].dataValues.score %></td>
-            <td><% if (queryRecent[i].dataValues.alpha_score ==='P' || queryRecent[i].dataValues.alpha_score == null) { %>
-                -
-            <% } else { %>
-                <%= queryRecent[i].dataValues.alpha_score %>
-            <% } %></td>
-            <td><a href=<%= "/deck/" + queryRecent[i].dataValues.deck_code %>><%= queryRecent[i].dataValues.deck_name %></a></td>
-            <td><img src=<%= "/set_" + queryRecent[i].dataValues.set_id + ".png" %> width="32px" height="32px" /></td>
-            <td><img src=<%= "/house_" + queryRecent[i].dataValues.house1 + ".png" %> width="48px" height="48px" />
-                <img src=<%= "/house_" + queryRecent[i].dataValues.house2 + ".png" %> width="48px" height="48px" />
-                <img src=<%= "/house_" + queryRecent[i].dataValues.house3 + ".png" %> width="48px" height="48px" /></td>
-        </tr>
-    <% } %>
-</table>
 
-<script>
-    $('#commentForm').submit(function(){ //listen for submit event
-    $.each(params, function(i, param) {
-        $('<input />').attr('type', 'hidden')
-            .attr('name', param.name)
-            .attr('value', param.value)
-            .appendTo('#commentForm');
-    });
+    <script src="/assets/js/bootstrap.js"></script>
+</body>
+</html>
 
-        return true;
-    }); 
-</script>

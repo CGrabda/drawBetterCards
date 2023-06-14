@@ -1,21 +1,26 @@
+"use strict";
 require('dotenv').config()
 const express = require('express')
 const app = express()
 
-if (process.env.NODE_ENV !== 'production') {
-    app.set('trust proxy', 1) 
-}
 
 // node package requirements
 const bcrypt = require('bcrypt')
-const passport = require('passport')
-const flash = require('express-flash')
 const session = require('express-session')
+const flash = require('express-flash')
+const passport = require('passport')
+const fs = require('fs')
+const helmet = require('helmet')
+const hpp = require('hpp')
+const https = require('https')
 const moment = require('moment')
+const svgCaptcha = require('svg-captcha-fixed');
+const toobusy = require('toobusy-js');
+const path = require('path');
 
 // db models
 const sequelize = require('./app/db.js')
-const { DataTypes, Op, json, or } = require("sequelize")
+const { DataTypes, Op } = require("sequelize")
 const User = require('./app/models/user.js')(sequelize, DataTypes)
 const Decks = require('./app/models/deck.js')(sequelize, DataTypes)
 const Houses = require('./app/models/house.js')(sequelize, DataTypes)
@@ -23,28 +28,52 @@ const Pods = require('./app/models/pod.js')(sequelize, DataTypes)
 const Cards = require('./app/models/card.js')(sequelize, DataTypes)
 const Sets = require('./app/models/set.js')(sequelize, DataTypes)
 const {PythonShell} = require('python-shell')
-const deckFunctions = require('./app/deckFunctions.js')
+const deckFunctions = require('./app/deckFunctions.js');
 
 require('./app/passport.js')
 
 
 // Express Middleware
 app.set('view-engine', 'ejs')
-app.use(express.urlencoded({extended: false}))
+app.use(express.urlencoded({ extended: false, limit: "1kb" }))
+app.use(express.json({ limit: "1kb" }))
 app.use(flash())
 app.use(session({
     cookie: {
         maxAge: 604800000,
-        sameSite: true
+        sameSite: true,
+        httpOnly: true,
+        
     },
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false
 }))
+
 app.use(express.static('public'));
+app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')))
+app.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')))
+app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')))
 app.use(passport.initialize())
 app.use(passport.session())
-app.disable('x-powered-by')
+//app.disable('x-powered-by') handled by helmet, changed
+
+
+// Security Middleware
+app.use(helmet.frameguard());
+app.use(helmet.xssFilter());
+app.use(helmet.noSniff());
+app.use(helmet.ieNoOpen());
+app.use(helmet.hidePoweredBy({ setTo: 'PHP 35.2.1' }));
+app.use(hpp());
+app.use(function(req, res, next) {
+    if (toobusy()) {
+        // log if you see necessary
+        res.status(503).send("Server Too Busy");
+    } else {
+    next();
+    }
+});
 
 
 
@@ -87,7 +116,7 @@ app.get('/', (req, res) => {
         Decks.findAll({
             where: { hidden: false },
             limit: 5,
-            order: [['score', 'DESC' ]],
+            order: [['score', 'DESC' ], ['createdAt', 'DESC']],
         }), 
         Decks.findAll({
             where: {
@@ -108,7 +137,7 @@ app.get('/', (req, res) => {
 
 // login page
 app.get('/login', isNOTAuthenticated, (req, res) => {
-    res.render('login.ejs')
+    res.render('login.ejs', { isLoggedIn: req.isAuthenticated() })
 })
 
 // Post login
@@ -124,22 +153,33 @@ app.post('/login', isNOTAuthenticated, passport.authenticate('local', {
 
 
 // Register page
-app.get('/register', isNOTAuthenticated, (req, res, next) => {
-    res.render('register.ejs')
+app.get('/register', isNOTAuthenticated, (req, res) => {
+    var captcha = svgCaptcha.create({
+        size: 6,
+        ignoreChars: '0o1iIlJ', // filter out some characters like 0o1i
+        noise: 4, // number of noise lines
+        color: true
+    });
+    req.session.captcha = captcha.text;
+    
+    res.render('register.ejs', { captcha_image: captcha.data, isLoggedIn: req.isAuthenticated() })
 })
 
 // Post register
-app.post('/register', isNOTAuthenticated, validateInput, async (req, res) => {
+app.post('/register', isNOTAuthenticated, passedCaptcha, validateInput, async (req, res) => {
     try {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10)
+        const hashedPassword = await bcrypt.hash(req.body.password, 13)
         User.create({
-            username: req.body.name,
+            username: req.body.username,
             email: req.body.email,
             password: hashedPassword
         })
-        .then(results=> {
-            console.log(`Created User ${req.body.name}`)
+        .then(function() {
+            console.log(`Created User ${req.body.username}`)
             res.redirect('/login')
+        }).catch(function () {
+            req.flash('error', 'User or Email already taken')
+            res.redirect('/register')
         })
     }
     catch (e) {
@@ -159,6 +199,7 @@ app.post('/logout', isAuthenticated, (req, res, next) => {
 
 
 // Import post
+// eslint-disable-next-line no-unused-vars
 app.post('/import', isAuthenticated, doesDeckExist, (req, res, next) => {
     var options = {
         mode: 'text',
@@ -215,18 +256,19 @@ app.post('/import', isAuthenticated, doesDeckExist, (req, res, next) => {
 // Mydecks page
 app.get('/mydecks', isAuthenticated, (req, res) => {
     // Visit mydecks page, deck rendering is handled by /load/mydecks
-    res.render('mydecks.ejs', { user: req.user })
+    res.render('mydecks.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user })
 })
 
 
 // Search/All Decks page
 app.get('/search', (req, res) => {
     // Visit search page, deck rendering is handled by /load/search
-    res.render('search.ejs', { isLoggedIn: req.isAuthenticated() })
+    res.render('search.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user })
 })
 
 
 // Load post, for search pagination
+// eslint-disable-next-line no-unused-vars
 app.post('/load/:search', (req, res, next) => {
     // if loading mydecks page
     if (req.params.search == "mydecks") {
@@ -235,20 +277,19 @@ app.post('/load/:search', (req, res, next) => {
             limit: 15,
             offset: 15 * req.body.page,
             where: { owner_id: req.user.id },
-            order: [['score', 'DESC' ]]
+            order: [['score', 'DESC'], ['createdAt', 'DESC']]
         })
         .then(results=> {
             return res.json({ html: queryToHTML(results) })
         })
     }
     else if (req.params.search == "search") {
-        // Request originating from search page
         return Decks.findAll({
-            // Request originating from mydecks page
+            // Request originating from search page
             limit: 15,
             offset: 15 * req.body.page,
             where: { hidden: false },
-            order: [['score', 'DESC' ]]
+            order: [['score', 'DESC'], ['createdAt', 'DESC']]
         })
         .then(results=> {
             return res.json({ html: queryToHTML(results) })
@@ -297,11 +338,12 @@ app.get("/deck/:deck_code", isValidCode, function(req, res) {
             // If deck is not hidden, display
             return res.render('deck.ejs', { query: results, isLoggedIn: req.isAuthenticated(), user: req.user })
         }
-    }).catch(e=> { req.flash('error', 'Error viewing deck, contact a team member'); res.redirect('/'); })
+    }).catch(e=> { req.flash('error', 'Error viewing deck, contact a team member'); console.log(e); res.redirect('/'); })
 })
 
 
 // Post deckaction, hide/unhide toggle or alpha scoring
+// eslint-disable-next-line no-unused-vars
 app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res, next) => {
     // Hide a deck
     var path = req.params.deck_code
@@ -330,7 +372,7 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
             }
             catch (e) {
                 console.log(e)
-                req.flash('error', 'Nice try ;)')
+                req.flash('error', 'Nice try, bucko ;)')
                 return res.redirect('/')
             }
         })
@@ -348,7 +390,7 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
                         deckFunctions.updateAlpha(path, "P")
                         // Decrement alpha_requests by 1
                         .then(results=> { req.user.requestedAlpha(); return results })
-                        .then(results=> { return res.redirect('/deck/' + query.deck_code) })
+                        .then(function() { return res.redirect('/deck/' + query.deck_code) })
                     }
                     else {
                         throw new Error('Deck owner is not the requesting user')
@@ -358,7 +400,7 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
                     // validate that the alpha score is a valid alpha score
                     if (ALPHA_SCORES.includes(req.body.alpha_score)) {
                         deckFunctions.updateAlpha(path, req.body.alpha_score)
-                        .then(results=> { return res.status(200).send({ message: "Ok" }) })
+                        .then(function() { return res.status(200).send({ message: "Ok" }) })
                     }
                     else {
                         throw new Error('Invalid Alpha Score')
@@ -370,34 +412,46 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
             }
             catch (e) {
                 console.log(e)
-                req.flash('error', 'Nice try ;)')
+                req.flash('error', 'Nice try, bucko ;)')
                 return res.redirect('/')
             }
         })
     }
 })
 
-
+// admin pages
 app.get("/admin/:path", isAuthenticated, isAdmin, function(req, res) {
     var path = req.params.path
 
     // render the paths
     if (path == 'landing') {
-        res.render('admin.ejs')
+        res.render('admin.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user })
     }
     else if (path == 'alpha') {
         Decks.findAll({
             where: { alpha_score: "P" },
             order: [['updatedAt', 'ASC' ]],
         })
-        .then(results=> { res.render('alpha.ejs', { query: results }) })
+        .then(results=> { res.render('alpha.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user, query: results }) })
     }
 })
 
 // 404 page
-app.use(function(req, res){
-    res.status(404).render('404.ejs');
+app.use(function(req, res, next) {
+    var err = new Error('Not Found')
+    console.log(req.url)
+    res.status(404).render('404.ejs', { user: req.user, isLoggedIn: req.isAuthenticated() });
+    next(err)
 })
+
+// 500 Server Error
+app.use(function(err, req, res) {
+    res.status(err.status || 500);
+    res.render('error', {
+        message: err.message,
+        error: err
+    });
+});
 
 
 
@@ -407,8 +461,8 @@ app.use(function(req, res){
 
 
 // Middleware
-const code_re = /^\w{8}\-(\w{4}\-){3}\w{12}$/;
-const link_re = /\w{8}\-(\w{4}\-){3}\w{12}/
+const code_re = /^\w{8}-(\w{4}-){3}\w{12}$/;
+const link_re = /\w{8}-(\w{4}-){3}\w{12}/;
 
 function isAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
@@ -427,9 +481,9 @@ function isNOTAuthenticated(req, res, next) {
 }
 
 function validateInput(req, res, next) {
-    error_messages =  []
+    var error_messages =  []
 
-    if (req.body.name.length < 4) {
+    if (req.body.username.length < 4) {
         error_messages.push('Usersname should be at least 4 characters long')
     }
     if (req.body.password.length < 10) {
@@ -489,6 +543,15 @@ function isAdmin (req, res, next) {
     res.status(404).redirect('404.ejs')
 }
 
+function passedCaptcha(req, res, next) {
+    if (req.session.captcha === req.body.captcha) {
+        return next()
+    }
+
+    req.flash('error', 'Invalid captcha')
+    res.redirect('/register')
+}
+
 function queryToHTML(query) {
     var output = ''
     var alpha = ''
@@ -503,10 +566,10 @@ function queryToHTML(query) {
         output += '<td>' + query[i]["dataValues"]["score"] + '</td>'
         output += '<td>' + alpha + '</td>'
         output += '<td><a href= "/deck/' + query[i]["dataValues"]["deck_code"] + '">' + query[i]["dataValues"]["deck_name"] + '</a></td>'
-        output += '<th><img src= "/set_' + query[i]["dataValues"]["set_id"] + '.png" width="32px" height="32px" /></th>'
-        output += '<td><img src= "/house_' + query[i]["dataValues"]["house1"] + '.png" width="48px" height="48px" />'
-        output += '<img src= "/house_' + query[i]["dataValues"]["house2"] + '.png" width="48px" height="48px" />'
-        output += '<img src= "/house_' + query[i]["dataValues"]["house3"] + '.png" width="48px" height="48px" /></td>'
+        output += '<th><img src= "rsrc/set_' + query[i]["dataValues"]["set_id"] + '.png" width="32px" height="32px" /></th>'
+        output += '<td><img src= "rsrc/house_' + query[i]["dataValues"]["house1"] + '.png" width="48px" height="48px" />'
+        output += '<img src= "rsrc/house_' + query[i]["dataValues"]["house2"] + '.png" width="48px" height="48px" />'
+        output += '<img src= "rsrc/house_' + query[i]["dataValues"]["house3"] + '.png" width="48px" height="48px" /></td>'
         output += '</tr>'
     }
 
@@ -516,14 +579,49 @@ function queryToHTML(query) {
 
 
 
+// development server, not https encrypted
+if (process.env.NODE_ENV !== 'production') {
+    app.set('trust proxy', 1)
+    
+    app.listen(process.env.PORT, async () => {
+        console.log(`App listening at localhost:${process.env.PORT}`)
+        try {
+            await sequelize.sync()
+            console.log('Connected to database')
+        }
+        catch (e) {
+            console.error(`Error: Cannot connect to database ${e}`)
+        }
+    })
+}
 
-app.listen(process.env.PORT, async () => {
-    console.log(`App listening at localhost:${process.env.PORT}`)
-    try {
-        await sequelize.sync()
-        console.log('Connected to database')
-    }
-    catch (e) {
-        console.error(`Error: Cannot connect to database ${e}`)
-    }
-})
+// prod server, https encrypted
+else if (process.env.NODE_ENV == "production") {
+    // require HTTPS connections
+    app.use(helmet.hsts()); 
+
+    // setup pki certs
+    const options = {
+        key: fs.readFileSync("certs/server.key"),
+        cert: fs.readFileSync("certs/certificate.crt"),
+        ca: fs.readFileSync('certs/intermediate.crt')
+    };
+        
+    const server = https.createServer(options, app)
+        .listen(process.env.PORT, async () => {
+        console.log(`App listening at localhost:${process.env.PORT}`)
+        try {
+            await sequelize.sync()
+            console.log('Connected to database')
+        }
+        catch (e) {
+            console.error(`Error: Cannot connect to database ${e}`)
+        }
+    });
+
+    server.setTimeout(6000, (socket) => {
+        socket.destroy();
+      });
+}
+
+
