@@ -65,7 +65,7 @@ async function addDeck(deck_info, pod_info, user_id, hidden) {
                     pod_artifacts: pod["artifacts"],
                     pod_actions: pod["actions"],
                     pod_upgrades: pod["upgades"]
-                })
+                }, {transaction: t})
             }
 
             // add the adjustment house (no cards)
