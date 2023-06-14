@@ -609,15 +609,21 @@ else if (process.env.NODE_ENV == "production") {
         
     const server = https.createServer(options, app)
         .listen(process.env.PORT, async () => {
-        console.log(`App listening at localhost:${process.env.PORT}`)
-        try {
-            await sequelize.sync()
-            console.log('Connected to database')
+            // Find out which user used sudo through the environment variable
+            var uid = parseInt(process.env.SUDO_UID);
+            // Set our server's uid to that user
+            if (uid) process.setuid(uid);
+
+            console.log(`App listening at localhost:${process.env.PORT}`)
+            try {
+                await sequelize.sync()
+                console.log('Connected to database')
+            }
+            catch (e) {
+                console.error(`Error: Cannot connect to database ${e}`)
+            }
         }
-        catch (e) {
-            console.error(`Error: Cannot connect to database ${e}`)
-        }
-    });
+    );
 
     server.setTimeout(6000, (socket) => {
         socket.destroy();
