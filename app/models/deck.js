@@ -58,6 +58,10 @@ module.exports = function(sequelize, Sequelize) {
       type: DataTypes.JSONB,
       defaultValue: null
     },
+    token: {
+      type: DataTypes.SMALLINT,
+      defaultValue: null,
+    },
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW

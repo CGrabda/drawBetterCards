@@ -9,13 +9,20 @@ async function addDeck(deck_info, pod_info, user_id, hidden) {
     var houses = [];
     var i = ""
     
+    // Retrieve houses within deck
     for (i in houseStrings) {
         if (houseStrings[i] != "1") {
             houses.push(Number(houseStrings[i]));
         }
     }
 
-    // check if deck should be hidden
+    // Handle attributes passed from import
+    var attributes = null
+    console.log(deck_info["attributes"])
+    if (Object.keys(deck_info["attributes"]) > 0) {
+        attributes = deck_info["attributes"]
+    }
+
 
     return sequelize.transaction(function (t) {
         return Deck.create({
@@ -24,10 +31,12 @@ async function addDeck(deck_info, pod_info, user_id, hidden) {
             deck_name: deck_info["name"],
             hidden: hidden,
             score: deck_info["score"],
+            attributes: attributes,
             house1: houses[0],
             house2: houses[1],
             house3: houses[2],
-            set_id: deck_info["set"]
+            set_id: deck_info["set"],
+            token: deck_info["token"]
         }, {transaction: t}).then(async function (deck) {
             for (i in houses) {
                 var house = houses[i]

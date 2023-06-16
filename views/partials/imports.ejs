@@ -1,0 +1,11 @@
+<% if (isLoggedIn) { %>
+    <form action="/import" method="POST">
+        <div>
+            <h3 class="text-warning">Alpha Scores Remaining: <%= user.alpha_requests %></h3>
+            <h3 class="text-warning">Imports Remaining: <%= user.imports %></h3>
+            <input type="text" id="deckLink" name="deckLink" placeholder="Deck Link" required>
+            <button class="btn btn-outline-light" type="submit">Import Deck</button>
+            <h4 class="text-light">Hide on import: <input class="form-check-input" type="checkbox" id="hidden" name="hidden" value="1"></h4>
+        </div>
+    </form>
+<% } %>

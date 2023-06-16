@@ -28,6 +28,7 @@ const Houses = require('./app/models/house.js')(sequelize, DataTypes)
 const Pods = require('./app/models/pod.js')(sequelize, DataTypes)
 const Cards = require('./app/models/card.js')(sequelize, DataTypes)
 const Sets = require('./app/models/set.js')(sequelize, DataTypes)
+const Tokens = require('./app/models/token.js')(sequelize, DataTypes)
 const {PythonShell} = require('python-shell')
 const deckFunctions = require('./app/deckFunctions.js');
 
@@ -105,6 +106,9 @@ Decks.hasMany(Pods, { foreignKey: "deck_id", targetKey: "deck_id" })
 // Associate sets between Deck and Set
 Decks.belongsTo(Sets, { foreignKey: "set_id" } )
 
+// Associate decks to tokens and tokens to cards
+Decks.belongsTo(Tokens, { foreignKey: "token", targetKey: "token_id" })
+Tokens.belongsTo(Cards, { foreignKey: "card_id" })
 
 // Misc variables declared for functions
 const ALPHA_SCORES = ['F', 'D', 'C-', 'C', 'C+', 'B-', 'B', 'B+', 'A-', 'A', 'A+']

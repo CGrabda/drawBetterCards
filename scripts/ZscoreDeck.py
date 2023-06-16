@@ -26,31 +26,62 @@ requestHeaders = {
 }
 
 IDENTIFY_HOUSE = {
-        "score_adjustment": "1",
-        "Brobnar": "2",
-        "Dis": "3",
-        "Logos": "4",
-        "Mars": "5",
-        "Sanctum": "6",
-        "Shadows": "7",
-        "Untamed": "8",
-        "Saurian": "9",
-        "Star Alliance": "10",
-        "Unfathomable": "11",
-        "Ekwidon": "12",
-        "Geistoid": "13"
+    "score_adjustment": "1",
+    "Brobnar": "2",
+    "Dis": "3",
+    "Logos": "4",
+    "Mars": "5",
+    "Sanctum": "6",
+    "Shadows": "7",
+    "Untamed": "8",
+    "Saurian": "9",
+    "Star Alliance": "10",
+    "Unfathomable": "11",
+    "Ekwidon": "12",
+    "Geistoid": "13"
 }
 
 IDENTIFY_SET = {
-        "341": ("COTA", 1),
-        "435": ("AOA", 2),
-        "452": ("WC", 3),
-        "453": ("Anomaly", 1000),
-        "479": ("MM", 4),
-        "496": ("DT", 5),
-        "600": ("WOE", 6),
-        "601": ("U23", 1001),
-    }
+    "341": ("COTA", 1),
+    "435": ("AOA", 2),
+    "452": ("WC", 3),
+    "453": ("Anomaly", 453),
+    "479": ("MM", 4),
+    "496": ("DT", 5),
+    "600": ("WOE", 6),
+    "601": ("U23", 1001),
+}
+
+TOKENS = {
+    "Berserker": 1,
+    "Warrior": 2,
+    "Skirmisher": 3,
+    "Grumpus": 4,
+    "Strange Shell": 5,
+    "Diplomat": 6,
+    "Trader": 7,
+    "Prospector": 8,
+    "Blorb": 9,
+    "Grunt": 10,
+    "Rebel": 11,
+    "Researcher": 12,
+    "Disciple": 13,
+    "Cleric": 14,
+    "Defender": 15,
+    "Squire": 16,
+    "Bellatorn Warrior": 17,
+    "Scholar": 18,
+    "Senator": 19,
+    "Trooper": 20,
+    "Aemberling": 21,
+    "Cadet": 22,
+    "Explorer": 23,
+    "B0-T": 24,
+    "Cultist": 25,
+    "Fish": 26,
+    "Priest": 27,
+    "Raider": 28
+}
 
 def validateLink(deckLink):
     '''
@@ -143,7 +174,7 @@ def parseDecklist(cardIdList, response):
     return (decklist, enhancements)
 
 
-def getScore(decklist, pods):
+def getScore(decklist, pods, deckInfo):
     '''
     Takes the set of each card and finds the score of that card within its set
     Sums all of the scores and returns that value
@@ -202,12 +233,6 @@ def getScore(decklist, pods):
                     cardName = "It's Coming"
                     cardDetails = scoreDict["MM"][cardName]
                     exceptionHandled = True
-                
-                # Deusillus
-                elif firstWord == "deusillus":
-                    cardName = "Deus Big Set"
-                    cardDetails = scoreDict["MM"][cardName]
-                    exceptionHandled = True
 
                 # MM Velum/Hyde (WC is covered in document)
                 elif firstWord == "hyde" or firstWord == "velum":
@@ -229,6 +254,40 @@ def getScore(decklist, pods):
                     cardSet = "COTA"
                     exceptionHandled = True
 
+                # Hings/Gross from non-DT sets
+                elif firstWord == "com.":
+                    if tokens[2] == "hings":
+                        cardName = "Com. Officer Hings"
+                    elif tokens[2] == "gross":
+                        cardName = "Com. Officer Gross"
+                    
+                    cardDetails = scoreDict["DT"][cardName]
+                    cardSet = "DT"
+                    exceptionHandled = True
+
+                # Gigantic creatures
+                # Ultra Gravitron
+                elif firstWord == "ultra":
+                    cardName = "Ultra Big Set"
+                    cardDetails = scoreDict["MM"][cardName]
+                    cardSet = "MM"
+                    exceptionHandled = True
+
+                # Niffle Kong
+                elif firstWord == "Niffle":
+                    cardName = "Kong Big Set"
+                    cardDetails = scoreDict["MM"][cardName]
+                    cardSet = "MM"
+                    exceptionHandled = True
+
+                # Deusillus
+                elif firstWord == "deusillus":
+                    cardName = "Deus Big Set"
+                    cardDetails = scoreDict["MM"][cardName]
+                    cardSet = "MM"
+                    exceptionHandled = True
+
+
                 # World's Collide variants
                 # Brobnar brews
                 elif len(tokens) > 1:
@@ -249,6 +308,26 @@ def getScore(decklist, pods):
                 print("\nError adding the card " + card[0]["card_title"] + " to the score")
                 print("Exiting...")
                 exit()
+
+
+        # Handle anomaly cards
+        except ValueError as e:
+            if (card[0]["card_number"][0]) == "A":
+                cardID = int(str(setNum) + str(card[0]["card_number"][1:]))
+                if (cardName[0] == "E" or cardName[0] == "C" or cardName[:2] == "Ne"):
+                    cardSet="WOE"
+                else:
+                    cardSet = "WC"
+                cardDetails = scoreDict[cardSet][cardName]
+                exceptionHandled = True
+            
+
+            if not exceptionHandled:
+                print("DeckImportError")
+                print(e)
+                print("\nError adding the anomaly " + card[0]["card_title"] + " to the score")
+                print("Exiting...")
+                exit()
         
 
         # Adds the raw score and value of multiples for all the cards and attributes
@@ -256,57 +335,12 @@ def getScore(decklist, pods):
         # 1 card is always a multiple adjustment of 0
         
         for i in range(card[1]):
-            # Add the card score
-            tempScore = float(cardDetails["score"]) \
-                + float(scoreDict[cardSet][cardName]["multiples"][i if i<5 else 4])
-            cardScore += tempScore
-
-            # Add each of the pod scores
-            cardHouse = IDENTIFY_HOUSE[card[0]["house"]]
-            pods[cardHouse]["score"] += tempScore
-            pods[cardHouse]["e"] += float(cardDetails["e"])
-            pods[cardHouse]["a"] += float(cardDetails["a"])
-            pods[cardHouse]["c"] += float(cardDetails["c"])
-            pods[cardHouse]["bob"] += float(cardDetails["bob"])
-
-            # Handles adding values which may be null
-            try:
-                pods[cardHouse]["f"] += float(cardDetails["f"])
-            except:
-                pods[cardHouse]["f"] = float(cardDetails["f"])
-
-            try:
-                pods[cardHouse]["d"] += float(cardDetails["d"])
-            except:
-                pods[cardHouse]["d"] = float(cardDetails["d"])
-
-            try:
-                pods[cardHouse]["r"] += float(cardDetails["r"])
-            except:
-                pods[cardHouse]["r"] = float(cardDetails["r"])
-
-            try:
-                pods[cardHouse]["scalingA"] += cardDetails["scalingA"]
-            except:
-                pods[cardHouse]["scalingA"] = cardDetails["scalingA"]
-            
-            try:
-                pods[cardHouse]["wipes"] += cardDetails["wipes"]
-            except:
-                pods[cardHouse]["wipes"] = cardDetails["wipes"]
-            
-            try:
-                pods[cardHouse]["cheats"] += cardDetails["cheats"]
-            except:
-                pods[cardHouse]["cheats"] = cardDetails["cheats"]
-            
-            try:
-                pods[cardHouse]["tokens"] += cardDetails["tokens"]
-            except:
-                pods[cardHouse]["tokens"] = cardDetails["tokens"]
+            notToken = True
 
             # Add to the count of card types
+            cardHouse = IDENTIFY_HOUSE[card[0]["house"]]
             cardType = cardDetails["type"]
+
             if cardType == "Creature":
                 pods[cardHouse]["creatures"] += 1
             elif cardType == "Action":
@@ -321,9 +355,66 @@ def getScore(decklist, pods):
                     pods[cardHouse]["upgrades"] += 1
                 except:
                     pods[cardHouse]["upgrades"] = 1
+            elif cardType == "Token":
+                notToken = False
 
-            # Add the card to the house
-            pods[cardHouse]["cards"].append(cardID)
+            if notToken:
+                # Add the card score
+                tempScore = float(cardDetails["score"]) \
+                    + float(scoreDict[cardSet][cardName]["multiples"][i if i<5 else 4])
+                cardScore += tempScore
+
+                # Add each of the pod scores
+                pods[cardHouse]["score"] += tempScore
+                pods[cardHouse]["e"] += float(cardDetails["e"])
+                pods[cardHouse]["a"] += float(cardDetails["a"])
+                pods[cardHouse]["c"] += float(cardDetails["c"])
+                pods[cardHouse]["bob"] += float(cardDetails["bob"])
+
+                # Handles adding values which may be null
+                try:
+                    pods[cardHouse]["f"] += float(cardDetails["f"])
+                except:
+                    pods[cardHouse]["f"] = float(cardDetails["f"])
+
+                try:
+                    pods[cardHouse]["d"] += float(cardDetails["d"])
+                except:
+                    pods[cardHouse]["d"] = float(cardDetails["d"])
+
+                try:
+                    pods[cardHouse]["r"] += float(cardDetails["r"])
+                except:
+                    pods[cardHouse]["r"] = float(cardDetails["r"])
+
+                try:
+                    pods[cardHouse]["scalingA"] += cardDetails["scalingA"]
+                except:
+                    pods[cardHouse]["scalingA"] = cardDetails["scalingA"]
+                
+                try:
+                    pods[cardHouse]["wipes"] += cardDetails["wipes"]
+                except:
+                    pods[cardHouse]["wipes"] = cardDetails["wipes"]
+                
+                try:
+                    pods[cardHouse]["cheats"] += cardDetails["cheats"]
+                except:
+                    pods[cardHouse]["cheats"] = cardDetails["cheats"]
+                
+                try:
+                    pods[cardHouse]["tokens"] += cardDetails["tokens"]
+                except:
+                    pods[cardHouse]["tokens"] = cardDetails["tokens"]
+
+                
+
+                # Add the card to the house
+                pods[cardHouse]["cards"].append(cardID)
+            
+            else:
+                # Card is a token creature
+                deckInfo["token"] = cardName
 
 
         # debugging output
@@ -367,6 +458,34 @@ def distributeEnhancements(scoredPods, enhancements):
     
 
     return scoredPods
+
+
+def scoreTokens(deckInfo, pods):
+    tokenScoreToAdjustment = {
+        '0': -1.5,
+        '1': -1,
+        '2': -0.5,
+        '3': 0.25,
+        '4': 0.5,
+        '5': 1,
+        '6': 1.5,
+    }
+
+    if deckInfo["token"] != None:
+        tokenCreators = 0
+        for key in pods:
+            try:
+                tokenCreators += pods[key]["tokens"]
+            except TypeError:
+                pass
+
+        # Set score adjustment within attributes
+        deckInfo["attributes"]["tokens"] = tokenCreators * tokenScoreToAdjustment[str(scoreDict["WOE"][deckInfo["token"]]["score"])]
+
+        # Change deckInfo token from cardName to token ID
+        deckInfo["token"] = TOKENS[deckInfo["token"]]
+    
+    return deckInfo
 
 
 
@@ -417,9 +536,14 @@ def analyzeDeck(deckLink):
             str(IDENTIFY_HOUSE[deckResponse["_linked"]["houses"][2]["id"]]):{"score":0, "e":0, "a":0, "c":0, "f":None, "d":None, "r":None, "bob":0, "scalingA":None, "wipes":None, "cheats":None, "tokens":None, "creatures":0, "actions":0, "artifacts":None, "upgrades":None, "cards":[], "enhancements":[]}, \
             "1":{"score":0, "e":0, "a":0, "c":0, "f":None, "d":None, "r":None, "bob":0, "scalingA":None, "wipes":None, "cheats":None, "tokens":None, "creatures":0, "actions":0, "artifacts":None, "upgrades":None}}
 
+    deckInfo["token"] = None
     # Add the score of deck
-    score, scoredPods =  getScore(decklist, pods)
+    score, scoredPods =  getScore(decklist, pods, deckInfo)
     deckInfo["score"] = score
+
+    # adjust for tokens (added to attributes)
+    deckInfo["attributes"] = {}
+    deckInfo = scoreTokens(deckInfo, pods)
 
     # Add the set of the house
     deckInfo["set"] = IDENTIFY_SET[str(deckResponse["data"]["expansion"])][1]
