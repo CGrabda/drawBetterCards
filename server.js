@@ -217,7 +217,7 @@ app.post('/import', isAuthenticated, doesDeckExist, (req, res, next) => {
         try {
             var output = ""
             // Run python script
-            PythonShell.run(process.env.SCRIPT_PATH, options)
+            PythonShell.run(process.env.SCRIPT_PATH + 'ZscoreDeck.py', options)
             .then(messages=>{
                 // messages is an array of the output from execution
                 // console.log(messages[0])
@@ -232,6 +232,10 @@ app.post('/import', isAuthenticated, doesDeckExist, (req, res, next) => {
                     console.log(e)
                     return new Error('Deck add Error')
                 });
+            })
+            .then(result=> {
+                // post parsing function
+                return result
             })
             .then(output=> {
                 if (output instanceof Error) {

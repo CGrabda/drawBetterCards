@@ -215,11 +215,12 @@ def getScore(decklist, pods, deckInfo):
                 cardDetails = scoreDict[cardSet][cardName]
 
         except KeyError as e:
-            exceptionHandled = False
-
             # Handle special cards
             tokens = cardName.split(" ")
             firstWord = tokens[0].lower()
+
+            # Initialize as blank to establish the exception is handled by containing a value
+            cardName = None
 
             # If it did not have a hyphen in the name
             # The Tide
@@ -232,27 +233,23 @@ def getScore(decklist, pods, deckInfo):
                 if firstWord == "it's":
                     cardName = "It's Coming"
                     cardDetails = scoreDict["MM"][cardName]
-                    exceptionHandled = True
 
                 # MM Velum/Hyde (WC is covered in document)
                 elif firstWord == "hyde" or firstWord == "velum":
                     cardName = "Hyde/Velum"
                     cardDetails = scoreDict["MM"][cardName]
-                    exceptionHandled = True
                 
                 # TT for non-COTA sets
                 elif firstWord == "timetraveller":
                     cardName = "Timetraveller"
                     cardDetails = scoreDict["COTA"][cardName]
                     cardSet = "COTA"
-                    exceptionHandled = True
                 
                 # HFFS for non-COTA sets
                 elif firstWord == "help":
                     cardName = "Help From Future Self"
                     cardDetails = scoreDict["COTA"][cardName]
                     cardSet = "COTA"
-                    exceptionHandled = True
 
                 # Hings/Gross from non-DT sets
                 elif firstWord == "com.":
@@ -263,7 +260,35 @@ def getScore(decklist, pods, deckInfo):
                     
                     cardDetails = scoreDict["DT"][cardName]
                     cardSet = "DT"
-                    exceptionHandled = True
+                
+                # Z-Force from non-DT sets
+                elif firstWord[0] == "z":
+                    if tokens[1] == "agent":
+                        cardName = "Z-Force Agent 14"
+
+                    elif tokens[1] == "emitter":
+                        cardName = "Z-Particle Tracker"
+
+                    elif tokens[1] == "blaster":
+                        cardName = "Z-Ray Blaster"
+
+                    elif tokens[1] == "agent":
+                        cardName = "Z-Wave Emitter"
+                        
+                    cardDetails = scoreDict["MM"][cardName]
+                    cardSet = "MM"
+                
+                # Dexus from non-WC decks
+                if firstWord == "dexus":
+                    cardName = "Dexus"
+                    cardDetails = scoreDict["WC"][cardName]
+                    cardSet = "WC"
+
+                # Toad from non-WC decks
+                if firstWord == "toad":
+                    cardName = "Toad"
+                    cardDetails = scoreDict["WC"][cardName]
+                    cardSet = "WC"
 
                 # Gigantic creatures
                 # Ultra Gravitron
@@ -271,21 +296,19 @@ def getScore(decklist, pods, deckInfo):
                     cardName = "Ultra Big Set"
                     cardDetails = scoreDict["MM"][cardName]
                     cardSet = "MM"
-                    exceptionHandled = True
 
                 # Niffle Kong
                 elif firstWord == "Niffle":
                     cardName = "Kong Big Set"
                     cardDetails = scoreDict["MM"][cardName]
                     cardSet = "MM"
-                    exceptionHandled = True
 
                 # Deusillus
                 elif firstWord == "deusillus":
                     cardName = "Deus Big Set"
                     cardDetails = scoreDict["MM"][cardName]
                     cardSet = "MM"
-                    exceptionHandled = True
+
 
 
                 # World's Collide variants
@@ -294,15 +317,13 @@ def getScore(decklist, pods, deckInfo):
                     if tokens[1].lower() == "brew":
                         cardName = "Brew"
                         cardDetails = scoreDict["WC"][cardName]
-                        exceptionHandled = True
 
                     # Dis banes
                     elif tokens[1].lower() == "bane":
                         cardName = "Bane"
                         cardDetails = scoreDict["WC"][cardName]
-                        exceptionHandled = True
                     
-            if not exceptionHandled:
+            if cardName == None:
                 print("DeckImportError")
                 print(e)
                 print("\nError adding the card " + card[0]["card_title"] + " to the score")
@@ -540,10 +561,6 @@ def analyzeDeck(deckLink):
     # Add the score of deck
     score, scoredPods =  getScore(decklist, pods, deckInfo)
     deckInfo["score"] = score
-
-    # adjust for tokens (added to attributes)
-    deckInfo["attributes"] = {}
-    deckInfo = scoreTokens(deckInfo, pods)
 
     # Add the set of the house
     deckInfo["set"] = IDENTIFY_SET[str(deckResponse["data"]["expansion"])][1]

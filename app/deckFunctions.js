@@ -1,17 +1,58 @@
 const sequelize = require('./db.js');
-const { DataTypes } = require("sequelize");
+const { DataTypes } = require('sequelize');
 const Deck = require('./models/deck.js')(sequelize, DataTypes)
 const Pod = require('./models/pod.js')(sequelize, DataTypes)
+
+const TOKENS = {
+    '1': '5',
+    '2': '4',
+    '3': '3',
+    '4': '2',
+    '5': '0',
+    '6': '3',
+    '7': '2',
+    '8': '6',
+    '9': '1',
+    '10': '4',
+    '11': '1',
+    '12': '3',
+    '13': '4',
+    '14': '3',
+    '15': '4',
+    '16': '3',
+    '17': '5',
+    '18': '3',
+    '19': '2',
+    '20': '3',
+    '21': '5',
+    '22': '3',
+    '23': '2',
+    '24': '1',
+    '25': '3',
+    '26': '3',
+    '27': '2',
+    '28': '1'
+}
+
+const TOKEN_SCORE_ADJ = {
+    '0': -1.5,
+    '1': -1,
+    '2': -0.5,
+    '3': 0.25,
+    '4': 0.5,
+    '5': 1,
+    '6': 1.5,
+}
 
 async function addDeck(deck_info, pod_info, user_id, hidden) {
     // check if deck exist by hash, redirect user to page if exists
     var houseStrings = Object.keys(pod_info);
     var houses = [];
-    var i = ""
+    var i = ''
     
     // Retrieve houses within deck
     for (i in houseStrings) {
-        if (houseStrings[i] != "1") {
+        if (houseStrings[i] != '1') {
             houses.push(Number(houseStrings[i]));
         }
     }
@@ -101,14 +142,14 @@ async function addDeck(deck_info, pod_info, user_id, hidden) {
             }, {transaction: t});
         }).catch(function (err) {
             console.log(err)
-            throw new Error("Error importing Deck")
+            throw new Error('Error importing Deck')
         });
     }).then(function() {
         // transaction successful
         return deck_info["code"]
     }).catch(e=> {
         console.log(e)
-        throw new Error("Deck already imported");
+        throw new Error('Deck already imported');
     });
 }
 
@@ -128,7 +169,29 @@ async function updateAlpha(path, score) {
     )
 }
 
+async function parseAttributes(deck_code) {
+    await Deck.findOne({
+        where: { deck_code: deck_code },
+        include: { all: true , nested: true }
+    })
+    .then(query=> {
+        // token scoring adjustment attribute
+        if (query.token) {
+            var score_adjustment = TOKEN_SCORE_ADJ[TOKENS[query.token.toString()]]
+
+            // count tokens
+            // multiply score adjustment by token creation count
+            // add to attributes AFTER python function
+        }
+
+
+        // add combo parsing python
+        return query
+    })
+}
+
 
 module.exports.addDeck = addDeck
 module.exports.hideDeck = hideDeck
 module.exports.updateAlpha = updateAlpha
+module.exports.parseAttributes = parseAttributes
