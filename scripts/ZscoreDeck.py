@@ -309,7 +309,15 @@ def getScore(decklist, pods, deckInfo):
                     cardName = "Deus Big Set"
                     cardDetails = scoreDict["MM"][cardName]
                     cardSet = "MM"
-
+                    
+                # WC Mega Brobnar creatures
+                elif firstWord == "mega":
+                    cardName = ""
+                    for token in tokens[1:]:
+                        cardName += token + " "
+                    cardName = cardName[:-1]
+                    cardDetails = scoreDict["WC"][cardName]
+                    cardSet = "WC"
 
 
                 # World's Collide variants
