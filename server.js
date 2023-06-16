@@ -24,11 +24,6 @@ const sequelize = require('./app/db.js')
 const { DataTypes, Op } = require("sequelize")
 const User = require('./app/models/user.js')(sequelize, DataTypes)
 const Decks = require('./app/models/deck.js')(sequelize, DataTypes)
-const Houses = require('./app/models/house.js')(sequelize, DataTypes)
-const Pods = require('./app/models/pod.js')(sequelize, DataTypes)
-const Cards = require('./app/models/card.js')(sequelize, DataTypes)
-const Sets = require('./app/models/set.js')(sequelize, DataTypes)
-const Tokens = require('./app/models/token.js')(sequelize, DataTypes)
 const {PythonShell} = require('python-shell')
 const deckFunctions = require('./app/deckFunctions.js');
 
@@ -79,36 +74,8 @@ app.use(function(req, res, next) {
 
 
 
-// SQL relationships
-// Associate deck houses with house ids
-Decks.belongsTo(Houses, { as: "house_1", foreignKey: "house1", targetKey: "house_id" })
-Decks.belongsTo(Houses, { as: "house_2", foreignKey: "house2", targetKey: "house_id" })
-Decks.belongsTo(Houses, { as: "house_3", foreignKey: "house3", targetKey: "house_id" })
-Pods.belongsTo(Houses, { foreignKey: "house_id", targetKey: "house_id" })
 
-// Associate each card in a deck with its information
-Pods.belongsTo(Cards, { as: "card_1", foreignKey: "card1", targetKey: "card_id" })
-Pods.belongsTo(Cards, { as: "card_2", foreignKey: "card2", targetKey: "card_id" })
-Pods.belongsTo(Cards, { as: "card_3", foreignKey: "card3", targetKey: "card_id" })
-Pods.belongsTo(Cards, { as: "card_4", foreignKey: "card4", targetKey: "card_id" })
-Pods.belongsTo(Cards, { as: "card_5", foreignKey: "card5", targetKey: "card_id" })
-Pods.belongsTo(Cards, { as: "card_6", foreignKey: "card6", targetKey: "card_id" })
-Pods.belongsTo(Cards, { as: "card_7", foreignKey: "card7", targetKey: "card_id" })
-Pods.belongsTo(Cards, { as: "card_8", foreignKey: "card8", targetKey: "card_id" })
-Pods.belongsTo(Cards, { as: "card_9", foreignKey: "card9", targetKey: "card_id" })
-Pods.belongsTo(Cards, { as: "card_10", foreignKey: "card10", targetKey: "card_id" })
-Pods.belongsTo(Cards, { as: "card_11", foreignKey: "card11", targetKey: "card_id" })
-Pods.belongsTo(Cards, { as: "card_12", foreignKey: "card12", targetKey: "card_id" })
 
-// Associate deck hash between pods and decks
-Decks.hasMany(Pods, { foreignKey: "deck_id", targetKey: "deck_id" })
-
-// Associate sets between Deck and Set
-Decks.belongsTo(Sets, { foreignKey: "set_id" } )
-
-// Associate decks to tokens and tokens to cards
-Decks.belongsTo(Tokens, { foreignKey: "token", targetKey: "token_id" })
-Tokens.belongsTo(Cards, { foreignKey: "card_id" })
 
 // Misc variables declared for functions
 const ALPHA_SCORES = ['F', 'D', 'C-', 'C', 'C+', 'B-', 'B', 'B+', 'A-', 'A', 'A+']
@@ -233,9 +200,9 @@ app.post('/import', isAuthenticated, doesDeckExist, (req, res, next) => {
                     return new Error('Deck add Error')
                 });
             })
-            .then(result=> {
-                // post parsing function
-                return result
+            .then(deck_code=> {
+                deckFunctions.parseAttributes(deck_code)
+                return deck_code
             })
             .then(output=> {
                 if (output instanceof Error) {
@@ -317,10 +284,7 @@ app.get("/deck/:deck_code", isValidCode, function(req, res) {
     var path = req.params.deck_code
 
     // retrieve deck
-    Decks.findOne({
-        where: { deck_code: path },
-        include: { all: true , nested: true }
-    })
+    deckFunctions.getAllDeckInfo(path)
     .then(results=> {
         if (results == null) {
             throw new Error();
@@ -521,7 +485,13 @@ function isValidCode(req, res, next) {
 
 function doesDeckExist(req, res, next) {
     // Check that the deck is not already imported
-    var deck_code = link_re.exec(req.body.deckLink)[0]
+    try {
+        var deck_code = link_re.exec(req.body.deckLink)[0]
+    }
+    catch {
+        req.flash('error', 'Error importing deck, invalid deck code')
+        return res.redirect('/')
+    }
 
     if (code_re.test(deck_code)) {
         Decks.findOne({

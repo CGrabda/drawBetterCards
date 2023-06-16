@@ -8,6 +8,37 @@ from json import loads, dumps
 from requests import request
 from time import sleep
 
+TOKENS = {
+    "Berserker": 1,
+    "Warrior": 2,
+    "Skirmisher": 3,
+    "Grumpus": 4,
+    "Strange Shell": 5,
+    "Diplomat": 6,
+    "Trader": 7,
+    "Prospector": 8,
+    "Blorb": 9,
+    "Grunt": 10,
+    "Rebel": 11,
+    "Researcher": 12,
+    "Disciple": 13,
+    "Cleric": 14,
+    "Defender": 15,
+    "Squire": 16,
+    "Bellatorn Warrior": 17,
+    "Scholar": 18,
+    "Senator": 19,
+    "Trooper": 20,
+    "Aemberling": 21,
+    "Cadet": 22,
+    "Explorer": 23,
+    "B0-T": 24,
+    "Cultist": 25,
+    "Fish": 26,
+    "Priest": 27,
+    "Raider": 28
+}
+
 with open("./scripts/scoring/scoreDict.json") as file:
     scoreDict = loads(file.readline())
 
@@ -52,36 +83,6 @@ IDENTIFY_SET = {
     "601": ("U23", 1001),
 }
 
-TOKENS = {
-    "Berserker": 1,
-    "Warrior": 2,
-    "Skirmisher": 3,
-    "Grumpus": 4,
-    "Strange Shell": 5,
-    "Diplomat": 6,
-    "Trader": 7,
-    "Prospector": 8,
-    "Blorb": 9,
-    "Grunt": 10,
-    "Rebel": 11,
-    "Researcher": 12,
-    "Disciple": 13,
-    "Cleric": 14,
-    "Defender": 15,
-    "Squire": 16,
-    "Bellatorn Warrior": 17,
-    "Scholar": 18,
-    "Senator": 19,
-    "Trooper": 20,
-    "Aemberling": 21,
-    "Cadet": 22,
-    "Explorer": 23,
-    "B0-T": 24,
-    "Cultist": 25,
-    "Fish": 26,
-    "Priest": 27,
-    "Raider": 28
-}
 
 def validateLink(deckLink):
     '''
@@ -435,7 +436,7 @@ def getScore(decklist, pods, deckInfo):
             
             else:
                 # Card is a token creature
-                deckInfo["token"] = cardName
+                deckInfo["token"] = TOKENS[cardName]
 
 
         # debugging output
@@ -479,34 +480,6 @@ def distributeEnhancements(scoredPods, enhancements):
     
 
     return scoredPods
-
-
-def scoreTokens(deckInfo, pods):
-    tokenScoreToAdjustment = {
-        '0': -1.5,
-        '1': -1,
-        '2': -0.5,
-        '3': 0.25,
-        '4': 0.5,
-        '5': 1,
-        '6': 1.5,
-    }
-
-    if deckInfo["token"] != None:
-        tokenCreators = 0
-        for key in pods:
-            try:
-                tokenCreators += pods[key]["tokens"]
-            except TypeError:
-                pass
-
-        # Set score adjustment within attributes
-        deckInfo["attributes"]["tokens"] = tokenCreators * tokenScoreToAdjustment[str(scoreDict["WOE"][deckInfo["token"]]["score"])]
-
-        # Change deckInfo token from cardName to token ID
-        deckInfo["token"] = TOKENS[deckInfo["token"]]
-    
-    return deckInfo
 
 
 

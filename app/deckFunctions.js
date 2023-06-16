@@ -1,48 +1,45 @@
 const sequelize = require('./db.js');
 const { DataTypes } = require('sequelize');
 const Deck = require('./models/deck.js')(sequelize, DataTypes)
+const House = require('./models/house.js')(sequelize, DataTypes)
 const Pod = require('./models/pod.js')(sequelize, DataTypes)
+const Card = require('./models/card.js')(sequelize, DataTypes)
+const Set = require('./models/set.js')(sequelize, DataTypes)
+const Token = require('./models/token.js')(sequelize, DataTypes)
+const {PythonShell} = require('python-shell')
 
-const TOKENS = {
-    '1': '5',
-    '2': '4',
-    '3': '3',
-    '4': '2',
-    '5': '0',
-    '6': '3',
-    '7': '2',
-    '8': '6',
-    '9': '1',
-    '10': '4',
-    '11': '1',
-    '12': '3',
-    '13': '4',
-    '14': '3',
-    '15': '4',
-    '16': '3',
-    '17': '5',
-    '18': '3',
-    '19': '2',
-    '20': '3',
-    '21': '5',
-    '22': '3',
-    '23': '2',
-    '24': '1',
-    '25': '3',
-    '26': '3',
-    '27': '2',
-    '28': '1'
-}
 
-const TOKEN_SCORE_ADJ = {
-    '0': -1.5,
-    '1': -1,
-    '2': -0.5,
-    '3': 0.25,
-    '4': 0.5,
-    '5': 1,
-    '6': 1.5,
-}
+// SQL relationships
+// Associate deck houses with house ids
+Deck.belongsTo(House, { as: "house_1", foreignKey: "house1", targetKey: "house_id" })
+Deck.belongsTo(House, { as: "house_2", foreignKey: "house2", targetKey: "house_id" })
+Deck.belongsTo(House, { as: "house_3", foreignKey: "house3", targetKey: "house_id" })
+Pod.belongsTo(House, { foreignKey: "house_id", targetKey: "house_id" })
+
+// Associate each card in a deck with its information
+Pod.belongsTo(Card, { as: "card_1", foreignKey: "card1", targetKey: "card_id" })
+Pod.belongsTo(Card, { as: "card_2", foreignKey: "card2", targetKey: "card_id" })
+Pod.belongsTo(Card, { as: "card_3", foreignKey: "card3", targetKey: "card_id" })
+Pod.belongsTo(Card, { as: "card_4", foreignKey: "card4", targetKey: "card_id" })
+Pod.belongsTo(Card, { as: "card_5", foreignKey: "card5", targetKey: "card_id" })
+Pod.belongsTo(Card, { as: "card_6", foreignKey: "card6", targetKey: "card_id" })
+Pod.belongsTo(Card, { as: "card_7", foreignKey: "card7", targetKey: "card_id" })
+Pod.belongsTo(Card, { as: "card_8", foreignKey: "card8", targetKey: "card_id" })
+Pod.belongsTo(Card, { as: "card_9", foreignKey: "card9", targetKey: "card_id" })
+Pod.belongsTo(Card, { as: "card_10", foreignKey: "card10", targetKey: "card_id" })
+Pod.belongsTo(Card, { as: "card_11", foreignKey: "card11", targetKey: "card_id" })
+Pod.belongsTo(Card, { as: "card_12", foreignKey: "card12", targetKey: "card_id" })
+
+// Associate deck hash between pods and decks
+Deck.hasMany(Pod, { foreignKey: "deck_id", targetKey: "deck_id" })
+
+// Associate sets between Deck and Set
+Deck.belongsTo(Set, { foreignKey: "set_id" } )
+
+// Associate decks to tokens and tokens to cards
+Deck.belongsTo(Token, { foreignKey: "token", targetKey: "token_id" })
+Token.belongsTo(Card, { foreignKey: "card_id" })
+
 
 async function addDeck(deck_info, pod_info, user_id, hidden) {
     // check if deck exist by hash, redirect user to page if exists
@@ -57,14 +54,6 @@ async function addDeck(deck_info, pod_info, user_id, hidden) {
         }
     }
 
-    // Handle attributes passed from import
-    var attributes = null
-    console.log(deck_info["attributes"])
-    if (Object.keys(deck_info["attributes"]) > 0) {
-        attributes = deck_info["attributes"]
-    }
-
-
     return sequelize.transaction(function (t) {
         return Deck.create({
             deck_code: deck_info["code"],
@@ -72,7 +61,6 @@ async function addDeck(deck_info, pod_info, user_id, hidden) {
             deck_name: deck_info["name"],
             hidden: hidden,
             score: deck_info["score"],
-            attributes: attributes,
             house1: houses[0],
             house2: houses[1],
             house3: houses[2],
@@ -154,39 +142,53 @@ async function addDeck(deck_info, pod_info, user_id, hidden) {
 }
 
 
-async function hideDeck(path, bool) {
+async function hideDeck(deck_code, bool) {
     await Deck.update(
         { hidden: bool },
-        { where: { deck_code: path } }
+        { where: { deck_code: deck_code } }
     )
 }
 
 
-async function updateAlpha(path, score) {
+async function updateAlpha(deck_code, score) {
     await Deck.update(
         { alpha_score: score, updatedAt: sequelize.literal('CURRENT_TIMESTAMP') },
-        { where: { deck_code: path } }
+        { where: { deck_code: deck_code } }
     )
 }
 
-async function parseAttributes(deck_code) {
-    await Deck.findOne({
+
+async function getAllDeckInfo(deck_code) {
+    return await Deck.findOne({
         where: { deck_code: deck_code },
         include: { all: true , nested: true }
     })
-    .then(query=> {
-        // token scoring adjustment attribute
-        if (query.token) {
-            var score_adjustment = TOKEN_SCORE_ADJ[TOKENS[query.token.toString()]]
+}
 
-            // count tokens
-            // multiply score adjustment by token creation count
-            // add to attributes AFTER python function
+
+async function parseAttributes(deck_code) {
+    getAllDeckInfo(deck_code)
+    .then(query=> {
+        var options = {
+            mode: 'text',
+            pythonPath: process.env.PYTHON_PATH,
+            args: [JSON.stringify(query)]
         }
 
-
-        // add combo parsing python
-        return query
+        // Send query output as a JSON to the python attribute script
+        // This script handles custom scores and combos
+        PythonShell.run(process.env.SCRIPT_PATH + 'parseAttributes.py', options)
+        .then(messages=> {
+            var attributes = JSON.parse(messages[0])
+        
+            // Add attributes from the script response to deck
+            Deck.update(
+                { attributes: attributes, updatedAt: sequelize.literal('CURRENT_TIMESTAMP') },
+                { where: { deck_code: deck_code } }
+            )
+        }).catch(e=> {
+            console.log(e)
+        })
     })
 }
 
@@ -194,4 +196,5 @@ async function parseAttributes(deck_code) {
 module.exports.addDeck = addDeck
 module.exports.hideDeck = hideDeck
 module.exports.updateAlpha = updateAlpha
+module.exports.getAllDeckInfo = getAllDeckInfo
 module.exports.parseAttributes = parseAttributes
