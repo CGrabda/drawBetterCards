@@ -1,5 +1,5 @@
 const sequelize = require('./db.js');
-const { DataTypes } = require('sequelize');
+const { DataTypes, Op } = require('sequelize');
 const Deck = require('./models/deck.js')(sequelize, DataTypes)
 const House = require('./models/house.js')(sequelize, DataTypes)
 const Pod = require('./models/pod.js')(sequelize, DataTypes)
@@ -186,6 +186,30 @@ async function parseAttributes(deck_code) {
                 { attributes: attributes, updatedAt: sequelize.literal('CURRENT_TIMESTAMP') },
                 { where: { deck_code: deck_code } }
             )
+
+            // retrieve deck id of this deck and then update the adjustment pod
+            Deck.findOne(
+                { where: { deck_code: deck_code } }
+            )
+            .then(query=> {
+                // goes through each attribute and tallies them
+                var score_adj = 0
+                for (var key in attributes) {
+                    score_adj += attributes[key]
+                }
+
+                // round value to nearest int
+                score_adj = Math.round(score_adj)
+
+                // sets the adjustment Pod value to the score adjustment
+                return Pod.update(
+                    { pod_score: score_adj, updatedAt: sequelize.literal('CURRENT_TIMESTAMP') },
+                    { where: {[Op.and]: [
+                        { deck_id: query["deck_id"] },
+                        { house_id: 1 }
+                    ]}}
+                )
+            })
         }).catch(e=> {
             console.log(e)
         })

@@ -201,8 +201,11 @@ app.post('/import', isAuthenticated, doesDeckExist, (req, res, next) => {
                 });
             })
             .then(deck_code=> {
-                deckFunctions.parseAttributes(deck_code)
-                return deck_code
+                return deckFunctions.parseAttributes(deck_code)
+                .then(function (test) {
+                    console.log(test)
+                    return deck_code
+                })
             })
             .then(output=> {
                 if (output instanceof Error) {
@@ -479,7 +482,7 @@ function isValidCode(req, res, next) {
         return next()
     }
     else {
-        res.status(404).render('404.ejs');
+        res.status(404).render('404.ejs', { user: req.user, isLoggedIn: req.isAuthenticated() });
     }
 }
 
