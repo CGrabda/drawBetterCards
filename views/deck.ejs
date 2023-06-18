@@ -321,7 +321,7 @@
             <% if (query.dataValues.attributes) { %>
                 <h3>Meta Score Adjustments</h3>
                 <% for (var key in query.dataValues.attributes) { %>
-                    <h5><%= key %>: <%= query.dataValues.attributes[key] %></h5>
+                    <h5><%= key %> score: <%= query.dataValues.attributes[key] %></h5>
                 <% } %>
             <% } %>
         </div>

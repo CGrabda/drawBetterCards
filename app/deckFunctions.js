@@ -167,8 +167,8 @@ async function getAllDeckInfo(deck_code) {
 
 
 async function parseAttributes(deck_code) {
-    getAllDeckInfo(deck_code)
-    .then(query=> {
+    await getAllDeckInfo(deck_code)
+    .then(async query=> {
         var options = {
             mode: 'text',
             pythonPath: process.env.PYTHON_PATH,
@@ -177,21 +177,16 @@ async function parseAttributes(deck_code) {
 
         // Send query output as a JSON to the python attribute script
         // This script handles custom scores and combos
-        PythonShell.run(process.env.SCRIPT_PATH + 'parseAttributes.py', options)
-        .then(messages=> {
+        await PythonShell.run(process.env.SCRIPT_PATH + 'parseAttributes.py', options)
+        .then(async messages=> {
             var attributes = JSON.parse(messages[0])
         
             // Add attributes from the script response to deck
-            Deck.update(
+            await Deck.update(
                 { attributes: attributes, updatedAt: sequelize.literal('CURRENT_TIMESTAMP') },
-                { where: { deck_code: deck_code } }
-            )
-
-            // retrieve deck id of this deck and then update the adjustment pod
-            Deck.findOne(
-                { where: { deck_code: deck_code } }
-            )
-            .then(query=> {
+                { returning: true, where: { deck_code: deck_code } }
+            )                                                       // eslint-disable-next-line no-unused-vars
+            .then(async function([ rowsUpdate, [updatedDeck] ]) {
                 // goes through each attribute and tallies them
                 var score_adj = 0
                 for (var key in attributes) {
@@ -202,17 +197,17 @@ async function parseAttributes(deck_code) {
                 score_adj = Math.round(score_adj)
 
                 // sets the adjustment Pod value to the score adjustment
-                return Pod.update(
-                    { pod_score: score_adj, updatedAt: sequelize.literal('CURRENT_TIMESTAMP') },
+                await Pod.update(
+                    { pod_score: score_adj },
                     { where: {[Op.and]: [
-                        { deck_id: query["deck_id"] },
+                        { deck_id: updatedDeck["dataValues"]["deck_id"] },
                         { house_id: 1 }
                     ]}}
                 )
             })
-        }).catch(e=> {
-            console.log(e)
         })
+    }).catch(e=> {
+        console.log(e)
     })
 }
 

@@ -201,20 +201,16 @@ app.post('/import', isAuthenticated, doesDeckExist, (req, res, next) => {
                 });
             })
             .then(deck_code=> {
-                return deckFunctions.parseAttributes(deck_code)
-                .then(function (test) {
-                    console.log(test)
-                    return deck_code
-                })
-            })
-            .then(output=> {
-                if (output instanceof Error) {
-                    throw output
-                }
-
-                // Decrement Imports by 1
-                req.user.importedDeck()
-                res.redirect('/deck/' + output)
+                deckFunctions.parseAttributes(deck_code)
+                .then(output=> {
+                    if (output instanceof Error) {
+                        throw output
+                    }
+    
+                    // Decrement Imports by 1
+                    req.user.importedDeck()
+                    return res.redirect('/deck/' + deck_code)
+                }).catch(e => { console.log(e); req.flash('error', 'Error adding attributes, contact a team member'); res.redirect('/'); });
             }).catch(e => { console.log(e); req.flash('error', 'Error importing deck, contact a team member'); res.redirect('/'); });
         }
         catch (PythonShellError) {
