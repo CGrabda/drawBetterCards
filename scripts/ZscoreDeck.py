@@ -29,7 +29,7 @@ TOKENS = {
     "Scholar": 18,
     "Senator": 19,
     "Trooper": 20,
-    "Aemberling": 21,
+    "AEmberling": 21,
     "Cadet": 22,
     "Explorer": 23,
     "B0-T": 24,
@@ -221,6 +221,7 @@ def getScore(decklist, pods, deckInfo):
             firstWord = tokens[0].lower()
 
             # Initialize as blank to establish the exception is handled by containing a value
+            oldCardName = cardName
             cardName = None
 
             # If it did not have a hyphen in the name
@@ -312,12 +313,15 @@ def getScore(decklist, pods, deckInfo):
                     
                 # WC Mega Brobnar creatures
                 elif firstWord == "mega":
-                    cardName = ""
-                    for token in tokens[1:]:
-                        cardName += token + " "
-                    cardName = cardName[:-1]
+                    cardName = oldCardName[5:]
                     cardDetails = scoreDict["WC"][cardName]
                     cardSet = "WC"
+
+                # Shiz Buggies, removes single quotes
+                elif firstWord[:3] == "shi":
+                    cardName = str.replace(oldCardName, "'", "")
+                    cardDetails = scoreDict["WOE"][cardName]
+                    cardSet = "WOE"
 
 
                 # World's Collide variants
