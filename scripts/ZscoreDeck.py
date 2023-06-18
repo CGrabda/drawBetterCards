@@ -76,7 +76,7 @@ IDENTIFY_SET = {
     "341": ("COTA", 1),
     "435": ("AOA", 2),
     "452": ("WC", 3),
-    "453": ("Anomaly", 453),
+    "453": ("Anomaly", 0),
     "479": ("MM", 4),
     "496": ("DT", 5),
     "600": ("WOE", 6),
@@ -281,16 +281,28 @@ def getScore(decklist, pods, deckInfo):
                     cardSet = "MM"
                 
                 # Dexus from non-WC decks
-                if firstWord == "dexus":
+                elif firstWord == "dexus":
                     cardName = "Dexus"
                     cardDetails = scoreDict["WC"][cardName]
                     cardSet = "WC"
 
                 # Toad from non-WC decks
-                if firstWord == "toad":
+                elif firstWord == "toad":
                     cardName = "Toad"
                     cardDetails = scoreDict["WC"][cardName]
                     cardSet = "WC"
+
+                # Scylla from non-MM decks
+                elif firstWord == "scylla":
+                    cardName = "Scylla"
+                    cardDetails = scoreDict["MM"][cardName]
+                    cardSet = "MM"
+
+                # Charybdis from non-MM decks
+                elif firstWord == "charybdis":
+                    cardName = "Charybdis"
+                    cardDetails = scoreDict["MM"][cardName]
+                    cardSet = "MM"
 
                 # Gigantic creatures
                 # Ultra Gravitron
@@ -347,11 +359,13 @@ def getScore(decklist, pods, deckInfo):
         # Handle anomaly cards
         except ValueError as e:
             if (card[0]["card_number"][0]) == "A":
-                cardID = int(str(setNum) + str(card[0]["card_number"][1:]))
                 if (cardName[0] == "E" or cardName[0] == "C" or cardName[:2] == "Ne"):
+                    setNum = 6
                     cardSet="WOE"
                 else:
+                    setNum = 3
                     cardSet = "WC"
+                cardID = -int(str(setNum) + str(card[0]["card_number"][1:]))
                 cardDetails = scoreDict[cardSet][cardName]
                 exceptionHandled = True
             
