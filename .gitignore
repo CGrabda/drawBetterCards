@@ -5,7 +5,7 @@ node_modules
 scripts/config.py
 scripts/meta
 scripts/test.py
-scripts/getPatreons.py
+scripts/__pycache__
 scripts/scoring/KF Card Analysis - Card Scores.csv
 scripts/scoring/csvToScoreObject.py
 

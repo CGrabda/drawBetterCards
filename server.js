@@ -6,18 +6,19 @@ const app = express()
 
 
 // node package requirements
-const bcrypt = require('bcrypt')
-const session = require('express-session')
-const flash = require('express-flash')
-const passport = require('passport')
-const fs = require('fs')
-const helmet = require('helmet')
-const hpp = require('hpp')
-const https = require('https')
-const moment = require('moment')
+const bcrypt = require('bcrypt');
+const session = require('express-session');
+const flash = require('express-flash');
+const passport = require('passport');
+const fs = require('fs');
+const helmet = require('helmet');
+const hpp = require('hpp');
+const https = require('https');
+const moment = require('moment');
 const svgCaptcha = require('svg-captcha-fixed');
 const toobusy = require('toobusy-js');
 const path = require('path');
+const cron = require('node-cron');
 
 // db models
 const sequelize = require('./app/db.js')
@@ -26,6 +27,7 @@ const User = require('./app/models/user.js')(sequelize, DataTypes)
 const Decks = require('./app/models/deck.js')(sequelize, DataTypes)
 const {PythonShell} = require('python-shell')
 const deckFunctions = require('./app/deckFunctions.js');
+const userFunctions = require('./app/userFunctions.js');
 
 require('./app/passport.js')
 
@@ -72,6 +74,20 @@ app.use(function(req, res, next) {
     }
 });
 
+
+
+// Scheduled tasks
+// Updates Patreon tiers from payments within the past 15 minutes
+cron.schedule('*/2 * * * *', () => {
+    userFunctions.updateTiers(3);
+});
+
+// Updates Patreon tiers for anyone with history in the past 3 months
+// Runs daily at midnight 
+// Former patreons handled here by the daily update
+cron.schedule('0 0 * * *', () => {
+    userFunctions.updateTiers();
+});
 
 
 
