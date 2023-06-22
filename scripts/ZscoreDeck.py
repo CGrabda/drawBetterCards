@@ -217,8 +217,8 @@ def getScore(decklist, pods, deckInfo):
 
         except KeyError as e:
             # Handle special cards
-            tokens = cardName.split(" ")
-            firstWord = tokens[0].lower()
+            tokens = cardName.lower().split(" ")
+            firstWord = tokens[0]
 
             # Initialize as blank to establish the exception is handled by containing a value
             oldCardName = cardName
@@ -268,13 +268,13 @@ def getScore(decklist, pods, deckInfo):
                     if tokens[1] == "agent":
                         cardName = "Z-Force Agent 14"
 
-                    elif tokens[1] == "emitter":
+                    elif tokens[1] == "tracker":
                         cardName = "Z-Particle Tracker"
 
                     elif tokens[1] == "blaster":
                         cardName = "Z-Ray Blaster"
 
-                    elif tokens[1] == "agent":
+                    elif tokens[1] == "emitter":
                         cardName = "Z-Wave Emitter"
                         
                     cardDetails = scoreDict["MM"][cardName]
@@ -312,7 +312,7 @@ def getScore(decklist, pods, deckInfo):
                     cardSet = "MM"
 
                 # Niffle Kong
-                elif firstWord == "Niffle":
+                elif firstWord == "niffle":
                     cardName = "Kong Big Set"
                     cardDetails = scoreDict["MM"][cardName]
                     cardSet = "MM"
@@ -334,6 +334,26 @@ def getScore(decklist, pods, deckInfo):
                     cardName = str.replace(oldCardName, "'", "")
                     cardDetails = scoreDict["WOE"][cardName]
                     cardSet = "WOE"
+
+                # Dive Deep
+                elif firstWord == "dive":
+                    cardName = "Dive Deep"
+                    cardSet = "DT"
+
+                # Drawn Down
+                elif firstWord == "drawn":
+                    cardName = "Drawn Down"
+                    cardSet = "DT"
+
+                # Ortannu the Chained
+                elif firstWord == "ortannu":
+                    cardName = "Ortannu the Chained"
+                    cardSet = "AoA"
+                
+                # Ortannu's Binding
+                elif firstWord == "ortannu's":
+                    cardName = "Ortannu's Binding"
+                    cardSet = "AoA"
 
 
                 # World's Collide variants
@@ -358,7 +378,21 @@ def getScore(decklist, pods, deckInfo):
 
         # Handle anomaly cards
         except ValueError as e:
-            if (card[0]["card_number"][0]) == "A":
+            if cardName == "Orb of Wonder":
+                setNum = 4
+                cardSet="MM"
+                cardID = 4173
+                cardDetails = scoreDict[cardSet][cardName]
+                exceptionHandled = True
+            
+            elif cardName == "Valoocanth":
+                setNum = 5
+                cardSet="DT"
+                cardID = 5350
+                cardDetails = scoreDict[cardSet][cardName]
+                exceptionHandled = True
+                
+            elif (card[0]["card_number"][0]) == "A":
                 if (cardName[0] == "E" or cardName[0] == "C" or cardName[:2] == "Ne"):
                     setNum = 6
                     cardSet="WOE"
