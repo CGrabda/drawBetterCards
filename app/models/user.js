@@ -49,6 +49,13 @@ module.exports = function(sequelize, Sequelize) {
             type: DataTypes.BOOLEAN,
             defaultValue: null
         },
+        payment_date: {
+            type: DataTypes.TIME,
+            defaultValue: null
+        },
+        last_payment: {
+            type: DataTypes.TIME
+        },
   })
   
     User.prototype.validPassword = async function (password) {

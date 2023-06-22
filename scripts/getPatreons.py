@@ -94,11 +94,11 @@ def parseMembers(membersResponse, timeMinutesCheck=131490):
 
             # If user isn't an active patron, sets tier to 0
             if patronStatus == "former_patron":
-                members.append([ email, 0 ])
+                members.append([ email, 0, None ])
                 continue
 
             # Add email and tier to output
-            members.append([ email, TIER_TO_ID[tierData[0]["id"]] ])
+            members.append([ email, TIER_TO_ID[tierData[0]["id"]], paymentDate ])
 
     return members
 
