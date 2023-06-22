@@ -2,6 +2,7 @@ const sequelize = require('./db.js');
 const { DataTypes, Op } = require('sequelize');
 const Deck = require('./models/deck.js')(sequelize, DataTypes)
 const House = require('./models/house.js')(sequelize, DataTypes)
+const Multiple = require('./models/multiples.js')(sequelize, DataTypes)
 const Pod = require('./models/pod.js')(sequelize, DataTypes)
 const Card = require('./models/card.js')(sequelize, DataTypes)
 const Set = require('./models/set.js')(sequelize, DataTypes)
@@ -15,6 +16,9 @@ Deck.belongsTo(House, { as: "house_1", foreignKey: "house1", targetKey: "house_i
 Deck.belongsTo(House, { as: "house_2", foreignKey: "house2", targetKey: "house_id" })
 Deck.belongsTo(House, { as: "house_3", foreignKey: "house3", targetKey: "house_id" })
 Pod.belongsTo(House, { foreignKey: "house_id", targetKey: "house_id" })
+
+// Associate card with multiples pattern
+Card.belongsTo(Multiple, {foreignKey: "multiple_id", targetKey: "multiple_id" })
 
 // Associate each card in a deck with its information
 Pod.belongsTo(Card, { as: "card_1", foreignKey: "card1", targetKey: "card_id" })

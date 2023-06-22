@@ -3,24 +3,16 @@ const sequelize = require('../db.js')
 
 module.exports = function(sequelize, Sequelize) {
   const Card = sequelize.define('Card', {
-    card_id: {
+    multiple_id: {
       type: DataTypes.SMALLINT,
       primaryKey: true,
       allowNull: false,
       unique: true
     },
-    card_name: {
-      type: DataTypes.STRING,
+    multiples: {
+      type: DataTypes.ARRAY(DataTypes.SMALLINT),
       allowNull: false,
-      notEmpty: true
-    },
-    traits: {
-      type: DataTypes.JSONB,
-      defaultValue: null
-    },
-    multiple_id: {
-      type: DataTypes.SMALLINT,
-      allowNull: false
+      unique: true
     },
   },
   {

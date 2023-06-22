@@ -166,7 +166,25 @@ def parseDecklist(cardIdList, response):
         enhancements = []
         for bonus in response["data"]["bonus_icons"]:
             card = matchDict[bonus["card_id"]]
-            cardID = int(str(IDENTIFY_SET[str(card["expansion"])][1]) + str(card["card_number"]))
+            try:
+                cardID = int(str(IDENTIFY_SET[str(card["expansion"])][1]) + str(card["card_number"]))
+            except ValueError:
+                # Handle enhancements on anomalies, set the cardId
+                cardName = card["card_title"]
+
+                if cardName == "Orb of Wonder":
+                    cardID = 4173
+                
+                elif cardName == "Valoocanth":
+                    cardID = 5350
+                    
+                elif (card["card_number"][0]) == "A":
+                    if (cardName[0] == "E" or cardName[0] == "C" or cardName[:2] == "Ne"):
+                        setNum = 6
+                    else:
+                        setNum = 3
+                    cardID = -int(str(setNum) + str(card["card_number"][1:]))
+            
 
             enhancements.append([cardID, [enhancementDict[pip] for pip in bonus["bonus_icons"]]])
 
