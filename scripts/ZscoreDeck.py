@@ -25,7 +25,7 @@ TOKENS = {
     "Cleric": 14,
     "Defender": 15,
     "Squire": 16,
-    "Bellatorn Warrior": 17,
+    "Bellatoran Warrior": 17,
     "Scholar": 18,
     "Senator": 19,
     "Trooper": 20,
