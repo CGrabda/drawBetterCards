@@ -5,9 +5,9 @@ const {PythonShell} = require('python-shell')
 
 // Dict for setting the number of imports and alphas for backers
 var rewardDict = {
-    "100": [1, 1],
-    "200": [2, 2],
-    "300": [3, 3]
+    "100": [20, 1],
+    "200": [100, 5],
+    "300": [10000, 10]
 }
 
 
@@ -56,14 +56,16 @@ async function processRewards() {
         // Loop over each user that has not yet been updated
         for (var i in query) {
             var user_id = query[i]["dataValues"]["id"]
+            var old_imports = query[i]["dataValues"]["imports"]
             var user_payment = query[i]["dataValues"]["payment_date"]
             var tier = query[i]["dataValues"]["patreon_rank"].toString()
             
             var rewards = rewardDict[tier]
+            var new_imports = rewards[0] + (0.5*old_imports)
             
             // Update the user's rewards and last_payment
             await User.update(
-                { imports: rewards[0], alpha_requests: rewards[1], last_payment: user_payment, updatedAt: sequelize.literal('CURRENT_TIMESTAMP') },
+                { imports: new_imports, alpha_requests: rewards[1], last_payment: user_payment, updatedAt: sequelize.literal('CURRENT_TIMESTAMP') },
                 { where: { id: user_id } }
             )
         }
