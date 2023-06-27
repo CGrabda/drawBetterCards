@@ -12,6 +12,12 @@
         <%- include('partials/navbar.ejs') %>
         <%- include('partials/imports.ejs') %>
 
+        <% if (messages.error) { %>
+            <div class="text-danger">
+                <%= messages.error %>
+            </div>
+        <% } %>
+
         <div class="bg-dark text-white">
             <% // Handle ordering the pods %>
             <% query.dataValues.Pods.sort(function(a, b){return a.house_id - b.house_id}) %>
