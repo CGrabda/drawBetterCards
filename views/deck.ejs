@@ -277,7 +277,7 @@
                     <th><%= query.dataValues.Pods[1].dataValues.pod_bob %></th>
                     <th><%= query.dataValues.Pods[2].dataValues.pod_bob %></th>
                     <th><%= query.dataValues.Pods[3].dataValues.pod_bob %></th>
-                    <th><%= query.dataValues.Pods[0].dataValues.pod_bob || '' %></th>
+                    <th><%= parseInt(query.dataValues.Pods[0].dataValues.pod_bob) || '' %></th>
                     <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_bob) + parseInt(query.dataValues.Pods[2].dataValues.pod_bob) + parseInt(query.dataValues.Pods[3].dataValues.pod_bob) + parseInt(query.dataValues.Pods[0].dataValues.pod_bob) %></th>
                     <th style="text-align:left">BoB</th>
                 </tr>
@@ -322,12 +322,13 @@
                 <% } %>
             </table>
         
-            <% // attributes displayed here %>
+            <% // Parse attributes %>
+            <% var attributes = JSON.parse(query.dataValues.attributes) %>
 
-            <% if (query.dataValues.attributes) { %>
+            <% if (attributes) { %>
                 <h3>Meta Score Adjustments</h3>
-                <% for (var key in query.dataValues.attributes) { %>
-                    <h5><%= key %> score: <%= query.dataValues.attributes[key] %></h5>
+                <% for (var key in attributes) { %>
+                    <h5><%= key %> score: <%= attributes[key] %></h5>
                 <% } %>
             <% } %>
         </div>

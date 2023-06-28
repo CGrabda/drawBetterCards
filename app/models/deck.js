@@ -34,9 +34,13 @@ module.exports = function(sequelize, Sequelize) {
       type: DataTypes.STRING,
       defaultValue: null
     },
-    score: {
+    raw_score: {
       type: DataTypes.SMALLINT,
       allowNull: false
+    },
+    adj_score: {
+      type: DataTypes.SMALLINT,
+      defaultValue: null
     },
     house1: {
       type: DataTypes.SMALLINT,
@@ -55,8 +59,7 @@ module.exports = function(sequelize, Sequelize) {
       allowNull: false
     },
     attributes: {
-      type: DataTypes.JSONB,
-      defaultValue: null
+      type: DataTypes.JSONB
     },
     token: {
       type: DataTypes.SMALLINT,

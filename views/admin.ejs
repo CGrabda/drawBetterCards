@@ -11,9 +11,26 @@
     <%- include('partials/navbar.ejs') %>
     <div class="bg-dark text-white">
         <h1>Admin Page</h1>
-        <form action=<%= "/admin/alpha" %> method="GET">
-            <button class="btn btn-outline-light w-10" type="submit">Alpha Score Hub</button>
-        </form>
+
+        <% if (messages.error) { %>
+            <div class="text-danger">
+                    <%= messages.error %>
+                </div>
+        <% } %>
+
+        <div class="btn-toolbar pb-5 " role="toolbar">
+            <div class="mr-2 btn-group-vertical" role="group">
+                <form class="pb-5" action="/admin/alpha" method="GET">
+                    <button class="btn btn-outline-light w-10" type="submit">Alpha Score Hub</button>
+                </form>
+
+                <h3 class="pt-5 text-danger">Red buttons will take the site down</h3>
+                <form action="/admin/scoreAdj" method="GET">
+                    <button class="btn btn-danger text-black w-10" type="submit">Update Score Adjustment</button>
+                </form>
+            </div>
+
+        </div>
     </div>
 
     <script src="/assets/js/bootstrap.js"></script>

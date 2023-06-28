@@ -8,9 +8,11 @@
     <link rel="stylesheet" href ="/assets/css/bootstrap.min.css">
 </head>
 <body>
-    <%- include('partials/navbar.ejs') %>
-
     <div class="bg-dark text-white">
+        <%- include('partials/navbar.ejs') %>
+        <%- include('partials/imports.ejs') %>
+
+
         <h1><%= user.username %>'s decks</h1>
         <table class="table table-striped" data-bs-theme="dark">
             <tr>

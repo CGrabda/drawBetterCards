@@ -31,7 +31,7 @@
             <% if (queryTop) { %>
                 <% for (var i = 0; i < queryTop.length; i++) { %>
                     <tr>
-                        <td><%= queryTop[i].dataValues.score %></td>
+                        <td><%= queryTop[i].dataValues.adj_score %></td>
                         <td><% if (queryTop[i].dataValues.alpha_score ==='P' || queryTop[i].dataValues.alpha_score == null) { %>
                             -
                         <% } else { %>
@@ -58,7 +58,7 @@
             <% if (queryRecent) { %>
                 <% for (var i = 0; i < queryRecent.length; i++) { %>
                     <tr>
-                        <td><%= queryRecent[i].dataValues.score %></td>
+                        <td><%= queryRecent[i].dataValues.adj_score %></td>
                         <td><% if (queryRecent[i].dataValues.alpha_score ==='P' || queryRecent[i].dataValues.alpha_score == null) { %>
                             -
                         <% } else { %>

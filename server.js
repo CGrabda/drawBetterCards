@@ -104,7 +104,7 @@ app.get('/', (req, res) => {
         Decks.findAll({
             where: { hidden: false },
             limit: 5,
-            order: [['score', 'DESC' ], ['createdAt', 'DESC']],
+            order: [['adj_score', 'DESC' ], ['createdAt', 'DESC']],
         }), 
         Decks.findAll({
             where: {
@@ -217,7 +217,7 @@ app.post('/import', isAuthenticated, doesDeckExist, (req, res, next) => {
                 });
             })
             .then(deck_code=> {
-                deckFunctions.parseAttributes(deck_code)
+                deckFunctions.parseAttributesImport(deck_code)
                 .then(output=> {
                     if (output instanceof Error) {
                         throw output
@@ -268,7 +268,7 @@ app.post('/load/:search', (req, res, next) => {
             limit: 15,
             offset: 15 * req.body.page,
             where: { owner_id: req.user.id },
-            order: [['score', 'DESC'], ['createdAt', 'DESC']]
+            order: [['adj_score', 'DESC'], ['createdAt', 'DESC']]
         })
         .then(results=> {
             return res.json({ html: queryToHTML(results) })
@@ -280,7 +280,7 @@ app.post('/load/:search', (req, res, next) => {
             limit: 15,
             offset: 15 * req.body.page,
             where: { hidden: false },
-            order: [['score', 'DESC'], ['createdAt', 'DESC']]
+            order: [['adj_score', 'DESC'], ['createdAt', 'DESC']]
         })
         .then(results=> {
             return res.json({ html: queryToHTML(results) })
@@ -308,29 +308,28 @@ app.get("/deck/:deck_code", isValidCode, function(req, res) {
         // If deck is hidden
         if (results.dataValues.hidden) {
             // See if user is authenticated
-            if (typeof req.user === 'undefined') {
-                req.flash('error', 'Error viewing deck, contact a team member')
-                return res.redirect('/')
+            if (typeof req.user != 'undefined') {
+                // Check that the authenticated user is the deck owner
+                if (req.user.id == results.owner_id) {
+                    // Render deck page
+                    return res.render('deck.ejs', { query: results, isLoggedIn: req.isAuthenticated(), user: req.user })
+                }
             }
-            // Check that the authenticated user is the deck owner
-            else if (req.user.id == results.owner_id) {
-                return res.render('deck.ejs', { query: results, isLoggedIn: req.isAuthenticated(), user: req.user })
-            }
-            // Else, error the person trying to view is not the owner
-            else {
-                req.flash('error', 'Error viewing deck, contact a team member')
-                return res.redirect('/')
-            }
+
+            // The person trying to view the deck is not authenticated or not the owner
+            req.flash('error', 'Error viewing deck, contact a team member')
+            return res.redirect('/')
         }
         else {
             // If deck is not hidden, display
             return res.render('deck.ejs', { query: results, isLoggedIn: req.isAuthenticated(), user: req.user })
         }
+    // On error, flash error message and redirect to index
     }).catch(e=> { req.flash('error', 'Error viewing deck, contact a team member'); console.log(e); res.redirect('/'); })
 })
 
 
-// Post deckaction, hide/unhide toggle or alpha scoring
+// Post deckaction, hide/unhide toggle and alpha scoring
 // eslint-disable-next-line no-unused-vars
 app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res, next) => {
     // Hide a deck
@@ -345,14 +344,15 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
             try {
                 // Check if the deck owner is the requester
                 if (req.user.id == results.owner_id) {
+                    // Toggle for hiding/unhiding deck
                     if (results.hidden) {
                         deckFunctions.hideDeck(path, false)
-                        return res.redirect('/deck/' + results.deck_code)
                     }
                     else {
                         deckFunctions.hideDeck(path, true)
-                        return res.redirect('/deck/' + results.deck_code) 
                     }
+
+                    return res.redirect('/deck/' + results.deck_code) 
                 }
                 else {
                     throw new Error('Deck owner is not the requesting user')
@@ -378,6 +378,7 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
                         deckFunctions.updateAlpha(path, "P")
                         // Decrement alpha_requests by 1
                         .then(results=> { req.user.requestedAlpha(); return results })
+                        // Render deck page
                         .then(function() { return res.redirect('/deck/' + query.deck_code) })
                     }
                     else {
@@ -416,20 +417,28 @@ app.get("/admin/:path", isAuthenticated, isAdmin, function(req, res) {
         res.render('admin.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user })
     }
     else if (path == 'alpha') {
+        // Get all decks pending an alpha score then render
         Decks.findAll({
             where: { alpha_score: "P" },
             order: [['updatedAt', 'ASC' ]],
         })
         .then(results=> { res.render('alpha.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user, query: results }) })
     }
+    else if (path == 'scoreAdj') {
+        // Adjust the scores and get attributes of all decks
+        deckFunctions.adjustScoreOnAllDecks()
+        .then(function () {
+            req.flash('error', ["Score Adjustments Updated. That better have been important..."])
+            res.render('admin.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user }) 
+        })
+    }
 })
 
 // 404 page
 app.use(function(req, res, next) {
-    var err = new Error('Not Found')
-    console.log(req.url)
+    console.log("Invalid Path " + req.url)
     res.status(404).render('404.ejs', { user: req.user, isLoggedIn: req.isAuthenticated() });
-    next(err)
+    next()
 })
 
 // 500 Server Error
@@ -514,6 +523,7 @@ function doesDeckExist(req, res, next) {
         }).then(results=> {
             if (results != null) {
                 // Deck already exists, redirect to deck page
+                req.flash('error', 'Deck already imported')
                 return res.redirect('/deck/' + results.dataValues.deck_code)
             }
             else {
@@ -557,7 +567,7 @@ function queryToHTML(query) {
         }
 
         output += '<tr>'
-        output += '<td>' + query[i]["dataValues"]["score"] + '</td>'
+        output += '<td>' + query[i]["dataValues"]["adj_score"] + '</td>'
         output += '<td>' + alpha + '</td>'
         output += '<td><a href= "/deck/' + query[i]["dataValues"]["deck_code"] + '">' + query[i]["dataValues"]["deck_name"] + '</a></td>'
         output += '<th><img src= "rsrc/set_' + query[i]["dataValues"]["set_id"] + '.png" width="32px" height="32px" /></th>'

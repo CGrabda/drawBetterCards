@@ -1,5 +1,5 @@
 const sequelize = require('./db.js');
-const { DataTypes, Op } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const Deck = require('./models/deck.js')(sequelize, DataTypes)
 const House = require('./models/house.js')(sequelize, DataTypes)
 const Multiple = require('./models/multiples.js')(sequelize, DataTypes)
@@ -7,8 +7,6 @@ const Pod = require('./models/pod.js')(sequelize, DataTypes)
 const Card = require('./models/card.js')(sequelize, DataTypes)
 const Set = require('./models/set.js')(sequelize, DataTypes)
 const Token = require('./models/token.js')(sequelize, DataTypes)
-const {PythonShell} = require('python-shell')
-
 
 // SQL relationships
 // Associate deck houses with house ids
@@ -64,11 +62,12 @@ async function addDeck(deck_info, pod_info, user_id, hidden) {
             owner_id: user_id,
             deck_name: deck_info["name"],
             hidden: hidden,
-            score: deck_info["score"],
+            raw_score: deck_info["score"],
             house1: houses[0],
             house2: houses[1],
             house3: houses[2],
             set_id: deck_info["set"],
+            attributes: {},
             token: deck_info["token"]
         }, {transaction: t}).then(async function (deck) {
             for (i in houses) {
@@ -170,48 +169,140 @@ async function getAllDeckInfo(deck_code) {
 }
 
 
-async function parseAttributes(deck_code) {
+
+async function parseAttributesImport(deck_code) {
+    // Retrieves deck from db before parsing
     await getAllDeckInfo(deck_code)
     .then(async query=> {
-        var options = {
-            mode: 'text',
-            pythonPath: process.env.PYTHON_PATH,
-            args: [JSON.stringify(query)]
-        }
-
-        // Send query output as a JSON to the python attribute script
-        // This script handles custom scores and combos
-        await PythonShell.run(process.env.SCRIPT_PATH + 'parseAttributes.py', options)
-        .then(async messages=> {
-            var attributes = JSON.parse(messages[0])
-        
-            // Add attributes from the script response to deck
-            await Deck.update(
-                { attributes: attributes, updatedAt: sequelize.literal('CURRENT_TIMESTAMP') },
-                { returning: true, where: { deck_code: deck_code } }
-            )                                                       // eslint-disable-next-line no-unused-vars
-            .then(async function([ rowsUpdate, [updatedDeck] ]) {
-                // goes through each attribute and tallies them
-                var score_adj = 0
-                for (var key in attributes) {
-                    score_adj += attributes[key]
-                }
-
-                // round value to nearest int
-                score_adj = Math.round(score_adj)
-
-                // sets the adjustment Pod value to the score adjustment
-                await Pod.update(
-                    { pod_score: score_adj },
-                    { where: {[Op.and]: [
-                        { deck_id: updatedDeck["dataValues"]["deck_id"] },
-                        { house_id: 1 }
-                    ]}}
-                )
-            })
-        })
+        await parseAttributes(query)
     }).catch(e=> {
         console.log(e)
+    })
+}
+
+async function adjustScoreOnAllDecks() {
+    // Retrieve all deck codes
+    return await Deck.findAll({
+        include: Pod
+    })
+    .then(async query=> {
+        // Iterate over each deck code and run parseAttributes
+        // Updates any scoring adjustments and 
+        for (var i in query) {
+            await parseAttributes(query[i])
+        }
+    })
+}
+
+
+
+
+// Internal functions, not exported
+const TOKENS = {
+    '1': '5',
+    '2': '4',
+    '3': '3',
+    '4': '2',
+    '5': '0',
+    '6': '3',
+    '7': '2',
+    '8': '6',
+    '9': '1',
+    '10': '4',
+    '11': '1',
+    '12': '3',
+    '13': '4',
+    '14': '3',
+    '15': '4',
+    '16': '3',
+    '17': '5',
+    '18': '3',
+    '19': '2',
+    '20': '3',
+    '21': '5',
+    '22': '3',
+    '23': '2',
+    '24': '1',
+    '25': '3',
+    '26': '3',
+    '27': '2',
+    '28': '1'
+}
+
+const TOKEN_SCORE_ADJ = {
+    '0': -1.5,
+    '1': -1,
+    '2': -0.5,
+    '3': 0.25,
+    '4': 0.5,
+    '5': 1,
+    '6': 1.5,
+}
+
+async function scoreTokens(deck_object, attributes) {
+    var pods = deck_object.Pods
+
+    // If deck has token, count the number of token creators and update attributes dict
+    if (deck_object.token != null) {
+        var token_score = TOKEN_SCORE_ADJ[TOKENS[deck_object["token"].toString()]]
+        var token_creators = 0
+
+        for (var i in pods) {
+            token_creators += pods[i]["pod_tokens"]
+        }
+
+        // Add score adjustment to attributes
+        try {
+            attributes["tokens"] = token_creators * token_score
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
+
+async function parseAttributes(deck_object) {
+    var attributes = {}
+
+    // Score tokens and updates attributes dict
+    await scoreTokens(deck_object, attributes)
+    .then(async function() {
+        // Goes through each attribute of teh deck and tallies score adjustment
+        var score_adj = 0
+        for (var key in attributes) {
+            score_adj += attributes[key]
+        }
+
+        // Round value to nearest int
+        score_adj = Math.round(score_adj)
+
+        // Calculate adjusted score
+        var adjusted_score = deck_object.raw_score + score_adj
+
+
+        // Retrieve adjustment Pod
+        var adjustment_pod = null
+        for (var i in deck_object.Pods) {
+            if (deck_object.Pods[i].house_id == 1) {
+                adjustment_pod = deck_object.Pods[i]
+                break
+            }
+        }
+
+
+        // Stage deck values, attributes from the script response to deck
+        deck_object.set({
+            adj_score: adjusted_score,
+            attributes: JSON.stringify(attributes),
+            UpdatedAt: sequelize.literal('CURRENT_TIMESTAMP')
+        })
+
+        
+        // Stage adjustment pod values
+        adjustment_pod.pod_score = score_adj
+
+        // Update db
+        await deck_object.save()
+        await adjustment_pod.save()
     })
 }
 
@@ -220,4 +311,5 @@ module.exports.addDeck = addDeck
 module.exports.hideDeck = hideDeck
 module.exports.updateAlpha = updateAlpha
 module.exports.getAllDeckInfo = getAllDeckInfo
-module.exports.parseAttributes = parseAttributes
+module.exports.parseAttributesImport = parseAttributesImport
+module.exports.adjustScoreOnAllDecks = adjustScoreOnAllDecks
