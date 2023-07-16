@@ -21,18 +21,9 @@
                             </div>
                         <% } %>
 
-                        <% if (messages.success) { %>
-                            <div class="text-success">
-                                <%= messages.success %>
-                            </div>
-                        <% } %>
-
-                        <form action="/login" method="POST">
-                            <div class="forms-inputs mb-4"> <label for="user">Username</label> <input id="username" name="username" autocomplete="off" type="text" v-bind:class="{'form-control':true, 'is-invalid' : !validEmail(email) && emailBlured}" v-on:blur="emailBlured = true" required> </div>
+                        <form action=<%= "/reset/" + token %> method="POST">
                             <div class="forms-inputs mb-4"> <label for="password">Password</label> <input id="password" name="password" autocomplete="off" type="password" v-model="password" v-bind:class="{'form-control':true, 'is-invalid' : !validPassword(password) && passwordBlured}" v-on:blur="passwordBlured = true" required> </div>
-                            <div class="mb-5"> <button v-on:click.stop.prevent="submit" class="btn btn-outline-warning w-100">Login</button> </div>
-
-                            <a href="/forgot" class="btn btn-outline-light w-100">Forgot Password</a>
+                            <div class="mb-1"> <button v-on:click.stop.prevent="submit" class="btn btn-outline-light w-100">Reset Password</button> </div>
                         </form>
                     </div>
                 </div>
@@ -43,6 +34,3 @@
     <script src="/assets/js/bootstrap.js"></script>
 </body>
 </html>
-
-
-

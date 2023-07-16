@@ -61,7 +61,7 @@ async function processRewards() {
             var tier = query[i]["dataValues"]["patreon_rank"].toString()
             
             var rewards = rewardDict[tier]
-            var new_imports = rewards[0] + (0.5*old_imports)
+            var new_imports = rewards[0] + Math.floor(0.5*old_imports)
             
             // Update the user's rewards and last_payment
             await User.update(
@@ -76,6 +76,66 @@ async function processRewards() {
 }
 
 
+// Retrieves a a user's email and returns it, else null if the user does not exist
+async function getEmail(user_email) {
+    return await User.findOne({
+        where: { email: user_email }
+    })
+    .then(async query=> {
+        if (query) {
+            return query["dataValues"]["email"]
+        }
+    })
+    .catch(e=> {
+        console.log(e)
+    })
+}
+
+// Retrieves a a user's email and returns it, else null if the user does not exist
+async function setToken(user_email, token, token_expiration) {
+    return await User.update(
+        { reset_token: token, token_expires: token_expiration },
+        { where: { email: user_email } } 
+    )
+    .then(async query=> {
+        if (query) {
+            return true
+        }
+    })
+    .catch(e=> {
+        console.log(e)
+    })
+}
+
+// If the user has a valid token that has not expired, return the user object, else null
+async function getUserObjectFromToken(token) {
+    return await User.findOne({
+        where: { reset_token: token }
+    }).then(async query=> {
+        var token_expires = query["dataValues"]["token_expires"]
+
+        // If the token is valid
+        if (token_expires > Date.now()) {
+            return query
+        }
+
+        // Token is invalid, reset token values to null
+        query.set({
+            reset_token: null,
+            token_expires: null
+        })
+        await query.save()
+
+        return null
+    }).catch(function () {
+        console.log(`Error retrieving token: ${token}`)
+        return null
+    })
+}
+
 
 module.exports.updateTiers = updateTiers
 module.exports.processRewards = processRewards
+module.exports.getEmail = getEmail
+module.exports.setToken = setToken
+module.exports.getUserObjectFromToken = getUserObjectFromToken

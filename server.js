@@ -7,27 +7,31 @@ const app = express()
 
 // node package requirements
 const bcrypt = require('bcrypt');
-const session = require('express-session');
+const cron = require('node-cron');
+const crypto = require('crypto');
 const flash = require('express-flash');
-const passport = require('passport');
 const fs = require('fs');
 const helmet = require('helmet');
 const hpp = require('hpp');
 const https = require('https');
 const moment = require('moment');
+const nodemailer = require("nodemailer");
+const passport = require('passport');
+const path = require('path');
+const session = require('express-session');
 const svgCaptcha = require('svg-captcha-fixed');
 const toobusy = require('toobusy-js');
-const path = require('path');
-const cron = require('node-cron');
+const util = require('util');
 
 // db models
 const sequelize = require('./app/db.js')
-const { DataTypes, Op } = require("sequelize")
+const { DataTypes, Op, Utils, Sequelize } = require("sequelize")
 const User = require('./app/models/user.js')(sequelize, DataTypes)
 const Decks = require('./app/models/deck.js')(sequelize, DataTypes)
 const {PythonShell} = require('python-shell')
 const deckFunctions = require('./app/deckFunctions.js');
 const userFunctions = require('./app/userFunctions.js');
+const token = require('./app/models/token.js');
 
 require('./app/passport.js')
 
@@ -56,6 +60,28 @@ app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')))
 app.use(passport.initialize())
 app.use(passport.session())
 //app.disable('x-powered-by') handled by helmet, changed
+
+
+// Nodemailer Configuration
+const transporter = nodemailer.createTransport({
+    host: "mail.privateemail.com",
+    port: 465,
+    secure: true,
+    requireTLS: true,
+    auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS
+    },
+    tls: {
+        rejectUnauthorized: false
+    }, 
+    dkim: {
+        domainName: 'drawbetter.cards',
+        keySelector: 'default',
+        privateKey: process.env.DKIM
+    }
+});
+
 
 
 // Security Middleware
@@ -433,6 +459,105 @@ app.get("/admin/:path", isAuthenticated, isAdmin, function(req, res) {
         })
     }
 })
+
+
+
+// Password Reset Page and Logic
+app.get('/forgot', (req, res) => {
+    res.render('forgot.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user })
+})
+
+app.post('/forgot', async (req, res) => {
+    const user_email = req.body.email
+
+    if (user_email == null) {
+      req.flash('success', ['If that email has an account, it has been sent a password reset'])
+      return res.redirect('/forgot')
+    }
+
+    const token = (await util.promisify(crypto.randomBytes)(20)).toString('hex')
+
+    // Set token and expiry time
+    userFunctions.setToken(user_email, token, Date.now() + 3600000)
+  
+    const reset_email = {
+      to: user_email,
+      from: process.env.MAIL_USER,
+      subject: 'Draw Better Cards Password Reset',
+      text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.
+            
+Please click on the following link, or paste this into your browser to complete the process:
+https://${req.headers.host}/reset/${token}
+            
+If you did not request this, please ignore this email and your password will remain unchanged.
+
+    Draw Better Cards and Make Better Passwords!
+      `,
+    }
+  
+    await transporter.sendMail(reset_email)
+
+    console.log("Password Reset Token Sent: %s", user_email)
+    req.flash('success', ['If that email has an account, it has been sent a password reset'])
+    res.redirect('/login')
+});
+  
+app.get('/reset/:token', (req, res) => {
+    userFunctions.getUserObjectFromToken(req.params.token)
+    .then(user=> {
+        // Reset token is invalid, redirect to login
+        if (!user) {
+            req.flash('error', 'Password reset token is invalid or has expired.')
+            return res.redirect('/login')
+        }
+    
+        // Reset token is valid, render page
+        res.render('reset.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user, token: req.params.token })
+    })
+})
+  
+app.post('/reset/:token', async (req, res) => {
+    userFunctions.getUserObjectFromToken(req.params.token)
+    .then(async user=> {
+        // Reset token is invalid
+        if (!user) {
+            req.flash('error', 'Password reset token is invalid or has expired.')
+            return res.redirect('/forgot')
+        }
+
+
+        // Reset token is valid, check if password length is valid
+        if (req.body.password.length < 10) {
+            req.flash('error', 'Password should be at least 10 characters long')
+            return res.redirect('/reset/' + req.params.token)
+        }
+        
+        
+        
+        // Update password and set token info to null
+        user.password = await bcrypt.hash(req.body.password, 13)
+        user.resetPasswordToken = null
+        user.resetPasswordExpires = null
+        await user.save()
+    
+        const resetEmail = {
+            to: user.email,
+            from: process.env.MAIL_USER,
+            subject: 'Your Password Has Been Changed',
+            text: `This is a confirmation that the password for your Draw Better Cards account has just been changed.
+
+    Happy forging!
+            `,
+        }
+    
+        await transporter.sendMail(resetEmail)
+        console.log("Password Reset Confirmation Sent: %s", user.email)
+
+        req.flash('success', ['Success! Your password has been changed.'])
+        return res.redirect('/')
+    })
+})
+
 
 // 404 page
 app.use(function(req, res, next) {

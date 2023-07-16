@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Draw Better Cards</title>
+
+    <link rel="stylesheet" href ="/assets/css/bootstrap.min.css">
+</head>
+<body>
+    <%- include('partials/navbar.ejs') %>
+
+    <div class="container mt-5" data-bs-theme="dark">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-6">
+                <div class="card px-5 py-5" id="form1">
+                    <div class="form-data" v-if="!submitted">
+                        <% if (messages.error) { %>
+                            <div class="text-danger">
+                                <%= messages.error %>
+                            </div>
+                        <% } %>
+
+                        <form action="/forgot" method="POST">
+                            <div class="forms-inputs mb-4"> <label for="email">Email</label> <input id="email" name="email" autocomplete="off" type="email" v-model="email"  required> </div>
+                            <div class="mb-1"> <button v-on:click.stop.prevent="submit" class="btn btn-outline-light w-100">Send Password Reset</button> </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/assets/js/bootstrap.js"></script>
+</body>
+</html>

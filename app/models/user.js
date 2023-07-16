@@ -56,6 +56,17 @@ module.exports = function(sequelize, Sequelize) {
         last_payment: {
             type: DataTypes.TIME
         },
+        reset_token: {
+            type: DataTypes.STRING,
+            defaultValue: null,
+            validate: {
+                len: 40
+            }
+        },
+        token_expires: {
+            type: DataTypes.BIGINT,
+            defaultValue: null
+        },
   })
   
     User.prototype.validPassword = async function (password) {
