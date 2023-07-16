@@ -8,6 +8,8 @@ from json import loads, dumps
 from requests import request
 from time import sleep
 
+scoreFile = "./scripts/data/scoreDict.json"
+
 TOKENS = {
     "Berserker": 1,
     "Warrior": 2,
@@ -39,7 +41,7 @@ TOKENS = {
     "Raider": 28
 }
 
-with open("./scripts/scoring/scoreDict.json") as file:
+with open(scoreFile) as file:
     scoreDict = loads(file.readline())
 
 debug = False
