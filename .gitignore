@@ -4,9 +4,11 @@ certs
 node_modules
 scripts/config.py
 scripts/meta
-scripts/test.py
+scripts/test
 scripts/__pycache__
-scripts/rsrc
+scripts/rsrc/config.py
+scripts/rsrc/__pycache__
+scripts/rsrc/cardDetails.htm
 scripts/data/*.txt
 
 

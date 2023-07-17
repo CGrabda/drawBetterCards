@@ -15,8 +15,9 @@ This also self-validates that all card imports match the proper name and ID
 from json import dumps
 import re
 
-cardsFile = "./scripts/rsrc/cards.htm"
-cardDetailsFile = "./scripts/rsrc/CardDetails.htm"
+cardIdNameFile = "./scripts/data/cardNameId.csv"
+# Card details is scraped from Archon Arcana cargo query with card traits
+cardDetailsFile = "./scripts/rsrc/cardDetails.htm"
 scoringFile = "./scripts/rsrc/KF Card Analysis - Card Scores.csv"
 
 outfileScoreDict = "./scripts/data/scoreDict.json"
@@ -40,6 +41,18 @@ setDict = {
 }
 
 
+def normalizeCardName(cardName):
+    '''
+    Replace unicode characters in card names to match text format
+    '''
+    cardName = cardName.strip().replace("Æ", "AE").replace("æ", "ae").replace("\u2019", "'").replace("\u201c", "\"").replace("\u201d", "\"").replace("”", "\"").replace("“", "\"")
+
+    # Replace Ekwidon unicode characters with the standard letter
+    if not cardName.isascii():
+        cardName = cardName.replace(u"\u0103", "a").replace(u"\u0115", "e").replace(u"\u012d", "i").replace(u"\u014f", "o").replace(u"\u016d", "u")
+
+    return cardName
+
 # -------------------- Update the Scoring Dict -------------------- #
 '''
 Written by SoutherlyElf
@@ -54,7 +67,7 @@ def scoreCard(scoreDict, line):
     Adds the cards and its attributes to the score dictionary
     '''
     # Replace unicode cahracters that may come through in name
-    line[0] = line[0].strip().replace("\u2019", "'").replace("\u201c", "\"").replace("\u201d", "\"")
+    line[0] = normalizeCardName(line[0])
 
     # Handle Tokens and thier fractional values
     if line[3] == "T":
@@ -173,48 +186,23 @@ with open(outfileScoreDict, "w") as file:
 
 
 # -------------------- Match each card ID to its name -------------------- #
-# Retrieve all card names and IDs from cards.htm
-with open(cardsFile, encoding="utf-8") as file:
-    matches = re.findall("<tr.*\n.*\n.*\n.*<\/td>", file.read())
+# Use cardNameId.csv to create a dict of card ID's to their name
+with open(cardIdNameFile, encoding="utf-8") as file:
+    # Go through each line in the file
+    csvReader = reader(file)
 
-for match in matches:
-    #print(match)
-    cardName = re.search("title=\"CardData:.*\">C", match).group().split(":")[1][:-3].replace("Æ", "AE").replace("æ", "ae").replace("’", "'").replace("“", "\"").replace("”", "\"")
-    setName = re.search("SetName.*e=\".*\"", match).group().split("title=\"")[1][:-1]
-    cardNumber = re.search(">(A?|\d?)\d{2}<", match).group()[1:-1]
-
-    # Handle Redacted
-    if cardName == "(REDACTED)":
-        cardName = "[REDACTED]"
-    
-    # Handle evil twins
-    if cardName[-12:] == " (Evil Twin)":
-        cardName = "Evil " + cardName[:-12]
-
-    # Handle Anomalies
-    if cardName[-10:] == " (Anomaly)":
-        cardName = cardName[:-10]
-
-    try:
-        setDict[setName] + cardNumber
-        # Initialize card names in name to trait dict
-        cardNameToTraitDict[cardName] = None
-
-        cardId = setDict[setName] + cardNumber
-        if cardNumber[0] == "A":
-            if cardName == "Ecto-Charge":
-                continue
-            cardId = "-" + setDict[setName] + cardNumber[1:]
+    # Populate the cardIDNameDict
+    for line in csvReader:
+        # If more than 2 lines, the card name contains a comma
+        if line[2] != "":
+            cardIDNameDict[line[0]] = line[1] + "," + line[2]
         
-        cardIDNameDict[str(cardId)] = cardName
-    except:
-        print(cardName)
-        print(setName)
+        else:
+            cardIDNameDict[line[0]] = line[1]
 
 
-# Write card ID to name dict
-with open(outfileIDToName, "w") as file:
-    file.write(dumps(cardIDNameDict))
+
+
 
 
 # -------------------- Relate card names to card traits -------------------- #
@@ -224,10 +212,17 @@ with open(cardDetailsFile, encoding="utf-8") as file:
 
 
 for match in matches:
-    cardName = re.search("title=\"CardData:.*\">C", match).group().split(":")[1][:-3].replace("Æ", "AE").replace("æ", "ae").replace("’", "'")
+    cardName = re.search("title=\"CardData:.*\">C", match).group().split(":")[1][:-3]
+    cardName = normalizeCardName(cardName).replace(" (Anomaly)", "")
     
-    if cardName == "(Redacted)":
-        cardName = "[Redacted]"
+    # Handle Redacted
+    if cardName == "(REDACTED)":
+        cardName = "[REDACTED]"
+
+    # Handle Evil Twins
+    tokens = cardName.split(" (Evil Twin)")
+    if len(tokens) > 1:
+        cardName = "Evil " + tokens[0]
         
     try:
         traitTokens = re.search("Traits\"><p>.*<\/p", match).group()[11:-3].split(" ")
@@ -268,7 +263,10 @@ for i in range(len(keys)):
 
     multiplesDict[keys[i]] = i
 
-output += "\b\b\nON CONFLICT (multiple_id) DO UPDATE\nSET\tmultiples = excluded.multiples;"
+output = output[:-2]
+output += "\nON CONFLICT (multiple_id) DO UPDATE\n"
+output += "SET   multiples = excluded.multiples"
+output += ";"
 
 with open(outfileMultiplesQuery, "w") as file:
     file.write(output)
@@ -290,7 +288,8 @@ IDENTIFY_SET = {
     "3": "WC",
     "4": "MM",
     "5": "DT",
-    "6": "WOE"
+    "6": "WOE",
+    "500": "VM",
 }
 
 
@@ -314,7 +313,7 @@ for id in cardIDToTraitDict:
         scoreName = scoreName.replace(u"\u0103", "a").replace(u"\u0115", "e").replace(u"\u012d", "i").replace(u"\u014f", "o").replace(u"\u016d", "u")
 
     # Get the set of a card
-    setId = id[0]
+    setId = id[:-3]
     if setId == "-":
         if (scoreName[0] == "E" or scoreName[0] == "C" or scoreName[:2] == "Ne"):
             cardSet="WOE"
@@ -461,6 +460,22 @@ for id in cardIDToTraitDict:
             cardName = "Ortannu's Binding"
             cardSet = "AoA"
 
+        # ---Vault Master Fixes--- #
+        elif firstWord == "chenille":
+            cardName = oldCardName
+            cardSet = "DT"
+        
+        elif firstWord == "bombyx":
+            cardName = oldCardName
+            cardSet = "DT"
+            
+        elif firstWord == "fifalde":
+            cardName = oldCardName
+            cardSet = "DT"
+
+        elif firstWord == "master":
+            cardName = oldCardName
+            cardSet = "COTA"
 
         # World's Collide variants
         # Brobnar brews

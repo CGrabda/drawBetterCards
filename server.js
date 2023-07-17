@@ -229,7 +229,7 @@ app.post('/import', isAuthenticated, doesDeckExist, (req, res, next) => {
             PythonShell.run(process.env.SCRIPT_PATH + 'ZscoreDeck.py', options)
             .then(messages=>{
                 // messages is an array of the output from execution
-                // console.log(messages[0])
+                //console.log(messages)
                 if (messages[0] instanceof Error) {
                     return new Error('Deck import error')
                 }
@@ -567,12 +567,12 @@ app.use(function(req, res, next) {
 })
 
 // 500 Server Error
-app.use(function(err, req, res) {
+// eslint-disable-next-line no-unused-vars
+app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: err
-    });
+    console.log(err.message);
+    req.flash('error', ['An unexpected error occurred, please contact a team member.'])
+    res.redirect('/');
 });
 
 
@@ -606,7 +606,7 @@ function validateInput(req, res, next) {
     var error_messages =  []
 
     if (req.body.username.length < 4) {
-        error_messages.push('Usersname should be at least 4 characters long')
+        error_messages.push('Username should be at least 4 characters long')
     }
     if (req.body.password.length < 10) {
         error_messages.push('Password should be at least 10 characters long')

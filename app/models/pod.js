@@ -14,51 +14,51 @@ module.exports = function(sequelize, Sequelize) {
       allowNull: false
     },
     card1: {
-      type: DataTypes.SMALLINT,
+      type: DataTypes.INTEGER,
       defaultValue: null
     },
     card2: {
-      type: DataTypes.SMALLINT,
+      type: DataTypes.INTEGER,
       defaultValue: null
     },
     card3: {
-        type: DataTypes.SMALLINT,
+        type: DataTypes.INTEGER,
         defaultValue: null
     },
     card4: {
-      type: DataTypes.SMALLINT,
+      type: DataTypes.INTEGER,
       defaultValue: null
     },
     card5: {
-        type: DataTypes.SMALLINT,
+        type: DataTypes.INTEGER,
         defaultValue: null
     },
     card6: {
-        type: DataTypes.SMALLINT,
+        type: DataTypes.INTEGER,
         defaultValue: null
     },
     card7: {
-        type: DataTypes.SMALLINT,
+        type: DataTypes.INTEGER,
         defaultValue: null
     },
     card8: {
-        type: DataTypes.SMALLINT,
+        type: DataTypes.INTEGER,
         defaultValue: null
     },
     card9: {
-        type: DataTypes.SMALLINT,
+        type: DataTypes.INTEGER,
         defaultValue: null
     },
     card10: {
-        type: DataTypes.SMALLINT,
+        type: DataTypes.INTEGER,
         defaultValue: null
     },
     card11: {
-        type: DataTypes.SMALLINT,
+        type: DataTypes.INTEGER,
         defaultValue: null
     },
     card12: {
-        type: DataTypes.SMALLINT,
+        type: DataTypes.INTEGER,
         defaultValue: null
     },
     enhancements: {

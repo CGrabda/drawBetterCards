@@ -83,6 +83,7 @@ IDENTIFY_SET = {
     "496": ("DT", 5),
     "600": ("WOE", 6),
     "601": ("U23", 1001),
+    "609": ("VM", 500),
 }
 
 
@@ -374,6 +375,22 @@ def getScore(decklist, pods, deckInfo):
                 elif firstWord == "ortannu's":
                     cardName = "Ortannu's Binding"
                     cardSet = "AoA"
+
+                # ---Vault Master Fixes--- #
+                elif firstWord == "chenille":
+                    cardName = oldCardName
+                    cardSet = "DT"
+                    cardID = 5375
+                
+                elif firstWord == "bombyx":
+                    cardName = oldCardName
+                    cardSet = "DT"
+                    cardID = 5376
+                    
+                elif firstWord == "fifalde":
+                    cardName = oldCardName
+                    cardSet = "DT"
+                    cardID = 5377
 
 
                 # World's Collide variants

@@ -4,7 +4,7 @@ const sequelize = require('../db.js')
 module.exports = function(sequelize, Sequelize) {
   const Card = sequelize.define('Card', {
     card_id: {
-      type: DataTypes.SMALLINT,
+      type: DataTypes.INTEGER,
       primaryKey: true,
       allowNull: false,
       unique: true
