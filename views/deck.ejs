@@ -18,6 +18,11 @@
             </div>
         <% } %>
 
+        <% if (messages.success) { %>
+            <div class="text-success">
+                <%= messages.success %>
+            </div>
+        <% } %>
         <div class="bg-dark text-white">
             <% // Handle ordering the pods %>
             <% query.dataValues.Pods.sort(function(a, b){return a.house_id - b.house_id}) %>
@@ -26,53 +31,46 @@
             <table data-bs-theme="dark">
                 <% // Check if user is logged in %>
                 <% if (isLoggedIn) { %>
-                    <% // Check if user is owner %>
-                    <% if (query.dataValues.owner_id == user.id) { %>
-                        <tr>
-                        <% // Hide/Unhide deck buttons %>
-                                
-                            <td>
-                                <% if (query.dataValues.hidden == false) { %>
-                                    <form action=<%= "/deck/" + query.dataValues.deck_code + "/hide" %> method="POST">
-                                        <button type="submit">Hide Deck</button>
-                                    </form>
-                                <% } else { %>
-                                    <form action=<%= "/deck/" + query.dataValues.deck_code + "/hide" %> method="POST">
-                                        <button type="submit">Unhide Deck</button>
-                                    </form>
-                                <% } %>
-                            </td>
-
-                        </tr>
-                        <tr>
-                            <% // If deck has no alpha displays requests and button %>
-                            <% if (query.dataValues.alpha_score == null) { %>
-                                <td>Alpha Scores Remaining:</td>
-                                <td><%= user.alpha_requests %></td>
-                                
-                                <% // Request alpha score button %>
-                                <% if (user.alpha_requests > 0) { %>
-                                    <td>
-                                        <form action=<%= "/deck/" + query.dataValues.deck_code + "/alpha" %> method="POST">
-                                            <button type="submit">Request Alpha Score</button>
-                                        </form>
-                                    </td>
-                                <% } %>
-                            <!--If alpha is pending, say is pending-->
-                            <% } else if (query.dataValues.alpha_score == "P") { %>
-                                <td>Alpha score is pending...</td>
+                    <% // Mine/Not Mine deck buttons %>
+                    <tr>
+                        <td>
+                            <% if (isInCollection) { %>
+                                <form action=<%= "/deck/" + query.dataValues.deck_code + "/notmine" %> method="POST">
+                                    <button class="pb-1 pt-1 btn btn-outline-light" type="submit">Not Mine</button>
+                                </form>
+                            <% } else { %>
+                                <form action=<%= "/deck/" + query.dataValues.deck_code + "/mine" %> method="POST">
+                                    <button class="pb-1 pt-1 btn btn-outline-light" type="submit">Mine</button>
+                                </form>
                             <% } %>
-                        </tr>
-                    <% } %>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <% // If deck has no alpha displays requests and button %>
+                        <% if (query.dataValues.alpha_score == null) { %>
+                            <% // Request alpha score button %>
+                            <% if (user.alpha_requests > 0) { %>
+                                <td>
+                                    <form class="pt-3 pb-2" action=<%= "/deck/" + query.dataValues.deck_code + "/alpha" %> method="POST">
+                                        <button class="pb-1 pt-1 btn btn-outline-warning" type="submit">Request Alpha Score</button>
+                                    </form>
+                                </td>
+                            <% } %>
+                        <!--If alpha is pending, say is pending-->
+                        <% } else if (query.dataValues.alpha_score == "P") { %>
+                            <td class="py-2">Alpha score is pending...</td>
+                        <% } %>
+                    </tr>
                 <% } %>
 
                 <% if (query.dataValues.alpha_score != "P" && query.dataValues.alpha_score != null) { %>
-                    <td>Alpha Score: <%= query.dataValues.alpha_score %></td>
+                    <td class="py-2">Alpha Score: <%= query.dataValues.alpha_score %></td>
                 <% } %>
 
                 <% if (query.Token) { %>
                     <% // if the deck has a token, display token %>
-                    <td>Token:  <%= query.Token.Card.card_name %></td>
+                    <td class="py-2">Token:  <%= query.Token.Card.card_name %></td>
                 <% } %>
             </table>
 

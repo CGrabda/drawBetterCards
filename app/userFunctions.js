@@ -1,7 +1,9 @@
 const sequelize = require('./db.js');
 const { DataTypes, Op } = require('sequelize');
 const User = require('./models/user.js')(sequelize, DataTypes)
+const Collection = require('./models/collection.js')(sequelize, DataTypes)
 const {PythonShell} = require('python-shell')
+
 
 // Dict for setting the number of imports and alphas for backers
 var rewardDict = {
@@ -134,8 +136,47 @@ async function getUserObjectFromToken(token) {
 }
 
 
+async function addToCollection(user_id, deck_id) {
+    await Collection.create({
+        owner_id: user_id,
+        deck_id: deck_id
+    })
+}
+
+async function removeFromCollection(user_id, deck_id) {
+    await Collection.destroy({
+        where: {
+            owner_id: user_id,
+            deck_id: deck_id
+        },
+        force: true
+    })
+}
+
+async function isDeckInCollection(user_id, deck_id) {
+    return await Collection.findOne({
+        where: {
+            owner_id: user_id,
+            deck_id: deck_id
+        }
+    })
+    .then(async query=> {
+        // If there is a value, add the user has this deck in their collection
+        if (query) {
+            return true
+        }
+        
+        // The query result was null, the user does not have this deck
+        return false
+    })
+}
+
+
 module.exports.updateTiers = updateTiers
 module.exports.processRewards = processRewards
 module.exports.getEmail = getEmail
 module.exports.setToken = setToken
 module.exports.getUserObjectFromToken = getUserObjectFromToken
+module.exports.addToCollection = addToCollection
+module.exports.removeFromCollection = removeFromCollection
+module.exports.isDeckInCollection = isDeckInCollection

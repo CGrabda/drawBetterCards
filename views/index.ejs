@@ -12,8 +12,14 @@
 
     <div class="bg-dark text-white px-4 pb-4">    
         <% if (messages.error) { %>
-        <div class="text-danger">
+            <div class="text-danger">
                 <%= messages.error %>
+            </div>
+        <% } %>
+
+        <% if (messages.success) { %>
+            <div class="text-success">
+                <%= messages.success %>
             </div>
         <% } %>
             

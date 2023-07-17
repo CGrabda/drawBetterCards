@@ -1,5 +1,6 @@
-const sequelize = require('./db.js');
-const { DataTypes } = require('sequelize');
+const sequelize = require('./db.js')
+const { DataTypes } = require('sequelize')
+const deck = require('./models/deck.js')
 const Deck = require('./models/deck.js')(sequelize, DataTypes)
 const House = require('./models/house.js')(sequelize, DataTypes)
 const Multiple = require('./models/multiples.js')(sequelize, DataTypes)
@@ -43,7 +44,7 @@ Deck.belongsTo(Token, { foreignKey: "token", targetKey: "token_id" })
 Token.belongsTo(Card, { foreignKey: "card_id" })
 
 
-async function addDeck(deck_info, pod_info, user_id, hidden) {
+async function addDeck(deck_info, pod_info) {
     // check if deck exist by hash, redirect user to page if exists
     var houseStrings = Object.keys(pod_info);
     var houses = [];
@@ -59,9 +60,7 @@ async function addDeck(deck_info, pod_info, user_id, hidden) {
     return sequelize.transaction(function (t) {
         return Deck.create({
             deck_code: deck_info["code"],
-            owner_id: user_id,
             deck_name: deck_info["name"],
-            hidden: hidden,
             raw_score: deck_info["score"],
             house1: houses[0],
             house2: houses[1],
@@ -131,33 +130,19 @@ async function addDeck(deck_info, pod_info, user_id, hidden) {
                 pod_actions: pod["actions"],
                 pod_upgrades: pod["upgrades"]
             }, {transaction: t});
+
+            return [deck.deck_id, deck.deck_code]
         }).catch(function (err) {
             console.log(err)
             throw new Error('Error importing Deck')
-        });
-    }).then(function() {
+        })
+    }).then(results => {
         // transaction successful
-        return deck_info["code"]
+        return results
     }).catch(e=> {
         console.log(e)
         throw new Error('Deck already imported');
     });
-}
-
-
-async function hideDeck(deck_code, bool) {
-    await Deck.update(
-        { hidden: bool },
-        { where: { deck_code: deck_code } }
-    )
-}
-
-
-async function updateAlpha(deck_code, score) {
-    await Deck.update(
-        { alpha_score: score, updatedAt: sequelize.literal('CURRENT_TIMESTAMP') },
-        { where: { deck_code: deck_code } }
-    )
 }
 
 
@@ -308,8 +293,6 @@ async function parseAttributes(deck_object) {
 
 
 module.exports.addDeck = addDeck
-module.exports.hideDeck = hideDeck
-module.exports.updateAlpha = updateAlpha
 module.exports.getAllDeckInfo = getAllDeckInfo
 module.exports.parseAttributesImport = parseAttributesImport
 module.exports.adjustScoreOnAllDecks = adjustScoreOnAllDecks

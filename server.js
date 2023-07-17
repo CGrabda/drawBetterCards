@@ -28,12 +28,19 @@ const sequelize = require('./app/db.js')
 const { DataTypes, Op, Utils, Sequelize } = require("sequelize")
 const User = require('./app/models/user.js')(sequelize, DataTypes)
 const Decks = require('./app/models/deck.js')(sequelize, DataTypes)
+const Collections = require('./app/models/collection.js')(sequelize, DataTypes)
 const {PythonShell} = require('python-shell')
 const deckFunctions = require('./app/deckFunctions.js');
 const userFunctions = require('./app/userFunctions.js');
 const token = require('./app/models/token.js');
 
+// Associate decks and users to Collections
+Decks.hasMany(Collections, { foreignKey: "deck_id" })
+User.hasMany(Collections, { foreignKey: "owner_id", targetKey: "id" })
+
+
 require('./app/passport.js')
+
 
 
 // Express Middleware
@@ -94,7 +101,7 @@ app.use(hpp());
 app.use(function(req, res, next) {
     if (toobusy()) {
         // log if you see necessary
-        res.status(503).send("Server Too Busy");
+        return res.status(503).send("Server Too Busy");
     } else {
     next();
     }
@@ -128,17 +135,11 @@ const ALPHA_SCORES = ['F', 'D', 'C-', 'C', 'C+', 'B-', 'B', 'B+', 'A-', 'A', 'A+
 app.get('/', (req, res) => {
     Promise.all([
         Decks.findAll({
-            where: { hidden: false },
             limit: 5,
             order: [['adj_score', 'DESC' ], ['createdAt', 'DESC']],
         }), 
         Decks.findAll({
-            where: {
-                [Op.and]: [
-                    { createdAt: {[Op.gte]: moment().subtract(30, 'days').toDate()} },
-                    { hidden: false }
-                ]
-            },
+            where: { createdAt: { [Op.gte]: moment().subtract(30, 'days').toDate() } },
             limit: 5,
             order: [['createdAt', 'DESC' ]]
         })
@@ -151,7 +152,7 @@ app.get('/', (req, res) => {
 
 // login page
 app.get('/login', isNOTAuthenticated, (req, res) => {
-    res.render('login.ejs', { isLoggedIn: req.isAuthenticated() })
+    return res.render('login.ejs', { isLoggedIn: req.isAuthenticated() })
 })
 
 // Post login
@@ -161,7 +162,7 @@ app.post('/login', isNOTAuthenticated, passport.authenticate('local', {
     failureFlash: true
     }),
     (req, res) => {
-        res.status(200).send({ message: 'Successful Authentication' })
+        return res.status(200).send({ message: 'Successful Authentication' })
     }
 )
 
@@ -176,7 +177,7 @@ app.get('/register', isNOTAuthenticated, (req, res) => {
     });
     req.session.captcha = captcha.text;
     
-    res.render('register.ejs', { captcha_image: captcha.data, isLoggedIn: req.isAuthenticated() })
+    return res.render('register.ejs', { captcha_image: captcha.data, isLoggedIn: req.isAuthenticated() })
 })
 /*
 // Post register
@@ -207,7 +208,7 @@ app.post('/register', isNOTAuthenticated, passedCaptcha, validateInput, async (r
 app.post('/logout', isAuthenticated, (req, res, next) => {
     req.logOut(function(err) {
         if (err) { return next(err) }
-        res.redirect('/')
+        return res.redirect('/')
     })
 })
 
@@ -236,8 +237,17 @@ app.post('/import', isAuthenticated, doesDeckExist, (req, res, next) => {
                 output = JSON.parse(messages[0])
 
                 // Add deck to database
-                console.log('Importing ' + output["deck_info"]["name"])
-                return deckFunctions.addDeck(output["deck_info"], output["pod_info"], req.user.id, req.body.hidden).catch(e => {
+                console.log('Importing ' + output["deck_info"]["name"] + ': ' + req.user.username)
+                return deckFunctions.addDeck(output["deck_info"], output["pod_info"])
+                .then(deck_info => {
+                    // Add deck to user's collection on import
+                    if (!req.body.isNotInCollection) {
+                        console.log('CollectionAdd ' + output["deck_info"]["name"] + ': ' + req.user.username)
+                        userFunctions.addToCollection(req.user.id, deck_info[0])
+                    }
+                    return deck_info[1]
+                })
+                .catch(e => {
                     console.log(e)
                     return new Error('Deck add Error')
                 });
@@ -259,13 +269,12 @@ app.post('/import', isAuthenticated, doesDeckExist, (req, res, next) => {
             req.flash('error', 'Error importing deck, contact a team member')
             console.log('Error importing deck')
             console.log(PythonShellError)
-            res.redirect('/')
-            return
+            return res.redirect('/')
         }
     }
     else {
         req.flash('error', 'No imports available')
-        res.redirect('/')
+        return res.redirect('/')
     }
 })
 
@@ -273,14 +282,14 @@ app.post('/import', isAuthenticated, doesDeckExist, (req, res, next) => {
 // Mydecks page
 app.get('/mydecks', isAuthenticated, (req, res) => {
     // Visit mydecks page, deck rendering is handled by /load/mydecks
-    res.render('mydecks.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user })
+    return res.render('mydecks.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user })
 })
 
 
 // Search/All Decks page
 app.get('/search', (req, res) => {
     // Visit search page, deck rendering is handled by /load/search
-    res.render('search.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user })
+    return res.render('search.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user })
 })
 
 
@@ -291,10 +300,13 @@ app.post('/load/:search', (req, res, next) => {
     if (req.params.search == "mydecks") {
         return Decks.findAll({
             // Request originating from mydecks page
+            include: {
+                model: Collections,
+                where: { owner_id: req.user.id }
+            },
             limit: 15,
             offset: 15 * req.body.page,
-            where: { owner_id: req.user.id },
-            order: [['adj_score', 'DESC'], ['createdAt', 'DESC']]
+            order: [['adj_score', 'DESC'], ['createdAt', 'DESC']],
         })
         .then(results=> {
             return res.json({ html: queryToHTML(results) })
@@ -305,7 +317,6 @@ app.post('/load/:search', (req, res, next) => {
             // Request originating from search page
             limit: 15,
             offset: 15 * req.body.page,
-            where: { hidden: false },
             order: [['adj_score', 'DESC'], ['createdAt', 'DESC']]
         })
         .then(results=> {
@@ -331,81 +342,80 @@ app.get("/deck/:deck_code", isValidCode, function(req, res) {
             throw new Error();
         }
 
-        // If deck is hidden
-        if (results.dataValues.hidden) {
-            // See if user is authenticated
-            if (typeof req.user != 'undefined') {
-                // Check that the authenticated user is the deck owner
-                if (req.user.id == results.owner_id) {
-                    // Render deck page
-                    return res.render('deck.ejs', { query: results, isLoggedIn: req.isAuthenticated(), user: req.user })
-                }
-            }
 
-            // The person trying to view the deck is not authenticated or not the owner
-            req.flash('error', 'Error viewing deck, contact a team member')
-            return res.redirect('/')
+        if (req.isAuthenticated()) {
+            // Check if user has deck in collection
+            return userFunctions.isDeckInCollection(req.user.id, results["dataValues"]["deck_id"])
+            .then(isInCollection=> {
+                return res.render('deck.ejs', { query: results, isLoggedIn: req.isAuthenticated(), user: req.user, isInCollection: isInCollection })
+            })
+            .catch(e=> {
+                console.log(e)
+            })
         }
-        else {
-            // If deck is not hidden, display
-            return res.render('deck.ejs', { query: results, isLoggedIn: req.isAuthenticated(), user: req.user })
-        }
+        
+        // User is not authenticated, no collection check
+        return res.render('deck.ejs', { query: results, isLoggedIn: req.isAuthenticated(), user: req.user, isInCollection: false })
+        
+
     // On error, flash error message and redirect to index
     }).catch(e=> { req.flash('error', 'Error viewing deck, contact a team member'); console.log(e); res.redirect('/'); })
 })
 
 
-// Post deckaction, hide/unhide toggle and alpha scoring
+// Post deckaction, mine/notmine collections and alpha scoring
 // eslint-disable-next-line no-unused-vars
 app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res, next) => {
-    // Hide a deck
-    var path = req.params.deck_code
+    var deck_code = req.params.deck_code
     var deckAction = req.params.deckAction
 
-    if (deckAction === 'hide') {
-        // Get the requested deck
-        Decks.findOne({
-            where: { deck_code: path }
-        }).then(results=> {
+    // Add deck to a user's collection
+    if (deckAction === 'mine') {
+        Decks.findOne({ where: { deck_code: deck_code } })
+        .then(query=> {
             try {
-                // Check if the deck owner is the requester
-                if (req.user.id == results.owner_id) {
-                    // Toggle for hiding/unhiding deck
-                    if (results.hidden) {
-                        deckFunctions.hideDeck(path, false)
-                    }
-                    else {
-                        deckFunctions.hideDeck(path, true)
-                    }
-
-                    return res.redirect('/deck/' + results.deck_code) 
-                }
-                else {
-                    throw new Error('Deck owner is not the requesting user')
-                }
+                userFunctions.addToCollection(req.user.id, query["dataValues"]["deck_id"])
+                console.log('CollectionAdd ' + query["dataValues"]["deck_name"] + ': ' + req.user.username)
+                req.flash('success', 'Deck added to collection')
+            } catch (e) {
+                req.flash('error', 'Error adding deck to collection')
             }
-            catch (e) {
-                console.log(e)
-                req.flash('error', 'Nice try, bucko ;)')
-                return res.redirect('/')
-            }
+            // Render deck page
+            return res.redirect('/deck/' + deck_code)
         })
     }
+
+    // Remove deck from a user's collection
+    else if (deckAction === 'notmine') {
+        Decks.findOne({ where: { deck_code: deck_code } })
+        .then(query=> {
+            try {
+                userFunctions.removeFromCollection(req.user.id, query["dataValues"]["deck_id"])
+                console.log('CollectionRemove ' + query["dataValues"]["deck_name"] + ': ' + req.user.username)
+                req.flash('success', 'Deck removed from collection')
+            } catch (e) {
+                req.flash('error', 'Error removing deck from collection')
+            }
+            // Render deck page
+            return res.redirect('/deck/' + deck_code)
+        })
+    }
+
     else if (deckAction === 'alpha') {
         // Update the alpha status
         // Get the requested deck
-        Decks.findOne({ where: { deck_code: path } })
+        Decks.findOne({ where: { deck_code: deck_code } })
         .then(query=> {
             try {
                 // if no score
                 if (query.alpha_score == null) {
                     // Check if the deck owner is the requester
                     if (req.user.id == query.owner_id) {
-                        deckFunctions.updateAlpha(path, "P")
+                        deckFunctions.updateAlpha(deck_code, "P")
                         // Decrement alpha_requests by 1
                         .then(results=> { req.user.requestedAlpha(); return results })
                         // Render deck page
-                        .then(function() { return res.redirect('/deck/' + query.deck_code) })
+                        .then(function() { return res.redirect('/deck/' + deck_code) })
                     }
                     else {
                         throw new Error('Deck owner is not the requesting user')
@@ -648,7 +658,8 @@ function doesDeckExist(req, res, next) {
         }).then(results=> {
             if (results != null) {
                 // Deck already exists, redirect to deck page
-                req.flash('error', 'Deck already imported')
+                userFunctions.addToCollection(req.user.id, deck_code)
+                req.flash('success', 'Deck already imported, added to collection')
                 return res.redirect('/deck/' + results.dataValues.deck_code)
             }
             else {

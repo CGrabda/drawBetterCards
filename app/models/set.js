@@ -3,27 +3,27 @@ const { DataTypes } = require("sequelize")
 const sequelize = require('../db.js')
 
 module.exports = function(sequelize, Sequelize) {
-  const Set = sequelize.define('Set', {
-    set_id: {
-      type: DataTypes.SMALLINT,
-      primaryKey: true,
-      allowNull: false,
-      unique: true
+    const Set = sequelize.define('Set', {
+        set_id: {
+            type: DataTypes.SMALLINT,
+            primaryKey: true,
+            allowNull: false,
+            unique: true
+        },
+        set_name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true
+        },
+        set_abbrev: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true
+        },
     },
-    set_name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
-    },
-    set_abbrev: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
-      },
-  },
-  {
-    timestamps: false 
-  })
+    {
+        timestamps: false 
+    })
 
-  return Set
+    return Set
 }
