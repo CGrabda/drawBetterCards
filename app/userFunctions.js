@@ -137,14 +137,14 @@ async function getUserObjectFromToken(token) {
 
 
 async function addToCollection(user_id, deck_id) {
-    await Collection.create({
+    return await Collection.create({
         owner_id: user_id,
         deck_id: deck_id
     })
 }
 
 async function removeFromCollection(user_id, deck_id) {
-    await Collection.destroy({
+    return await Collection.destroy({
         where: {
             owner_id: user_id,
             deck_id: deck_id

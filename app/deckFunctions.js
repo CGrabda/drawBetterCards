@@ -187,7 +187,7 @@ async function adjustScoreOnAllDecks() {
 async function rescoreAllDecks() {
     var timer = Date.now()
     // Retrieve all decks including pods/cards
-    await Deck.findAll({ include: [{ model: Pod, include: {all: true, nested: true} }] })
+    return await Deck.findAll({ include: [{ model: Pod, include: {all: true, nested: true} }] })
     .then(async query=> {
         // go through each deck, score all the cardName->scoringDict
         for (var deck_object in query) {
@@ -196,13 +196,14 @@ async function rescoreAllDecks() {
                 throw new Error(e)
             })
         }
+        
         console.log('Count of decks: ' + query.length.toString())
         console.log('All decks updated in ' + ((Date.now() - timer)/1000).toString() + "s")
+        return
     })
     .catch(e=> {
         console.log(e)
     })
-
 }
 
 
