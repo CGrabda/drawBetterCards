@@ -470,7 +470,7 @@ async function parseAttributes(deck_object) {
     var attributes = {}
 
     // Score tokens and updates attributes dict
-    await scoreTokens(deck_object, attributes)
+    return await scoreTokens(deck_object, attributes)
     .then(async function() {
         // Goes through each attribute of the deck and tallies score adjustment
         var score_adj = 0
@@ -644,7 +644,10 @@ async function rescoreDeck(deck_object) {
     deck_object.adj_score = raw_score + adjustment_pod.pod_score
 
     // Push updates to db
-    deck_object.save()
+    return deck_object.save()
+    .then(async function() {
+        return
+    })
 }
 
 
