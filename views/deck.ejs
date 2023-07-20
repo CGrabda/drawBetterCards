@@ -8,7 +8,7 @@
     <link rel="stylesheet" href ="/assets/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="bg-dark text-white">
+    <div class="bg-dark pb-4 text-white">
         <%- include('partials/navbar.ejs') %>
         <%- include('partials/imports.ejs') %>
 
@@ -23,7 +23,7 @@
                 <%= messages.success %>
             </div>
         <% } %>
-        <div class="bg-dark text-white">
+        <div class="bg-dark px-2 text-white">
             <% // Handle ordering the pods %>
             <% query.dataValues.Pods.sort(function(a, b){return a.house_id - b.house_id}) %>
             <h1><img src=<%= "/rsrc/set_" + query.dataValues.set_id + ".png" %> width="4%" height="4%" />  <%= query.dataValues.deck_name %></h1>
@@ -36,11 +36,11 @@
                         <td>
                             <% if (isInCollection) { %>
                                 <form action=<%= "/deck/" + query.dataValues.deck_code + "/notmine" %> method="POST">
-                                    <button class="pb-1 pt-1 btn btn-outline-light" type="submit">Not Mine</button>
+                                    <button class="py-1 mx-3 btn btn-outline-light" type="submit">Not Mine</button>
                                 </form>
                             <% } else { %>
                                 <form action=<%= "/deck/" + query.dataValues.deck_code + "/mine" %> method="POST">
-                                    <button class="pb-1 pt-1 btn btn-outline-light" type="submit">Mine</button>
+                                    <button class="py-1 mx-3 btn btn-outline-light" type="submit">Mine</button>
                                 </form>
                             <% } %>
                         </td>
@@ -53,7 +53,7 @@
                             <% if (user.alpha_requests > 0) { %>
                                 <td>
                                     <form class="pt-3 pb-2" action=<%= "/deck/" + query.dataValues.deck_code + "/alpha" %> method="POST">
-                                        <button class="pb-1 pt-1 btn btn-outline-warning" type="submit">Request Alpha Score</button>
+                                        <button class="py-1 mx-3 btn btn-outline-warning" type="submit">Request Alpha Score</button>
                                     </form>
                                 </td>
                             <% } %>

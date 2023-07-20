@@ -4,8 +4,8 @@
             <div class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
                 <h6 class="px-2 text-warning">Alpha Scores: <%= user.alpha_requests %></h6>
                 <h6 class="px-3 text-warning">Imports: <%= ((user.imports > 1000) ? '∞' : user.imports) %></h6>
-                <input type="text" id="deckLink" name="deckLink" placeholder="Deck Link" required>
-                <button class="pb-1 pt-1 btn btn-outline-light" type="submit">Import</button>
+                <input class="px-2" type="text" id="deckLink" name="deckLink" placeholder="Deck Link" required>
+                <button class="btn btn-outline-light" type="submit">Import</button>
                 <h6 class="px-2 text-light">Exclude From Collection: <input class="form-check-input" type="checkbox" id="isNotInCollection" name="isNotInCollection" value="1"></h6>
             </div>
         </div>

@@ -445,7 +445,7 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
 })
 
 // admin pages
-app.get("/admin/:path", isAuthenticated, isAdmin, function(req, res) {
+app.get("/admin/:path", isAdmin, isAuthenticated, function(req, res) {
     var path = req.params.path
 
     // render the paths
@@ -465,6 +465,14 @@ app.get("/admin/:path", isAuthenticated, isAdmin, function(req, res) {
         deckFunctions.adjustScoreOnAllDecks()
         .then(function () {
             req.flash('error', ["Score Adjustments Updated. That better have been important..."])
+            res.render('admin.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user }) 
+        })
+    }
+    else if (path == 'rescoreAll') {
+        // Adjust the scores and get attributes of all decks
+        deckFunctions.rescoreAllDecks()
+        .then(function () {
+            req.flash('error', ["All decks have been rescored. That better have been important..."])
             res.render('admin.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user }) 
         })
     }
@@ -676,11 +684,13 @@ function doesDeckExist(req, res, next) {
 }
 
 function isAdmin (req, res, next) {
-    if (req.user.is_admin === true) {
-        return next()
+    if (req.user) {
+        if (req.user.is_admin === true) {
+            return next()
+        }
     }
 
-    res.status(404).redirect('404.ejs')
+    return res.status(404).redirect('/404')
 }
 
 function passedCaptcha(req, res, next) {

@@ -245,9 +245,8 @@ def getScore(decklist, pods, deckInfo):
             oldCardName = cardName
             cardName = None
 
-            # If it did not have a hyphen in the name
             # The Tide
-            if firstWord == "the":
+            if oldCardName == "The Tide":
                 continue
 
             

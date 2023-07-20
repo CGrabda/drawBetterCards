@@ -9,7 +9,7 @@
 </head>
 <body>
     <%- include('partials/navbar.ejs') %>
-    <div class="bg-dark text-white">
+    <div class="bg-dark text-white px-4 pb-5">
         <h1>Admin Page</h1>
 
         <% if (messages.error) { %>
@@ -18,16 +18,23 @@
                 </div>
         <% } %>
 
-        <div class="btn-toolbar pb-5 " role="toolbar">
+        <div class="btn-toolbar" role="toolbar">
             <div class="mr-2 btn-group-vertical" role="group">
-                <form class="pb-5" action="/admin/alpha" method="GET">
+                <form class="py-2 mx-3" action="/admin/alpha" method="GET">
                     <button class="btn btn-outline-light w-10" type="submit">Alpha Score Hub</button>
                 </form>
 
                 <h3 class="pt-5 text-danger">Red buttons will take the site down</h3>
-                <form action="/admin/scoreAdj" method="GET">
-                    <button class="btn btn-danger text-black w-10" type="submit">Update Score Adjustment</button>
-                </form>
+                <div class="my-2 mx-3">
+                    <form action="/admin/scoreAdj" method="GET">
+                        <button class="btn btn-danger text-black w-10" type="submit">Update Score Adjustment</button>
+                    </form>
+                </div>
+                <div class="my-2 mx-3">
+                    <form action="/admin/rescoreAll" method="GET">
+                        <button class="btn btn-danger text-black w-10" type="submit">Rescore All Decks</button>
+                    </form>
+                </div>
             </div>
 
         </div>
