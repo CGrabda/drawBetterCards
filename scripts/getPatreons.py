@@ -1,4 +1,4 @@
-import rsrc.config as config
+import config as config
 import requests
 from datetime import datetime, timedelta
 from json import loads, dumps
