@@ -50,22 +50,37 @@
                         <% // If deck has no alpha displays requests and button %>
                         <% if (query.dataValues.alpha_score == null) { %>
                             <% // Request alpha score button %>
-                            <% if (user.alpha_requests > 0) { %>
-                                <td>
-                                    <form class="pt-3 pb-2" action=<%= "/deck/" + query.dataValues.deck_code + "/alpha" %> method="POST">
-                                        <button class="py-1 mx-3 btn btn-outline-warning" type="submit">Request Alpha Score</button>
-                                    </form>
-                                </td>
+                            <% if (isInCollection) { %>
+                                <% if (user.alpha_requests > 0) { %>
+                                    <td>
+                                        <form class="pt-3 pb-2" action=<%= "/deck/" + query.dataValues.deck_code + "/alpha" %> method="POST">
+                                            <button class="py-1 mx-3 btn btn-outline-warning" type="submit">Request Alpha Score</button>
+                                        </form>
+                                    </td>
+                                <% } %>
                             <% } %>
                         <!--If alpha is pending, say is pending-->
-                        <% } else if (query.dataValues.alpha_score == "P") { %>
+                        <% } else if (query.dataValues.alpha_score == "P" || query.dataValues.alpha_score[0] == "R") { %>
                             <td class="py-2">Alpha score is pending...</td>
                         <% } %>
                     </tr>
                 <% } %>
 
-                <% if (query.dataValues.alpha_score != "P" && query.dataValues.alpha_score != null) { %>
-                    <td class="py-2">Alpha Score: <%= query.dataValues.alpha_score %></td>
+                <% if (query.dataValues.alpha_score != null && query.dataValues.alpha_score != "P" && query.dataValues.alpha_score[0] != "R") { %>
+                    <% // Rescore alpha button %>
+                    <% if (isLoggedIn && isInCollection) { %>
+                        <% if (user.alpha_requests > 0) { %>
+                            <tr>
+                                <td>
+                                    <form class="pt-3 pb-2" action=<%= "/deck/" + query.dataValues.deck_code + "/alpharescore" %> method="POST">
+                                        <button class="py-1 mx-3 btn btn-outline-warning" type="submit">Request Alpha Re-Score</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% } %>
+                    <% } %>
+
+                    <td class="py-2 ">Alpha Score: <%= query.dataValues.alpha_score %></td>
                 <% } %>
 
                 <% if (query.Token) { %>
@@ -249,7 +264,7 @@
                     <th><%= query.dataValues.Pods[2].dataValues.pod_f %></th>
                     <th><%= query.dataValues.Pods[3].dataValues.pod_f %></th>
                     <th><%= query.dataValues.Pods[0].dataValues.pod_f %></th>
-                    <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_f) + parseInt(query.dataValues.Pods[2].dataValues.pod_f) + parseInt(query.dataValues.Pods[3].dataValues.pod_f) + parseInt(query.dataValues.Pods[0].dataValues.pod_f || 0) %></th>
+                    <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_f || 0) + parseInt(query.dataValues.Pods[2].dataValues.pod_f || 0) + parseInt(query.dataValues.Pods[3].dataValues.pod_f || 0) + parseInt(query.dataValues.Pods[0].dataValues.pod_f || 0) %></th>
                     <th style="text-align:left">F</th>
                 </tr>
                 <tr>
@@ -258,7 +273,7 @@
                     <th><%= query.dataValues.Pods[2].dataValues.pod_d %></th>
                     <th><%= query.dataValues.Pods[3].dataValues.pod_d %></th>
                     <th><%= query.dataValues.Pods[0].dataValues.pod_d %></th>
-                    <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_d) + parseInt(query.dataValues.Pods[2].dataValues.pod_d) + parseInt(query.dataValues.Pods[3].dataValues.pod_d) + parseInt(query.dataValues.Pods[0].dataValues.pod_d || 0) %></th>
+                    <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_d || 0) + parseInt(query.dataValues.Pods[2].dataValues.pod_d || 0) + parseInt(query.dataValues.Pods[3].dataValues.pod_d || 0) + parseInt(query.dataValues.Pods[0].dataValues.pod_d || 0) %></th>
                     <th style="text-align:left">D</th>
                 </tr>
                 <tr>
@@ -267,7 +282,7 @@
                     <th><%= query.dataValues.Pods[2].dataValues.pod_r %></th>
                     <th><%= query.dataValues.Pods[3].dataValues.pod_r %></th>
                     <th><%= query.dataValues.Pods[0].dataValues.pod_r %></th>
-                    <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_r) + parseInt(query.dataValues.Pods[2].dataValues.pod_r) + parseInt(query.dataValues.Pods[3].dataValues.pod_r) + parseInt(query.dataValues.Pods[0].dataValues.pod_r || 0) %></th>
+                    <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_r || 0) + parseInt(query.dataValues.Pods[2].dataValues.pod_r || 0) + parseInt(query.dataValues.Pods[3].dataValues.pod_r || 0) + parseInt(query.dataValues.Pods[0].dataValues.pod_r || 0) %></th>
                     <th style="text-align:left">R</th>
                 </tr>
                 <tr>
@@ -285,7 +300,7 @@
                     <th><%= query.dataValues.Pods[2].dataValues.pod_scaling_a %></th>
                     <th><%= query.dataValues.Pods[3].dataValues.pod_scaling_a %></th>
                     <th><%= query.dataValues.Pods[0].dataValues.pod_scaling_a %></th>
-                    <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_scaling_a) + parseInt(query.dataValues.Pods[2].dataValues.pod_scaling_a) + parseInt(query.dataValues.Pods[3].dataValues.pod_scaling_a) + parseInt(query.dataValues.Pods[0].dataValues.pod_scaling_a || 0) %></th>
+                    <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_scaling_a || 0) + parseInt(query.dataValues.Pods[2].dataValues.pod_scaling_a || 0) + parseInt(query.dataValues.Pods[3].dataValues.pod_scaling_a || 0) + parseInt(query.dataValues.Pods[0].dataValues.pod_scaling_a || 0) %></th>
                     <th style="text-align:left">Scaling A</th>
                 </tr>
                 <tr>
@@ -294,7 +309,7 @@
                     <th><%= query.dataValues.Pods[2].dataValues.pod_wipes %></th>
                     <th><%= query.dataValues.Pods[3].dataValues.pod_wipes %></th>
                     <th><%= query.dataValues.Pods[0].dataValues.pod_wipes %></th>
-                    <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_wipes) + parseInt(query.dataValues.Pods[2].dataValues.pod_wipes) + parseInt(query.dataValues.Pods[3].dataValues.pod_wipes) + parseInt(query.dataValues.Pods[0].dataValues.pod_wipes || 0) %></th>
+                    <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_wipes || 0) + parseInt(query.dataValues.Pods[2].dataValues.pod_wipes || 0) + parseInt(query.dataValues.Pods[3].dataValues.pod_wipes || 0) + parseInt(query.dataValues.Pods[0].dataValues.pod_wipes || 0) %></th>
                     <th style="text-align:left">Wipes</td>
                 </tr>
                 <tr>
@@ -303,7 +318,7 @@
                     <th><%= query.dataValues.Pods[2].dataValues.pod_cheats %></th>
                     <th><%= query.dataValues.Pods[3].dataValues.pod_cheats %></th>
                     <th><%= query.dataValues.Pods[0].dataValues.pod_cheats %></th>
-                    <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_cheats) + parseInt(query.dataValues.Pods[2].dataValues.pod_cheats) + parseInt(query.dataValues.Pods[3].dataValues.pod_cheats) + parseInt(query.dataValues.Pods[0].dataValues.pod_cheats || 0) %></th>
+                    <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_cheats || 0) + parseInt(query.dataValues.Pods[2].dataValues.pod_cheats || 0) + parseInt(query.dataValues.Pods[3].dataValues.pod_cheats || 0) + parseInt(query.dataValues.Pods[0].dataValues.pod_cheats || 0) %></th>
                     <th style="text-align:left">Cheats</td>
                 </tr>
                 <% if (query.Token) { %>

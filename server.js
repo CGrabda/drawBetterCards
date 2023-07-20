@@ -402,6 +402,7 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
         })
     }
 
+    // Set unscored deck to pending
     else if (deckAction === 'alpha') {
         // Update the alpha status
         // Get the requested deck
@@ -410,22 +411,18 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
             try {
                 // if no score
                 if (query.alpha_score == null) {
-                    // Check if the deck owner is the requester
-                    if (req.user.id == query.owner_id) {
-                        deckFunctions.updateAlpha(deck_code, "P")
-                        // Decrement alpha_requests by 1
-                        .then(results=> { req.user.requestedAlpha(); return results })
-                        // Render deck page
-                        .then(function() { return res.redirect('/deck/' + deck_code) })
-                    }
-                    else {
-                        throw new Error('Deck owner is not the requesting user')
-                    }
+                    query.updateAlpha("P")
+                    // Decrement alpha_requests by 1
+                    .then(results=> { req.user.requestedAlpha(); return results })
+
+                    // Render deck page
+                    .then(function() { return res.redirect('/deck/' + deck_code) })
                 }
                 else if (req.user.is_admin) {
                     // validate that the alpha score is a valid alpha score
                     if (ALPHA_SCORES.includes(req.body.alpha_score)) {
-                        deckFunctions.updateAlpha(path, req.body.alpha_score)
+                        console.log('Alpha score set on: ' + query.dataValues.deck_id + ' ' + req.user.username + ' ' + req.body.alpha_score)
+                        query.updateAlpha(req.body.alpha_score)
                         .then(function() { return res.status(200).send({ message: "Ok" }) })
                     }
                     else {
@@ -434,6 +431,31 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
                 }
                 else {
                     throw new Error('Requesting user is not admin')
+                }
+            }
+            catch (e) {
+                console.log(e)
+                req.flash('error', 'Nice try, bucko ;)')
+                return res.redirect('/')
+            }
+        })
+    }
+
+    // Set already scored deck to rescore
+    else if (deckAction === 'alpharescore') {
+        // Update the alpha status
+        // Get the requested deck
+        Decks.findOne({ where: { deck_code: deck_code } })
+        .then(query=> {
+            try {
+                // if no score
+                if (query.alpha_score != null && query.alpha_score != 'P') {        
+                    query.updateAlpha('R' + query.alpha_score)
+                    // Decrement alpha_requests by 1
+                    .then(results=> { req.user.requestedAlpha(); return results })
+
+                    // Render deck page
+                    .then(function() { return res.redirect('/deck/' + deck_code) })
                 }
             }
             catch (e) {
@@ -455,8 +477,10 @@ app.get("/admin/:path", isAdmin, isAuthenticated, function(req, res) {
     }
     else if (path == 'alpha') {
         // Get all decks pending an alpha score then render
+        // Alpha score is either P or starts with R
+        // Alpha scores with R store the prior score following e.g. RF RA+ RC-
         Decks.findAll({
-            where: { alpha_score: "P" },
+            where: { [Op.or]: [{ alpha_score: 'P' }, { alpha_score: { [Op.like]: 'R%' } }] },
             order: [['updatedAt', 'ASC' ]],
         })
         .then(results=> { res.render('alpha.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user, query: results }) })
@@ -707,7 +731,7 @@ function queryToHTML(query) {
 
     for (var i = 0; i < Object.keys(query).length; i++) {
         alpha = query[i]["dataValues"]["alpha_score"]
-        if (alpha ==='P' || alpha == null) {
+        if (alpha == null || alpha ==='P' || alpha[0] === 'R') {
             alpha = '-'
         }
 

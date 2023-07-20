@@ -69,12 +69,9 @@ module.exports = function(sequelize, Sequelize) {
         timestamps: false 
     })
 
-    Deck.prototype.updateAlpha = async function(deck_code, score) {
-        await Deck.update(
-            { alpha_score: score, updatedAt: sequelize.literal('CURRENT_TIMESTAMP') },
-            { where: { deck_code: deck_code } }
-          )
-      }
+    Deck.prototype.updateAlpha = async function(score) {
+        await this.update({ alpha_score: score, updatedAt: sequelize.literal('CURRENT_TIMESTAMP') })
+    }
 
     return Deck
 }

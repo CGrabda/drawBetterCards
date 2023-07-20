@@ -26,7 +26,13 @@
             <tbody>
             <% for (var i = 0; i < query.length; i++) { %>
                 <tr id=<%= "row_" + i %>>
-                    <td><%= query[i].dataValues.score %></td>
+                    <td><%= query[i].dataValues.adj_score %></td>
+                    <% // If deck is being rescored, displays the former score %>
+                    <td>
+                        <% if (query[i].dataValues.alpha_score != null && query[i].dataValues.alpha_score[0] === 'R') { %>
+                            Re: <%= query[i].dataValues.alpha_score.slice(1) %>
+                        <% } %>
+                    </td>
                     <td><a href=<%= "/deck/" + query[i].dataValues.deck_code %> id=<%= "deck_" + i %> class=<%= query[i].dataValues.deck_code %>><%= query[i].dataValues.deck_name %></a></td>
                     <td><img src=<%= "/rsrc/set_" + query[i].dataValues.set_id + ".png" %> width="32px" height="32px" /></td>
                     <td><img src=<%= "/rsrc/house_" + query[i].dataValues.house1 + ".png" %> width="48px" height="48px" />
