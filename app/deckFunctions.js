@@ -630,7 +630,7 @@ async function rescoreDeck(deck_object) {
             }
             
             // Update pod in db
-            pod.save()
+            await pod.save()
         }
         else {
             // House id is 1, assign the adjustment pod
@@ -644,10 +644,7 @@ async function rescoreDeck(deck_object) {
     deck_object.adj_score = raw_score + adjustment_pod.pod_score
 
     // Push updates to db
-    return deck_object.save()
-    .then(async function() {
-        return
-    })
+    return await deck_object.save()
 }
 
 
