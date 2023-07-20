@@ -162,6 +162,7 @@ app.post('/login', isNOTAuthenticated, passport.authenticate('local', {
     failureFlash: true
     }),
     (req, res) => {
+        console.log('Authentication to: ' + req.user.username + ' from ' + req.headers['CF-Connecting-IP'])
         return res.status(200).send({ message: 'Successful Authentication' })
     }
 )
@@ -578,19 +579,17 @@ app.post('/reset/:token', async (req, res) => {
 
 
 // 404 page
-app.use(function(req, res, next) {
-    console.log("Invalid Path " + req.url)
-    res.status(404).render('404.ejs', { user: req.user, isLoggedIn: req.isAuthenticated() });
-    next()
+app.get('*', function(req, res){
+    console.log('Invalid Path: ' + req.url)
+    return res.status(404).render('404.ejs', { user: req.user, isLoggedIn: req.isAuthenticated() });
 })
 
 // 500 Server Error
 // eslint-disable-next-line no-unused-vars
 app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    console.log(err.message);
+    console.log(err.message)
     req.flash('error', ['An unexpected error occurred, please contact a team member.'])
-    res.redirect('/');
+    return res.redirect('/')
 });
 
 
