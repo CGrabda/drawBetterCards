@@ -690,7 +690,7 @@ function doesDeckExist(req, res, next) {
             if (results != null) {
                 // Deck already exists, redirect to deck page
                 userFunctions.addToCollection(req.user.id, deck_code)
-                req.flash('success', 'Deck already imported, added to collection')
+                req.flash('success', 'Deck already imported')
                 return res.redirect('/deck/' + results.dataValues.deck_code)
             }
             else {
