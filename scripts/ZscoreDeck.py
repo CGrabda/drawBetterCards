@@ -234,7 +234,12 @@ def getScore(decklist, pods, deckInfo):
                 if not cardName.isascii():
                     cardName = cardName.replace(u"\u0103", "a").replace(u"\u0115", "e").replace(u"\u012d", "i").replace(u"\u014f", "o").replace(u"\u016d", "u")
 
-                cardDetails = scoreDict[cardSet][cardName]
+                try:
+                    cardDetails = scoreDict[cardSet][cardName]
+                except:
+                    # Master Vault fix, attempts to use the set of the deck
+                    cardSet = deckInfo["setName"]
+                    cardDetails = scoreDict[cardSet][cardName]
 
         except KeyError as e:
             # Handle special cards
@@ -408,6 +413,7 @@ def getScore(decklist, pods, deckInfo):
                 print("DeckImportError")
                 print(e)
                 print("\nError adding the card " + card[0]["card_title"] + " to the score")
+                print(cardSet, cardID)
                 print("Exiting...")
                 exit()
 
@@ -602,6 +608,7 @@ def analyzeDeck(deckLink):
             # Check if the response is a valid deck
             cardIdList = deckResponse["data"]["_links"]["cards"]
             deckInfo["name"] = deckResponse["data"]["name"].replace("Æ", "AE").replace("æ", "ae").replace("’", "'")
+            deckInfo["setName"] = IDENTIFY_SET[str(deckResponse["data"]["expansion"])][0]
             retryCount = 0
 
         except Exception as e:
@@ -631,7 +638,7 @@ def analyzeDeck(deckLink):
     score, scoredPods =  getScore(decklist, pods, deckInfo)
     deckInfo["score"] = score
 
-    # Add the set of the house
+    # Add the set of the deck
     deckInfo["set"] = IDENTIFY_SET[str(deckResponse["data"]["expansion"])][1]
 
     # Add the enhancements to the pods
