@@ -262,28 +262,37 @@ def getScore(decklist, pods, deckInfo):
                     cardDetails = scoreDict["MM"][cardName]
 
                 # MM Velum/Hyde (WC is covered in document)
-                elif firstWord == "hyde" or firstWord == "velum":
+                elif firstWord == "hyde":
                     cardName = "Hyde/Velum"
                     cardDetails = scoreDict["MM"][cardName]
+                    cardID = 4104
+                elif firstWord == "velum":
+                    cardName = "Hyde/Velum"
+                    cardDetails = scoreDict["MM"][cardName]
+                    cardID = 4118
                 
                 # TT for non-COTA sets
                 elif firstWord == "timetraveller":
                     cardName = "Timetraveller"
                     cardDetails = scoreDict["COTA"][cardName]
+                    cardID = 1153
                     cardSet = "COTA"
                 
                 # HFFS for non-COTA sets
                 elif firstWord == "help":
                     cardName = "Help From Future Self"
                     cardDetails = scoreDict["COTA"][cardName]
+                    cardID = 1111
                     cardSet = "COTA"
 
                 # Hings/Gross from non-DT sets
                 elif firstWord == "com.":
                     if tokens[2] == "hings":
                         cardName = "Com. Officer Hings"
+                        cardID = 5250
                     elif tokens[2] == "gross":
                         cardName = "Com. Officer Gross"
+                        cardID = 5251
                     
                     cardDetails = scoreDict["DT"][cardName]
                     cardSet = "DT"
@@ -292,15 +301,19 @@ def getScore(decklist, pods, deckInfo):
                 elif firstWord[0] == "z":
                     if tokens[1] == "agent":
                         cardName = "Z-Force Agent 14"
+                        cardID = 4252
 
                     elif tokens[1] == "tracker":
                         cardName = "Z-Particle Tracker"
+                        cardID = 4253
 
                     elif tokens[1] == "blaster":
                         cardName = "Z-Ray Blaster"
+                        cardID = 4255
 
                     elif tokens[1] == "emitter":
                         cardName = "Z-Wave Emitter"
+                        cardID = 4256
                         
                     cardDetails = scoreDict["MM"][cardName]
                     cardSet = "MM"
@@ -309,24 +322,28 @@ def getScore(decklist, pods, deckInfo):
                 elif firstWord == "dexus":
                     cardName = "Dexus"
                     cardDetails = scoreDict["WC"][cardName]
+                    cardID = 3124
                     cardSet = "WC"
 
                 # Toad from non-WC decks
                 elif firstWord == "toad":
                     cardName = "Toad"
                     cardDetails = scoreDict["WC"][cardName]
+                    cardID = 3405
                     cardSet = "WC"
 
                 # Scylla from non-MM decks
                 elif firstWord == "scylla":
                     cardName = "Scylla"
                     cardDetails = scoreDict["MM"][cardName]
+                    cardID = 4230
                     cardSet = "MM"
 
                 # Charybdis from non-MM decks
                 elif firstWord == "charybdis":
                     cardName = "Charybdis"
                     cardDetails = scoreDict["MM"][cardName]
+                    cardID = 4234
                     cardSet = "MM"
 
                 # Gigantic creatures

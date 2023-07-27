@@ -201,6 +201,8 @@ with open(cardIdNameFile, encoding="utf-8") as file:
             cardIDNameDict[line[0]] = line[1]
 
 
+with open(outfileIDToName, "w") as file:
+    file.write(dumps(cardIDNameDict))
 
 
 

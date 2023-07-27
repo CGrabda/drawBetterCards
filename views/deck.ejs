@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="en">
 <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>Draw Better Cards</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><%= query.dataValues.deck_name %>></title>
 
-    <link rel="stylesheet" href ="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href ="/css/bootstrap.min.css">
 </head>
 <body>
     <div class="bg-dark pb-4 text-white">
@@ -109,97 +109,145 @@
 
                 <tr>
                     <td></td>
-                    <td><%= query.dataValues.Pods[1].card_1.card_name %></td>
-                    <td><%= query.dataValues.Pods[2].card_1.card_name %></td>
-                    <td><%= query.dataValues.Pods[3].card_1.card_name %></td>
+                    <% card1_1 = query.dataValues.Pods[1].card_1.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_1.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_1.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_1.Multiple.dataValues.multiples %>
+                    <% card1_2 = query.dataValues.Pods[2].card_1.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_1.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_1.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_1.Multiple.dataValues.multiples %>
+                    <% card1_3 = query.dataValues.Pods[3].card_1.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_1.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_1.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_1.Multiple.dataValues.multiples %>
+
+                    <td data-bs-toggle="tooltip" data-bs-delay="{ show: 100, hide: 100 }" data-bs-placement="top" title="<%= card1_1 %>"><%= query.dataValues.Pods[1].card_1.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card1_2 %>"><%= query.dataValues.Pods[2].card_1.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card1_3 %>"><%= query.dataValues.Pods[3].card_1.card_name %></td>
                     <td></td>
                     <th><%= query.dataValues.Pods[0].dataValues.pod_score + query.dataValues.Pods[1].dataValues.pod_score + query.dataValues.Pods[2].dataValues.pod_score + query.dataValues.Pods[3].dataValues.pod_score %></th>
                 </tr>
                 <tr>
                     <td></td>
-                    <td><%= query.dataValues.Pods[1].card_2.card_name %></td>
-                    <td><%= query.dataValues.Pods[2].card_2.card_name %></td>
-                    <td><%= query.dataValues.Pods[3].card_2.card_name %></td>
+                    <% card2_1 = query.dataValues.Pods[1].card_2.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_2.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_2.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_2.Multiple.dataValues.multiples %>
+                    <% card2_2 = query.dataValues.Pods[2].card_2.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_2.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_2.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_2.Multiple.dataValues.multiples %>
+                    <% card2_3 = query.dataValues.Pods[3].card_2.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_2.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_2.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_2.Multiple.dataValues.multiples %>
+
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card2_1 %>"><%= query.dataValues.Pods[1].card_2.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card2_2 %>"><%= query.dataValues.Pods[2].card_2.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card2_3 %>"><%= query.dataValues.Pods[3].card_2.card_name %></td>
                     <td></td>
                     <th>Creatures</th>
                 </tr>
                 <tr>
                     <td></td>
-                    <td><%= query.dataValues.Pods[1].card_3.card_name %></td>
-                    <td><%= query.dataValues.Pods[2].card_3.card_name %></td>
-                    <td><%= query.dataValues.Pods[3].card_3.card_name %></td>
+                    <% card3_1 = query.dataValues.Pods[1].card_3.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_3.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_3.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_3.Multiple.dataValues.multiples %>
+                    <% card3_2 = query.dataValues.Pods[2].card_3.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_3.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_3.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_3.Multiple.dataValues.multiples %>
+                    <% card3_3 = query.dataValues.Pods[3].card_3.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_3.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_3.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_3.Multiple.dataValues.multiples %>
+
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card3_1 %>"><%= query.dataValues.Pods[1].card_3.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card3_2 %>"><%= query.dataValues.Pods[2].card_3.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card3_3 %>"><%= query.dataValues.Pods[3].card_3.card_name %></td>
                     <td></td>
                     <th><%= query.dataValues.Pods[1].dataValues.pod_creatures + query.dataValues.Pods[2].dataValues.pod_creatures + query.dataValues.Pods[3].dataValues.pod_creatures %></th>
                 </tr>
                 <tr>
                     <td></td>
-                    <td><%= query.dataValues.Pods[1].card_4.card_name %></td>
-                    <td><%= query.dataValues.Pods[2].card_4.card_name %></td>
-                    <td><%= query.dataValues.Pods[3].card_4.card_name %></td>
+                    <% card4_1 = query.dataValues.Pods[1].card_4.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_4.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_4.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_4.Multiple.dataValues.multiples %>
+                    <% card4_2 = query.dataValues.Pods[2].card_4.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_4.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_4.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_4.Multiple.dataValues.multiples %>
+                    <% card4_3 = query.dataValues.Pods[3].card_4.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_4.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_4.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_4.Multiple.dataValues.multiples %>
+
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card4_1 %>"><%= query.dataValues.Pods[1].card_4.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card4_2 %>"><%= query.dataValues.Pods[2].card_4.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card4_3 %>"><%= query.dataValues.Pods[3].card_4.card_name %></td>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
                     <td></td>
-                    <td><%= query.dataValues.Pods[1].card_5.card_name %></td>
-                    <td><%= query.dataValues.Pods[2].card_5.card_name %></td>
-                    <td><%= query.dataValues.Pods[3].card_5.card_name %></td>
+                    <% card5_1 = query.dataValues.Pods[1].card_5.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_5.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_5.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_5.Multiple.dataValues.multiples %>
+                    <% card5_2 = query.dataValues.Pods[2].card_5.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_5.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_5.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_5.Multiple.dataValues.multiples %>
+                    <% card5_3 = query.dataValues.Pods[3].card_5.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_5.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_5.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_5.Multiple.dataValues.multiples %>
+
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card5_1 %>"><%= query.dataValues.Pods[1].card_5.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card5_2 %>"><%= query.dataValues.Pods[2].card_5.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card5_3 %>"><%= query.dataValues.Pods[3].card_5.card_name %></td>
                     <td></td>
                     <th>Actions</th>
                 </tr>
                 <tr>
                     <td></td>
-                    <td><%= query.dataValues.Pods[1].card_6.card_name %></td>
-                    <td><%= query.dataValues.Pods[2].card_6.card_name %></td>
-                    <td><%= query.dataValues.Pods[3].card_6.card_name %></td>
+                    <% card6_1 = query.dataValues.Pods[1].card_6.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_6.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_6.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_6.Multiple.dataValues.multiples %>
+                    <% card6_2 = query.dataValues.Pods[2].card_6.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_6.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_6.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_6.Multiple.dataValues.multiples %>
+                    <% card6_3 = query.dataValues.Pods[3].card_6.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_6.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_6.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_6.Multiple.dataValues.multiples %>
+
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card6_1 %>"><%= query.dataValues.Pods[1].card_6.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card6_2 %>"><%= query.dataValues.Pods[2].card_6.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card6_3 %>"><%= query.dataValues.Pods[3].card_6.card_name %></td>
                     <td></td>
                     <th><%= query.dataValues.Pods[1].dataValues.pod_actions + query.dataValues.Pods[2].dataValues.pod_actions + query.dataValues.Pods[3].dataValues.pod_actions %></th>
                 </tr>
                 <tr>
                     <td></td>
-                    <td><%= query.dataValues.Pods[1].card_7.card_name %></td>
-                    <td><%= query.dataValues.Pods[2].card_7.card_name %></td>
-                    <td><%= query.dataValues.Pods[3].card_7.card_name %></td>
+                    <% card7_1 = query.dataValues.Pods[1].card_7.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_7.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_7.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_7.Multiple.dataValues.multiples %>
+                    <% card7_2 = query.dataValues.Pods[2].card_7.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_7.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_7.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_7.Multiple.dataValues.multiples %>
+                    <% card7_3 = query.dataValues.Pods[3].card_7.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_7.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_7.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_7.Multiple.dataValues.multiples %>
+
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card7_1 %>"><%= query.dataValues.Pods[1].card_7.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card7_2 %>"><%= query.dataValues.Pods[2].card_7.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card7_3 %>"><%= query.dataValues.Pods[3].card_7.card_name %></td>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
                     <td></td>
-                    <td><%= query.dataValues.Pods[1].card_8.card_name %></td>
-                    <td><%= query.dataValues.Pods[2].card_8.card_name %></td>
-                    <td><%= query.dataValues.Pods[3].card_8.card_name %></td>
+                    <% card8_1 = query.dataValues.Pods[1].card_8.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_8.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_8.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_8.Multiple.dataValues.multiples %>
+                    <% card8_2 = query.dataValues.Pods[2].card_8.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_8.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_8.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_8.Multiple.dataValues.multiples %>
+                    <% card8_3 = query.dataValues.Pods[3].card_8.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_8.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_8.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_8.Multiple.dataValues.multiples %>
+
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card8_1 %>"><%= query.dataValues.Pods[1].card_8.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card8_2 %>"><%= query.dataValues.Pods[2].card_8.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card8_3 %>"><%= query.dataValues.Pods[3].card_8.card_name %></td>
                     <td></td>
                     <th>Artifacts</th>
                 </tr>
                 <tr>
                     <td></td>
-                    <td><%= query.dataValues.Pods[1].card_9.card_name %></td>
-                    <td><%= query.dataValues.Pods[2].card_9.card_name %></td>
-                    <td><%= query.dataValues.Pods[3].card_9.card_name %></td>
+                    <% card9_1 = query.dataValues.Pods[1].card_9.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_9.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_9.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_9.Multiple.dataValues.multiples %>
+                    <% card9_2 = query.dataValues.Pods[2].card_9.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_9.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_9.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_9.Multiple.dataValues.multiples %>
+                    <% card9_3 = query.dataValues.Pods[3].card_9.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_9.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_9.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_9.Multiple.dataValues.multiples %>
+
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card9_1 %>"><%= query.dataValues.Pods[1].card_9.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card9_2 %>"><%= query.dataValues.Pods[2].card_9.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card9_3 %>"><%= query.dataValues.Pods[3].card_9.card_name %></td>
                     <td></td>
                     <th><%= query.dataValues.Pods[1].dataValues.pod_artifacts + query.dataValues.Pods[2].dataValues.pod_artifacts + query.dataValues.Pods[3].dataValues.pod_artifacts %></th>
                 </tr>
                 <tr>
                     <td></td>
-                    <td><%= query.dataValues.Pods[1].card_10.card_name %></td>
-                    <td><%= query.dataValues.Pods[2].card_10.card_name %></td>
-                    <td><%= query.dataValues.Pods[3].card_10.card_name %></td>
+                    <% card10_1 = query.dataValues.Pods[1].card_10.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_10.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_10.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_10.Multiple.dataValues.multiples %>
+                    <% card10_2 = query.dataValues.Pods[2].card_10.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_10.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_10.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_10.Multiple.dataValues.multiples %>
+                    <% card10_3 = query.dataValues.Pods[3].card_10.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_10.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_10.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_10.Multiple.dataValues.multiples %>
+
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card10_1 %>"><%= query.dataValues.Pods[1].card_10.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card10_2 %>"><%= query.dataValues.Pods[2].card_10.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card10_3 %>"><%= query.dataValues.Pods[3].card_10.card_name %></td>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
                     <td></td>
-                    <td><%= query.dataValues.Pods[1].card_11.card_name %></td>
-                    <td><%= query.dataValues.Pods[2].card_11.card_name %></td>
-                    <td><%= query.dataValues.Pods[3].card_11.card_name %></td>
+                    <% card11_1 = query.dataValues.Pods[1].card_11.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_11.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_11.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_11.Multiple.dataValues.multiples %>
+                    <% card11_2 = query.dataValues.Pods[2].card_11.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_11.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_11.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_11.Multiple.dataValues.multiples %>
+                    <% card11_3 = query.dataValues.Pods[3].card_11.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_11.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_11.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_11.Multiple.dataValues.multiples %>
+
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card11_1 %>"><%= query.dataValues.Pods[1].card_11.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card11_2 %>"><%= query.dataValues.Pods[2].card_11.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card11_3 %>"><%= query.dataValues.Pods[3].card_11.card_name %></td>
                     <td></td>
                     <th>Upgrades</th>
                 </tr>
                 <tr>
                     <td></td>
-                    <td><%= query.dataValues.Pods[1].card_12.card_name %></td>
-                    <td><%= query.dataValues.Pods[2].card_12.card_name %></td>
-                    <td><%= query.dataValues.Pods[3].card_12.card_name %></td>
+                    <% card12_1 = query.dataValues.Pods[1].card_12.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_12.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_12.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_12.Multiple.dataValues.multiples %>
+                    <% card12_2 = query.dataValues.Pods[2].card_12.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_12.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_12.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_12.Multiple.dataValues.multiples %>
+                    <% card12_3 = query.dataValues.Pods[3].card_12.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_12.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_12.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_12.Multiple.dataValues.multiples %>
+
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card12_1 %>"><%= query.dataValues.Pods[1].card_12.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card12_2 %>"><%= query.dataValues.Pods[2].card_12.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card12_3 %>"><%= query.dataValues.Pods[3].card_12.card_name %></td>
                     <td></td>
                     <th><%= query.dataValues.Pods[1].dataValues.pod_upgrades + query.dataValues.Pods[2].dataValues.pod_upgrades + query.dataValues.Pods[3].dataValues.pod_upgrades %></th>
                 </tr>
@@ -347,7 +395,14 @@
         </div>
     </div>
 
-    <script src="/assets/js/bootstrap.js"></script>
+
+
+    <script src="/js/bootstrap.bundle.min.js">
+        // Enable tooltips
+        $(document).ready(function(){
+            $('[data-bs-toggle="tooltip"]').tooltip();   
+        });
+    </script>
 </body>
 </html>
 

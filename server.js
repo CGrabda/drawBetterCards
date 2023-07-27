@@ -63,7 +63,7 @@ app.use(session({
 app.use(express.static('public'));
 app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')))
 app.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')))
-app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')))
+//app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')))
 app.use(passport.initialize())
 app.use(passport.session())
 //app.disable('x-powered-by') handled by helmet, changed
@@ -71,7 +71,7 @@ app.use(passport.session())
 
 // Nodemailer Configuration
 const transporter = nodemailer.createTransport({
-    host: "mail.privateemail.com",
+    host: 'mail.privateemail.com',
     port: 465,
     secure: true,
     requireTLS: true,
@@ -88,6 +88,26 @@ const transporter = nodemailer.createTransport({
         privateKey: process.env.DKIM
     }
 });
+
+
+
+// Setup globals for views
+app.locals = {
+    'card_info': {
+        'scoring_dict': require('./scripts/data/scoreDict.json'),
+        'card_id_to_name': require('./scripts/data/cardIDToName.json'),
+        'card_setnum_to_abbrev': {
+            1: 'COTA',
+            2: 'AOA',
+            3: 'WC',
+            4: 'MM',
+            5: 'DT',
+            6: 'WOE',
+            7: 'GR',
+            500: 'VM'
+        }
+    } 
+}
 
 
 
@@ -238,12 +258,12 @@ app.post('/import', isAuthenticated, doesDeckExist, (req, res, next) => {
                 output = JSON.parse(messages[0])
 
                 // Add deck to database
-                console.log('Importing ' + output["deck_info"]["name"] + ': ' + req.user.username)
+                console.log('Importing from ' + req.user.username + ':' + output["deck_info"]["deck_code"])
                 return deckFunctions.addDeck(output["deck_info"], output["pod_info"])
                 .then(deck_info => {
                     // Add deck to user's collection on import
                     if (!req.body.isNotInCollection) {
-                        console.log('CollectionAdd ' + output["deck_info"]["name"] + ': ' + req.user.username)
+                        console.log('CollectionAdd ' + output["deck_info"]["name"] + ':' + req.user.username)
                         userFunctions.addToCollection(req.user.id, deck_info[0])
                     }
                     return deck_info[1]
@@ -376,7 +396,7 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
         .then(query=> {
             try {
                 userFunctions.addToCollection(req.user.id, query["dataValues"]["deck_id"])
-                console.log('CollectionAdd ' + query["dataValues"]["deck_name"] + ': ' + req.user.username)
+                console.log('CollectionAdd ' + query["dataValues"]["deck_name"] + ':' + req.user.username)
                 req.flash('success', 'Deck added to collection')
             } catch (e) {
                 req.flash('error', 'Error adding deck to collection')
@@ -392,7 +412,7 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
         .then(query=> {
             try {
                 userFunctions.removeFromCollection(req.user.id, query["dataValues"]["deck_id"])
-                console.log('CollectionRemove ' + query["dataValues"]["deck_name"] + ': ' + req.user.username)
+                console.log('CollectionRemove ' + query["dataValues"]["deck_name"] + ':' + req.user.username)
                 req.flash('success', 'Deck removed from collection')
             } catch (e) {
                 req.flash('error', 'Error removing deck from collection')
