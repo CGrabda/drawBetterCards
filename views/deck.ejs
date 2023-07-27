@@ -6,6 +6,13 @@
     <title><%= query.dataValues.deck_name %>></title>
 
     <link rel="stylesheet" href ="/css/bootstrap.min.css">
+
+    <style>
+        .tooltip-inner{
+            text-align: left;
+            white-space: pre-line;
+        }
+    </style>
 </head>
 <body>
     <div class="bg-dark pb-4 text-white">
@@ -23,6 +30,43 @@
                 <%= messages.success %>
             </div>
         <% } %>
+
+
+        <%
+        getCardTooltip = function(card) {
+            var outstring = ""
+
+            // If card is an anomaly, shorter card ID, else longer card ID
+            // This ensures the correct set is identified
+            var card_set_number = parseInt(card.card_id) < 0 ? card.card_id.toString().slice(0, -2).replace('-', '') : card.card_id.toString().slice(0, -3)
+            
+            // Retrieve the card name and score
+            try {
+                var card_set = card_info['card_setnum_to_abbrev'][card_set_number]
+                var card_scoring_name = card_info['card_id_to_name'][card.card_id]
+                var card_score = card_info['scoring_dict'][card_set][card_scoring_name]['score']
+            }
+            catch {
+                console.log("Error displaying card " + card.card_id + ":" + card.card_name)
+            }
+
+
+
+            // Map the multiples array to the actual score of the card when of that value
+            var multiples = card.Multiple.dataValues.multiples.map(multiples => multiples + parseInt(card_score))
+
+
+            // Form the output
+            outstring += card.card_name + "\n"
+            outstring += "Score: " + card_score + "\n"
+            outstring += "Multiples: " + multiples
+
+            return outstring;
+        }
+        %>
+
+
+
         <div class="bg-dark px-2 text-white">
             <% // Handle ordering the pods %>
             <% query.dataValues.Pods.sort(function(a, b){return a.house_id - b.house_id}) %>
@@ -109,145 +153,97 @@
 
                 <tr>
                     <td></td>
-                    <% card1_1 = query.dataValues.Pods[1].card_1.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_1.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_1.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_1.Multiple.dataValues.multiples %>
-                    <% card1_2 = query.dataValues.Pods[2].card_1.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_1.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_1.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_1.Multiple.dataValues.multiples %>
-                    <% card1_3 = query.dataValues.Pods[3].card_1.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_1.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_1.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_1.Multiple.dataValues.multiples %>
-
-                    <td data-bs-toggle="tooltip" data-bs-delay="{ show: 100, hide: 100 }" data-bs-placement="top" title="<%= card1_1 %>"><%= query.dataValues.Pods[1].card_1.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card1_2 %>"><%= query.dataValues.Pods[2].card_1.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card1_3 %>"><%= query.dataValues.Pods[3].card_1.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_1) %>"><%= query.dataValues.Pods[1].card_1.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_1) %>"><%= query.dataValues.Pods[2].card_1.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_1) %>"><%= query.dataValues.Pods[3].card_1.card_name %></td>
                     <td></td>
                     <th><%= query.dataValues.Pods[0].dataValues.pod_score + query.dataValues.Pods[1].dataValues.pod_score + query.dataValues.Pods[2].dataValues.pod_score + query.dataValues.Pods[3].dataValues.pod_score %></th>
                 </tr>
                 <tr>
                     <td></td>
-                    <% card2_1 = query.dataValues.Pods[1].card_2.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_2.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_2.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_2.Multiple.dataValues.multiples %>
-                    <% card2_2 = query.dataValues.Pods[2].card_2.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_2.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_2.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_2.Multiple.dataValues.multiples %>
-                    <% card2_3 = query.dataValues.Pods[3].card_2.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_2.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_2.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_2.Multiple.dataValues.multiples %>
-
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card2_1 %>"><%= query.dataValues.Pods[1].card_2.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card2_2 %>"><%= query.dataValues.Pods[2].card_2.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card2_3 %>"><%= query.dataValues.Pods[3].card_2.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_2) %>"><%= query.dataValues.Pods[1].card_2.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_2) %>"><%= query.dataValues.Pods[2].card_2.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_2) %>"><%= query.dataValues.Pods[3].card_2.card_name %></td>
                     <td></td>
                     <th>Creatures</th>
                 </tr>
                 <tr>
                     <td></td>
-                    <% card3_1 = query.dataValues.Pods[1].card_3.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_3.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_3.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_3.Multiple.dataValues.multiples %>
-                    <% card3_2 = query.dataValues.Pods[2].card_3.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_3.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_3.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_3.Multiple.dataValues.multiples %>
-                    <% card3_3 = query.dataValues.Pods[3].card_3.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_3.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_3.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_3.Multiple.dataValues.multiples %>
-
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card3_1 %>"><%= query.dataValues.Pods[1].card_3.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card3_2 %>"><%= query.dataValues.Pods[2].card_3.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card3_3 %>"><%= query.dataValues.Pods[3].card_3.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_3) %>"><%= query.dataValues.Pods[1].card_3.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_3) %>"><%= query.dataValues.Pods[2].card_3.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_3) %>"><%= query.dataValues.Pods[3].card_3.card_name %></td>
                     <td></td>
                     <th><%= query.dataValues.Pods[1].dataValues.pod_creatures + query.dataValues.Pods[2].dataValues.pod_creatures + query.dataValues.Pods[3].dataValues.pod_creatures %></th>
                 </tr>
                 <tr>
                     <td></td>
-                    <% card4_1 = query.dataValues.Pods[1].card_4.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_4.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_4.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_4.Multiple.dataValues.multiples %>
-                    <% card4_2 = query.dataValues.Pods[2].card_4.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_4.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_4.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_4.Multiple.dataValues.multiples %>
-                    <% card4_3 = query.dataValues.Pods[3].card_4.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_4.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_4.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_4.Multiple.dataValues.multiples %>
-
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card4_1 %>"><%= query.dataValues.Pods[1].card_4.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card4_2 %>"><%= query.dataValues.Pods[2].card_4.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card4_3 %>"><%= query.dataValues.Pods[3].card_4.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_4) %>"><%= query.dataValues.Pods[1].card_4.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_4) %>"><%= query.dataValues.Pods[2].card_4.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_4) %>"><%= query.dataValues.Pods[3].card_4.card_name %></td>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
                     <td></td>
-                    <% card5_1 = query.dataValues.Pods[1].card_5.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_5.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_5.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_5.Multiple.dataValues.multiples %>
-                    <% card5_2 = query.dataValues.Pods[2].card_5.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_5.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_5.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_5.Multiple.dataValues.multiples %>
-                    <% card5_3 = query.dataValues.Pods[3].card_5.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_5.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_5.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_5.Multiple.dataValues.multiples %>
-
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card5_1 %>"><%= query.dataValues.Pods[1].card_5.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card5_2 %>"><%= query.dataValues.Pods[2].card_5.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card5_3 %>"><%= query.dataValues.Pods[3].card_5.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_5) %>"><%= query.dataValues.Pods[1].card_5.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_5) %>"><%= query.dataValues.Pods[2].card_5.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_5) %>"><%= query.dataValues.Pods[3].card_5.card_name %></td>
                     <td></td>
                     <th>Actions</th>
                 </tr>
                 <tr>
                     <td></td>
-                    <% card6_1 = query.dataValues.Pods[1].card_6.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_6.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_6.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_6.Multiple.dataValues.multiples %>
-                    <% card6_2 = query.dataValues.Pods[2].card_6.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_6.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_6.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_6.Multiple.dataValues.multiples %>
-                    <% card6_3 = query.dataValues.Pods[3].card_6.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_6.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_6.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_6.Multiple.dataValues.multiples %>
-
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card6_1 %>"><%= query.dataValues.Pods[1].card_6.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card6_2 %>"><%= query.dataValues.Pods[2].card_6.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card6_3 %>"><%= query.dataValues.Pods[3].card_6.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_6) %>"><%= query.dataValues.Pods[1].card_6.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_6) %>"><%= query.dataValues.Pods[2].card_6.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_6) %>"><%= query.dataValues.Pods[3].card_6.card_name %></td>
                     <td></td>
                     <th><%= query.dataValues.Pods[1].dataValues.pod_actions + query.dataValues.Pods[2].dataValues.pod_actions + query.dataValues.Pods[3].dataValues.pod_actions %></th>
                 </tr>
                 <tr>
                     <td></td>
-                    <% card7_1 = query.dataValues.Pods[1].card_7.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_7.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_7.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_7.Multiple.dataValues.multiples %>
-                    <% card7_2 = query.dataValues.Pods[2].card_7.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_7.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_7.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_7.Multiple.dataValues.multiples %>
-                    <% card7_3 = query.dataValues.Pods[3].card_7.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_7.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_7.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_7.Multiple.dataValues.multiples %>
-
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card7_1 %>"><%= query.dataValues.Pods[1].card_7.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card7_2 %>"><%= query.dataValues.Pods[2].card_7.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card7_3 %>"><%= query.dataValues.Pods[3].card_7.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_7) %>"><%= query.dataValues.Pods[1].card_7.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_7) %>"><%= query.dataValues.Pods[2].card_7.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_7) %>"><%= query.dataValues.Pods[3].card_7.card_name %></td>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
                     <td></td>
-                    <% card8_1 = query.dataValues.Pods[1].card_8.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_8.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_8.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_8.Multiple.dataValues.multiples %>
-                    <% card8_2 = query.dataValues.Pods[2].card_8.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_8.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_8.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_8.Multiple.dataValues.multiples %>
-                    <% card8_3 = query.dataValues.Pods[3].card_8.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_8.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_8.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_8.Multiple.dataValues.multiples %>
-
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card8_1 %>"><%= query.dataValues.Pods[1].card_8.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card8_2 %>"><%= query.dataValues.Pods[2].card_8.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card8_3 %>"><%= query.dataValues.Pods[3].card_8.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_8) %>"><%= query.dataValues.Pods[1].card_8.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_8) %>"><%= query.dataValues.Pods[2].card_8.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_8) %>"><%= query.dataValues.Pods[3].card_8.card_name %></td>
                     <td></td>
                     <th>Artifacts</th>
                 </tr>
                 <tr>
                     <td></td>
-                    <% card9_1 = query.dataValues.Pods[1].card_9.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_9.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_9.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_9.Multiple.dataValues.multiples %>
-                    <% card9_2 = query.dataValues.Pods[2].card_9.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_9.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_9.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_9.Multiple.dataValues.multiples %>
-                    <% card9_3 = query.dataValues.Pods[3].card_9.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_9.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_9.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_9.Multiple.dataValues.multiples %>
-
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card9_1 %>"><%= query.dataValues.Pods[1].card_9.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card9_2 %>"><%= query.dataValues.Pods[2].card_9.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card9_3 %>"><%= query.dataValues.Pods[3].card_9.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_9) %>"><%= query.dataValues.Pods[1].card_9.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_9) %>"><%= query.dataValues.Pods[2].card_9.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_9) %>"><%= query.dataValues.Pods[3].card_9.card_name %></td>
                     <td></td>
                     <th><%= query.dataValues.Pods[1].dataValues.pod_artifacts + query.dataValues.Pods[2].dataValues.pod_artifacts + query.dataValues.Pods[3].dataValues.pod_artifacts %></th>
                 </tr>
                 <tr>
                     <td></td>
-                    <% card10_1 = query.dataValues.Pods[1].card_10.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_10.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_10.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_10.Multiple.dataValues.multiples %>
-                    <% card10_2 = query.dataValues.Pods[2].card_10.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_10.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_10.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_10.Multiple.dataValues.multiples %>
-                    <% card10_3 = query.dataValues.Pods[3].card_10.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_10.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_10.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_10.Multiple.dataValues.multiples %>
-
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card10_1 %>"><%= query.dataValues.Pods[1].card_10.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card10_2 %>"><%= query.dataValues.Pods[2].card_10.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card10_3 %>"><%= query.dataValues.Pods[3].card_10.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_10) %>"><%= query.dataValues.Pods[1].card_10.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_10) %>"><%= query.dataValues.Pods[2].card_10.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_10) %>"><%= query.dataValues.Pods[3].card_10.card_name %></td>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
                     <td></td>
-                    <% card11_1 = query.dataValues.Pods[1].card_11.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_11.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_11.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_11.Multiple.dataValues.multiples %>
-                    <% card11_2 = query.dataValues.Pods[2].card_11.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_11.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_11.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_11.Multiple.dataValues.multiples %>
-                    <% card11_3 = query.dataValues.Pods[3].card_11.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_11.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_11.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_11.Multiple.dataValues.multiples %>
-
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card11_1 %>"><%= query.dataValues.Pods[1].card_11.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card11_2 %>"><%= query.dataValues.Pods[2].card_11.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card11_3 %>"><%= query.dataValues.Pods[3].card_11.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_11) %>"><%= query.dataValues.Pods[1].card_11.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_11) %>"><%= query.dataValues.Pods[2].card_11.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_11) %>"><%= query.dataValues.Pods[3].card_11.card_name %></td>
                     <td></td>
                     <th>Upgrades</th>
                 </tr>
                 <tr>
                     <td></td>
-                    <% card12_1 = query.dataValues.Pods[1].card_12.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[1].card_12.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[1].card_12.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[1].card_12.Multiple.dataValues.multiples %>
-                    <% card12_2 = query.dataValues.Pods[2].card_12.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[2].card_12.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[2].card_12.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[2].card_12.Multiple.dataValues.multiples %>
-                    <% card12_3 = query.dataValues.Pods[3].card_12.card_name + "\nScore: " + card_info['scoring_dict'][card_info['card_setnum_to_abbrev'][Math.abs(query.dataValues.Pods[3].card_12.card_id).toString().slice(0, -3)]][card_info['card_id_to_name'][query.dataValues.Pods[3].card_12.card_id]]['score'] + "\nMultiples: + " + query.dataValues.Pods[3].card_12.Multiple.dataValues.multiples %>
-
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card12_1 %>"><%= query.dataValues.Pods[1].card_12.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card12_2 %>"><%= query.dataValues.Pods[2].card_12.card_name %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="<%= card12_3 %>"><%= query.dataValues.Pods[3].card_12.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_12) %>"><%= query.dataValues.Pods[1].card_12.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_12) %>"><%= query.dataValues.Pods[2].card_12.card_name %></td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_12) %>"><%= query.dataValues.Pods[3].card_12.card_name %></td>
                     <td></td>
                     <th><%= query.dataValues.Pods[1].dataValues.pod_upgrades + query.dataValues.Pods[2].dataValues.pod_upgrades + query.dataValues.Pods[3].dataValues.pod_upgrades %></th>
                 </tr>
@@ -397,11 +393,12 @@
 
 
 
-    <script src="/js/bootstrap.bundle.min.js">
-        // Enable tooltips
-        $(document).ready(function(){
-            $('[data-bs-toggle="tooltip"]').tooltip();   
-        });
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+
+    <script type="text/javascript">
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
     </script>
 </body>
 </html>

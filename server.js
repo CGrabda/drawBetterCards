@@ -258,7 +258,7 @@ app.post('/import', isAuthenticated, doesDeckExist, (req, res, next) => {
                 output = JSON.parse(messages[0])
 
                 // Add deck to database
-                console.log('Importing from ' + req.user.username + ':' + output["deck_info"]["deck_code"])
+                console.log('Importing from ' + req.user.username + ':' + output["deck_info"]["code"])
                 return deckFunctions.addDeck(output["deck_info"], output["pod_info"])
                 .then(deck_info => {
                     // Add deck to user's collection on import
@@ -709,7 +709,6 @@ function doesDeckExist(req, res, next) {
         }).then(results=> {
             if (results != null) {
                 // Deck already exists, redirect to deck page
-                userFunctions.addToCollection(req.user.id, deck_code)
                 req.flash('success', 'Deck already imported')
                 return res.redirect('/deck/' + results.dataValues.deck_code)
             }

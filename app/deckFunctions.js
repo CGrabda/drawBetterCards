@@ -169,7 +169,8 @@ async function parseAttributesImport(deck_code) {
 }
 
 async function adjustScoreOnAllDecks() {
-    // Retrieve all deck codes
+    var timer = Date.now()
+    // Retrieve all decks and their pods
     return await Deck.findAll({
         include: Pod
     })
@@ -178,7 +179,14 @@ async function adjustScoreOnAllDecks() {
         // Updates any scoring adjustments and 
         for (var i in query) {
             await parseAttributes(query[i])
+            .catch(e=> {
+                throw new Error(e)
+            })
         }
+
+        console.log('Count of decks: ' + query.length.toString())
+        console.log('Deck adjustments updated in ' + ((Date.now() - timer)/1000).toString() + "s")
+        return
     })
 }
 
@@ -198,7 +206,7 @@ async function rescoreAllDecks() {
         }
         
         console.log('Count of decks: ' + query.length.toString())
-        console.log('All decks updated in ' + ((Date.now() - timer)/1000).toString() + "s")
+        console.log('Deck scores updated in ' + ((Date.now() - timer)/1000).toString() + "s")
         return
     })
     .catch(e=> {
