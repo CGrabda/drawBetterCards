@@ -32,6 +32,7 @@ const Collections = require('./app/models/collection.js')(sequelize, DataTypes)
 const {PythonShell} = require('python-shell')
 const deckFunctions = require('./app/deckFunctions.js');
 const userFunctions = require('./app/userFunctions.js');
+const deckSearch = require('./app/search.js')
 const token = require('./app/models/token.js');
 
 // Associate decks and users to Collections
@@ -303,50 +304,93 @@ app.post('/import', isAuthenticated, doesDeckExist, (req, res, next) => {
 // Mydecks page
 app.get('/mydecks', isAuthenticated, (req, res) => {
     // Visit mydecks page, deck rendering is handled by /load/mydecks
-    return res.render('mydecks.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user })
+    console.log("get mydecks:", req.query, req.queryPolluted)
+    return deckSearch.getQueryData(req.query, req.queryPolluted)
+    .then(results=> {
+        return res.render('mydecks.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user, searchData: results, searchPath: "mydecks" })
+    })
 })
 
 
 // Search/All Decks page
 app.get('/search', (req, res) => {
     // Visit search page, deck rendering is handled by /load/search
-    return res.render('search.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user })
+    return deckSearch.getQueryData(req.query, req.queryPolluted)
+    .then(results=> {
+        return res.render('search.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user, searchData: results, searchPath: "search" })
+    })
 })
 
 
 // Load post, for search pagination
 // eslint-disable-next-line no-unused-vars
 app.post('/load/:search', (req, res, next) => {
-    // if loading mydecks page
-    if (req.params.search == "mydecks") {
-        return Decks.findAll({
-            // Request originating from mydecks page
-            include: {
-                model: Collections,
-                where: { owner_id: req.user.id }
-            },
-            limit: 15,
-            offset: 15 * req.body.page,
-            order: [['adj_score', 'DESC'], ['createdAt', 'DESC']],
-        })
-        .then(results=> {
-            return res.json({ html: queryToHTML(results) })
-        })
+    // Check if there is a page with the request, else default to 0
+    var data = JSON.parse(req.body.data, req.body.page)
+    var page = req.body.page
+    if (page % 1 != 0) {
+        page = 0
     }
-    else if (req.params.search == "search") {
-        return Decks.findAll({
-            // Request originating from search page
-            limit: 15,
-            offset: 15 * req.body.page,
-            order: [['adj_score', 'DESC'], ['createdAt', 'DESC']]
-        })
-        .then(results=> {
-            return res.json({ html: queryToHTML(results) })
-        })
+
+    // If params length > 1, this is a custom search made by the user
+    console.log("Load request:" + req.body.data)
+    if (Object.keys(data).length){
+        if (req.params.search == "mydecks") {
+            return deckSearch.searchDeck(data, page, req.user.id)
+            .then(results=> {
+                return res.json({ html: queryToHTML(results) })
+            })
+        }
+        else if (req.params.search == "search") {
+            return deckSearch.searchDeck(data, page)
+            .then(results=> {
+                return res.json({ html: queryToHTML(results) })
+            })
+        }
     }
     else {
-        //error
-        return
+        // Default search for mydecks page
+        if (req.params.search == "mydecks") {
+            return Decks.findAll({
+                // Request originating from mydecks page
+                include: {
+                    model: Collections,
+                    where: { owner_id: req.user.id }
+                },
+                limit: 15,
+                offset: 15 * page,
+                order: [['adj_score', 'DESC'], ['createdAt', 'DESC']],
+            })
+            .then(results=> {
+                return res.json({ html: queryToHTML(results) })
+            })
+            .catch(e=> {
+                console.log("Error fetching mydecks:" + req.user.username)
+                req.flash('error', ['An unexpected error occurred, please contact a team member.'])
+                //return res.redirect('/')
+            })
+        }
+        // Default search for all decks
+        else if (req.params.search == "search") {
+            return Decks.findAll({
+                // Request originating from search page
+                limit: 15,
+                offset: 15 * page,
+                order: [['adj_score', 'DESC'], ['createdAt', 'DESC']]
+            })
+            .then(results=> {
+                return res.json({ html: queryToHTML(results) })
+            })
+            .catch(e=> {
+                console.log("Error fetching all decks")
+                req.flash('error', ['An unexpected error occurred, please contact a team member.'])
+                //return res.redirect('/')
+            })
+        }
+        else {
+            //error
+            return
+        }
     }
 })
 
@@ -764,7 +808,6 @@ function queryToHTML(query) {
         output += '<img src= "rsrc/house_' + query[i]["dataValues"]["house3"] + '.png" width="48px" height="48px" /></td>'
         output += '</tr>'
     }
-
 
     return output
 }

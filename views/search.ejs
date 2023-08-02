@@ -9,6 +9,7 @@
 </head>
 <body>
     <%- include('partials/navbar.ejs') %>
+    <%- include('partials/searchNav.ejs') %>
 
     <div class="bg-dark px-2 pb-4 text-white">
         <h1 class="mx-1">All Decks</h1>
@@ -35,6 +36,7 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script type="text/javascript">
     var clicks = 0;
+    var searchData = <%- JSON.stringify(searchData) %>;
 
     $(document).ready(function() {
         loadMore(clicks)
@@ -52,7 +54,8 @@
             method: "POST",
             url: "/load/search",
             data: {
-                page: clickCount
+                page: clickCount,
+                data: JSON.stringify(searchData)
             },
             dataType: 'json',
             cache: false,

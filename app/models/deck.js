@@ -19,7 +19,10 @@ module.exports = function(sequelize, Sequelize) {
         deck_name: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true
+            unique: true,
+            validate: {
+                len: 65
+            }
         },
         alpha_score: {
             type: DataTypes.STRING,

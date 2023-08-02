@@ -75,21 +75,22 @@
             <table data-bs-theme="dark">
                 <% // Check if user is logged in %>
                 <% if (isLoggedIn) { %>
-                    <% // Mine/Not Mine deck buttons %>
-                    <tr>
-                        <td>
-                            <% if (isInCollection) { %>
-                                <form action=<%= "/deck/" + query.dataValues.deck_code + "/notmine" %> method="POST">
-                                    <button class="py-1 mx-3 btn btn-outline-light" type="submit">Not Mine</button>
-                                </form>
-                            <% } else { %>
-                                <form action=<%= "/deck/" + query.dataValues.deck_code + "/mine" %> method="POST">
-                                    <button class="py-1 mx-3 btn btn-outline-light" type="submit">Mine</button>
-                                </form>
-                            <% } %>
-                        </td>
-
-                    </tr>
+                    <% // Mine/Not Mine deck buttons, display if user is patreon or admin %>
+                    <% if (user.patreon_rank > -1 || user.is_admin) { %>
+                        <tr>
+                            <td>
+                                <% if (isInCollection) { %>
+                                    <form action=<%= "/deck/" + query.dataValues.deck_code + "/notmine" %> method="POST">
+                                        <button class="py-1 mx-3 btn btn-outline-light" type="submit">Not Mine</button>
+                                    </form>
+                                <% } else { %>
+                                    <form action=<%= "/deck/" + query.dataValues.deck_code + "/mine" %> method="POST">
+                                        <button class="py-1 mx-3 btn btn-outline-light" type="submit">Mine</button>
+                                    </form>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% } %>
                     <tr>
                         <% // If deck has no alpha displays requests and button %>
                         <% if (query.dataValues.alpha_score == null) { %>

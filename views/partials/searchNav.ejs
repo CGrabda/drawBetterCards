@@ -1,0 +1,129 @@
+<% // Navbar dropdown %>
+<nav class="navbar navbar-dark bg-dark">
+<div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search my-2 mx-1" viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+        </svg>
+    </button>
+</div>
+</nav>
+
+<% // Navbar contents %>
+<div class="collapse bg-dark" id="navbarToggleExternalContent">
+    <form action=<%= "/" + searchPath %> method="GET">
+        <div class="d-flex flex-row px-5 mb-4">
+            <% // Deck name input %>
+            <div class="d-flex mb-2 mx-1">
+                <div class="forms-inputs my-3"> <input id="name" name="name" placeholder="Deck Name" autocomplete="off" type="text"> </div>
+            </div>
+            
+            <% // Buttons to show/hide inputs %>
+            <div class="d-flex flex-column mb-4">
+                <button class="btn btn-toggle align-items-center btn-outline-light collapsed mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#set-collapse" aria-expanded="true">Sets</button>
+                <button class="btn btn-toggle align-items-center btn-outline-light collapsed mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#house-collapse" aria-expanded="true">Houses</button>
+            </div>
+            
+
+            <div class="d-flex flex-column w-25">
+                <% // Set inputs %>
+                <div class="collapse border border-warning rounded mx-2" id="set-collapse">
+                    <div class="d-flex flex-wrap forms-inputs">
+                        <div class="form-check py-2 mx-2">
+                            <img src= "rsrc/set_1.png" width="32px" height="32px" />
+                            <input class="form-check-input" value="1" type="checkbox" name="set">
+                        </div>
+
+                        <div class="form-check py-2 mx-2">
+                            <img src= "rsrc/set_2.png" width="32px" height="32px" />
+                            <input class="form-check-input" value="2" type="checkbox" name="set">
+                        </div>
+
+                        <div class="form-check py-2 mx-2">
+                            <img src= "rsrc/set_3.png" width="32px" height="32px" />
+                            <input class="form-check-input" value="3" type="checkbox" name="set">
+                        </div>
+
+                        <div class="form-check py-2 mx-2">
+                            <img src= "rsrc/set_4.png" width="32px" height="32px" />
+                            <input class="form-check-input" value="4" type="checkbox" name="set">
+                        </div>
+                        
+                        <div class="form-check py-2 mx-2">
+                            <img src= "rsrc/set_5.png" width="32px" height="32px" />
+                            <input class="form-check-input" value="5" type="checkbox" name="set">
+                        </div>
+                        
+                        <div class="form-check py-2 mx-2">
+                            <img src= "rsrc/set_6.png" width="32px" height="32px" />
+                            <input class="form-check-input" value="6" type="checkbox" name="set">
+                        </div>
+                    </div>
+                </div>
+            
+                <% // House inputs %>
+                <div class="collapse border border-warning rounded mx-2 my-3" id="house-collapse">
+                    <div class="d-flex flex-wrap forms-inputs my-1 mx-2">
+                        <div class="form-check py-2 mx-2">
+                            <img src= "rsrc/house_2.png" width="32px" height="32px" />
+                            <input class="form-check-input" value="2" type="checkbox" name="house">
+                        </div>
+                        <div class="form-check py-2 mx-2">
+                            <img src= "rsrc/house_3.png" width="32px" height="32px" />
+                            <input class="form-check-input" value="3" type="checkbox" name="house">
+                        </div>
+
+                        <div class="form-check py-2 mx-2">
+                            <img src= "rsrc/house_4.png" width="32px" height="32px" />
+                            <input class="form-check-input" value="4" type="checkbox" name="house">
+                        </div>
+                        <div class="form-check py-2 mx-2">
+                            <img src= "rsrc/house_5.png" width="32px" height="32px" />
+                            <input class="form-check-input" value="5" type="checkbox" name="house">
+                        </div>
+
+                        <div class="form-check py-2 mx-2">
+                            <img src= "rsrc/house_6.png" width="32px" height="32px" />
+                            <input class="form-check-input" value="6" type="checkbox" name="house">
+                        </div>
+                        <div class="form-check py-2 mx-2">
+                            <img src= "rsrc/house_7.png" width="32px" height="32px" />
+                            <input class="form-check-input" value="7" type="checkbox" name="house">
+                        </div>
+
+                        <div class="form-check py-2 mx-2">
+                            <img src= "rsrc/house_8.png" width="32px" height="32px" />
+                            <input class="form-check-input" value="8" type="checkbox" name="house">
+                        </div>
+                        <div class="form-check py-2 mx-2">
+                            <img src= "rsrc/house_9.png" width="32px" height="32px" />
+                            <input class="form-check-input" value="9" type="checkbox" name="house">
+                        </div>
+                        
+                        <div class="form-check py-2 mx-2">
+                            <img src= "rsrc/house_10.png" width="32px" height="32px" />
+                            <input class="form-check-input" value="10" type="checkbox" name="house">
+                        </div>
+                        <div class="form-check py-2 mx-2">
+                            <img src= "rsrc/house_11.png" width="32px" height="32px" />
+                            <input class="form-check-input" value="11" type="checkbox" name="house">
+                        </div>
+
+                        <div class="form-check py-2 mx-2">
+                            <img src= "rsrc/house_12.png" width="32px" height="32px" />
+                            <input class="form-check-input" value="12" type="checkbox" name="house">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+        
+        </div>
+        <div class="pb-5 px-5"> <button class="btn btn-outline-warning w-20" id="submit-search" type="submit">Search</button> </div>
+    </form>
+</div>
