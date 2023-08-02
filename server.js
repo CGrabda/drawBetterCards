@@ -18,6 +18,7 @@ const moment = require('moment');
 const nodemailer = require("nodemailer");
 const passport = require('passport');
 const path = require('path');
+const rateLimit = require('express-rate-limit');
 const session = require('express-session');
 const svgCaptcha = require('svg-captcha-fixed');
 const toobusy = require('toobusy-js');
@@ -48,6 +49,13 @@ require('./app/passport.js')
 app.set('view-engine', 'ejs')
 app.use(express.urlencoded({ extended: false, limit: "1kb" }))
 app.use(express.json({ limit: "1kb" }))
+app.use(rateLimit({
+	windowMs: 1 * 60 * 1000, // 15 minutes
+	max: 200, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+}))
+
 app.use(flash())
 app.use(session({
     cookie: {
@@ -438,14 +446,15 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
     if (deckAction === 'mine') {
         Decks.findOne({ where: { deck_code: deck_code } })
         .then(query=> {
-            try {
-                userFunctions.addToCollection(req.user.id, query["dataValues"]["deck_id"])
-                console.log('CollectionAdd ' + query["dataValues"]["deck_name"] + ':' + req.user.username)
-                req.flash('success', 'Deck added to collection')
-            } catch (e) {
-                req.flash('error', 'Error adding deck to collection')
-            }
+            userFunctions.addToCollection(req.user.id, query["dataValues"]["deck_id"])
+            console.log('CollectionAdd ' + query["dataValues"]["deck_name"] + ':' + req.user.username)
+            req.flash('success', 'Deck added to collection')
+
             // Render deck page
+            return res.redirect('/deck/' + deck_code)
+        })
+        .catch(e=> {
+            req.flash('error', 'Error adding deck to collection')
             return res.redirect('/deck/' + deck_code)
         })
     }
@@ -454,14 +463,15 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
     else if (deckAction === 'notmine') {
         Decks.findOne({ where: { deck_code: deck_code } })
         .then(query=> {
-            try {
-                userFunctions.removeFromCollection(req.user.id, query["dataValues"]["deck_id"])
-                console.log('CollectionRemove ' + query["dataValues"]["deck_name"] + ':' + req.user.username)
-                req.flash('success', 'Deck removed from collection')
-            } catch (e) {
-                req.flash('error', 'Error removing deck from collection')
-            }
+            userFunctions.removeFromCollection(req.user.id, query["dataValues"]["deck_id"])
+            console.log('CollectionRemove ' + query["dataValues"]["deck_name"] + ':' + req.user.username)
+            req.flash('success', 'Deck removed from collection')
+
             // Render deck page
+            return res.redirect('/deck/' + deck_code)
+        })
+        .catch(e=> {
+            req.flash('error', 'Error removing deck from collection')
             return res.redirect('/deck/' + deck_code)
         })
     }
@@ -478,9 +488,17 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
                     query.updateAlpha("P")
                     // Decrement alpha_requests by 1
                     .then(results=> { req.user.requestedAlpha(); return results })
+                    .catch(e=> {
+                        req.flash('error', ['An unexpected error occurred, please contact a team member.'])
+                        return res.redirect('/')
+                    })
 
                     // Render deck page
                     .then(function() { return res.redirect('/deck/' + deck_code) })
+                    .catch(e=> {
+                        req.flash('error', ['An unexpected error occurred, please contact a team member.'])
+                        return res.redirect('/')
+                    })
                 }
                 else if (req.user.is_admin) {
                     // validate that the alpha score is a valid alpha score
@@ -488,6 +506,10 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
                         console.log('Alpha score set on: ' + query.dataValues.deck_id + ' ' + req.user.username + ' ' + req.body.alpha_score)
                         query.updateAlpha(req.body.alpha_score)
                         .then(function() { return res.status(200).send({ message: "Ok" }) })
+                        .catch(e=> {
+                            req.flash('error', ['An unexpected error occurred, please contact a team member.'])
+                            return res.redirect('/')
+                        })
                     }
                     else {
                         throw new Error('Invalid Alpha Score')
@@ -502,6 +524,10 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
                 req.flash('error', 'Nice try, bucko ;)')
                 return res.redirect('/')
             }
+        })
+        .catch(e=> {
+            req.flash('error', ['An unexpected error occurred, please contact a team member.'])
+            return res.redirect('/')
         })
     }
 
@@ -520,6 +546,11 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
 
                     // Render deck page
                     .then(function() { return res.redirect('/deck/' + deck_code) })
+
+                    .catch(e=> {
+                        req.flash('error', ['An unexpected error occurred, please contact a team member.'])
+                        return res.redirect('/')
+                    })
                 }
             }
             catch (e) {
@@ -527,6 +558,10 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
                 req.flash('error', 'Nice try, bucko ;)')
                 return res.redirect('/')
             }
+        })
+        .catch(e=> {
+            req.flash('error', ['An unexpected error occurred, please contact a team member.'])
+            return res.redirect('/')
         })
     }
 })
@@ -548,20 +583,32 @@ app.get("/admin/:path", isAdmin, isAuthenticated, function(req, res) {
             order: [['updatedAt', 'ASC' ]],
         })
         .then(results=> { res.render('alpha.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user, query: results }) })
+        .catch(e=> {
+            req.flash('error', ['An unexpected error occurred, please contact a team member.'])
+            return res.redirect('/')
+        })
     }
     else if (path == 'scoreAdj') {
         // Adjust the scores and get attributes of all decks
         deckFunctions.adjustScoreOnAllDecks()
         .then(function () {
-            req.flash('error', ["Score Adjustments Updated. That better have been important..."])
+            req.flash('error', ['Score Adjustments Updated. That better have been important...'])
             res.render('admin.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user }) 
+        })
+        .catch(e=> {
+            req.flash('error', ['An unexpected error occurred, please contact a team member.'])
+            return res.redirect('/')
         })
     }
     else if (path == 'rescoreAll') {
         // Adjust the scores and get attributes of all decks
         deckFunctions.rescoreAllDecks()
         .then(function () {
-            req.flash('error', ["All decks have been rescored. That better have been important..."])
+            req.flash('error', ['All decks have been rescored. That better have been important...'])
+            res.render('admin.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user }) 
+        })
+        .catch(e=> {
+            req.flash('error', ['An unexpected error occurred, please contact a team member.'])
             res.render('admin.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user }) 
         })
     }
@@ -621,6 +668,10 @@ app.get('/reset/:token', (req, res) => {
         // Reset token is valid, render page
         res.render('reset.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user, token: req.params.token })
     })
+    .catch(e=> {
+        req.flash('error', ['An unexpected error occurred, please contact a team member.'])
+        return res.redirect('/')
+    })
 })
   
 app.post('/reset/:token', async (req, res) => {
@@ -634,7 +685,7 @@ app.post('/reset/:token', async (req, res) => {
 
 
         // Reset token is valid, check if password length is valid
-        if (req.body.password.length < 10) {
+        if (typeof req.body.password === 'string' && req.body.password.length < 10) {
             req.flash('error', 'Password should be at least 10 characters long')
             return res.redirect('/reset/' + req.params.token)
         }
@@ -662,6 +713,11 @@ app.post('/reset/:token', async (req, res) => {
 
         req.flash('success', ['Success! Your password has been changed.'])
         return res.redirect('/')
+    })
+    .catch(e=> {
+        console.log()
+        req.flash('error', 'Error resetting passsword')
+        return res.redirect('/forgot')
     })
 })
 
@@ -710,13 +766,13 @@ function isNOTAuthenticated(req, res, next) {
 function validateInput(req, res, next) {
     var error_messages =  []
 
-    if (req.body.username.length < 4) {
+    if (typeof req.body.username === 'string' && req.body.username.length < 4) {
         error_messages.push('Username should be at least 4 characters long')
     }
-    if (req.body.password.length < 10) {
+    if (typeof req.body.password === 'string' && req.body.password.length < 10) {
         error_messages.push('Password should be at least 10 characters long')
     }
-    if (req.body.email.length < 6) {
+    if (typeof req.body.email === 'string' && req.body.email.length < 6) {
         error_messages.push('Email should be at least 6 characters long')
     }
 
@@ -760,6 +816,10 @@ function doesDeckExist(req, res, next) {
                 // Deck does not exist
                 return next()
             }
+        })
+        .catch(e=> {
+            req.flash('error', 'Error importing deck, invalid deck code')
+            return res.redirect('/')
         })
     }
     else {

@@ -188,6 +188,9 @@ async function adjustScoreOnAllDecks() {
         console.log('Deck adjustments updated in ' + ((Date.now() - timer)/1000).toString() + "s")
         return
     })
+    .catch(e=> {
+        throw new Error('Error adjusting scores on all decks')
+    })
 }
 
 
@@ -518,6 +521,9 @@ async function parseAttributes(deck_object) {
         await adjustment_pod.save()
         await deck_object.save()
     })
+    .catch(e=> {
+        throw new Error('Error updating token scores')
+    })
 }
 
 
@@ -574,6 +580,9 @@ async function rescoreDeck(deck_object) {
                     await getStatsFromCard(card_name)
                     .then(output=> {
                         card_stats = output
+                    })
+                    .catch(e=> {
+                        throw new Error('Error getting stats from cards')
                     })
                     //console.log(card_stats)
                 }

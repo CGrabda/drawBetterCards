@@ -21,7 +21,7 @@ module.exports = function(sequelize, Sequelize) {
             allowNull: false,
             unique: true,
             validate: {
-                len: 65
+                len: [2,65]
             }
         },
         alpha_score: {

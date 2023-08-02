@@ -79,11 +79,11 @@ def parseMembers(membersResponse, timeMinutesCheck=131490):
             tierData = member["relationships"]["currently_entitled_tiers"]["data"]
 
             # If user has no email
-            if email == None:
+            if email is None:
                 continue
         
             # User had never paid
-            if paymentDate == None:
+            if paymentDate is None:
                 continue
 
             # check that last update is within past x seconds, default is past 3 months, 43830 minutes in a month

@@ -40,6 +40,9 @@ async function updateTiers(lookback_minutes = 131490) {
                 )
             }
         })
+        .catch(e=> {
+            throw new Error('Error updating patreon tiers')
+        })
     }
     catch (PythonShellError) {
         console.log('Error updating patreon tiers')
@@ -168,6 +171,9 @@ async function isDeckInCollection(user_id, deck_id) {
         
         // The query result was null, the user does not have this deck
         return false
+    })
+    .catch(e=> {
+        throw new Error('Error determining if deck is in collection')
     })
 }
 

@@ -2,7 +2,7 @@
 Written by SoutherlyElf
 '''
 import re
-from sys import argv
+from sys import argv, exit
 from csv import reader
 from json import loads, dumps
 from requests import request
@@ -671,10 +671,9 @@ def analyzeDeck(deckLink):
     return { "deck_info": deckInfo, "pod_info": scoredPods}
 
 
+'''
 def analyzeCollection(deckLink):
-    '''
     
-    '''
     # Open csv file
     with open(deckLink, encoding="utf-8") as file:
         next(file)
@@ -695,7 +694,7 @@ def analyzeCollection(deckLink):
                 # Write the deck name, score, and DoK link to the output file
                 outString = "\"" + line[0] + "\"" + ", " + str(score) + ", " + line[48] + "\n"
                 outFile.write(outString)
-
+'''
 
 
 def main():
@@ -730,15 +729,18 @@ def main():
                     continue
                 
                 # Analyze each deck in the collection
-                analyzeCollection(deckLink)
+                #analyzeCollection(deckLink)
 
             # Analyze a single deck
             else:
-                deckInfo = analyzeDeck(deckLink)
-                #with open("deck.json", "w") as file:
-                #    file.write(dumps(deckInfo))
-                print(deckInfo["deck_info"])
-                print("\nThe Z-Score of " + deckInfo["deck_info"]["name"] + " is " + str(round(deckInfo["deck_info"]["score"], 2)) + "\n")
+                try:
+                    deckInfo = analyzeDeck(deckLink)
+                    #with open("deck.json", "w") as file:
+                    #    file.write(dumps(deckInfo))
+                    print(deckInfo["deck_info"])
+                    print("\nThe Z-Score of " + deckInfo["deck_info"]["name"] + " is " + str(round(deckInfo["deck_info"]["score"], 2)) + "\n")
+                except:
+                    pass
 
         
 

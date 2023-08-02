@@ -93,7 +93,6 @@ async function searchDeck(data, req_page, req_user_id=null) {
             deck_query = { [Op.and]: [deck_query, additional_query] }
         }
         else {
-            console.log("House First Param", deck_query)
             deck_query = additional_query
         }
         notEmpty = true
