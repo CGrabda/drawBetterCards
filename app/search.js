@@ -142,7 +142,7 @@ async function searchDeck(data, req_page, req_user_id=null) {
 
     // If req_user_id is passed, add an exclusive join on collection to decks using include
     if (req_user_id) {
-        include_query = [include_query, { model: Collection }]
+        include_query = { model: Collection }
     }
 
     console.log('Query:', deck_query, include_query, '\n')
