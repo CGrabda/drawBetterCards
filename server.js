@@ -852,21 +852,27 @@ function queryToHTML(query) {
     var output = ''
     var alpha = ''
 
-    for (var i = 0; i < Object.keys(query).length; i++) {
-        alpha = query[i]["dataValues"]["alpha_score"]
-        if (alpha == null || alpha ==='P' || alpha[0] === 'R') {
-            alpha = '-'
-        }
+    try {
+        for (var i = 0; i < Object.keys(query).length; i++) {
+            alpha = query[i]["dataValues"]["alpha_score"]
+            if (alpha == null || alpha ==='P' || alpha[0] === 'R') {
+                alpha = '-'
+            }
 
-        output += '<tr>'
-        output += '<td>' + query[i]["dataValues"]["adj_score"] + '</td>'
-        output += '<td>' + alpha + '</td>'
-        output += '<td><a href= "/deck/' + query[i]["dataValues"]["deck_code"] + '">' + query[i]["dataValues"]["deck_name"] + '</a></td>'
-        output += '<th><img src= "rsrc/set_' + query[i]["dataValues"]["set_id"] + '.png" width="32px" height="32px" /></th>'
-        output += '<td><img src= "rsrc/house_' + query[i]["dataValues"]["house1"] + '.png" width="48px" height="48px" />'
-        output += '<img src= "rsrc/house_' + query[i]["dataValues"]["house2"] + '.png" width="48px" height="48px" />'
-        output += '<img src= "rsrc/house_' + query[i]["dataValues"]["house3"] + '.png" width="48px" height="48px" /></td>'
-        output += '</tr>'
+            output += '<tr>'
+            output += '<td>' + query[i]["dataValues"]["adj_score"] + '</td>'
+            output += '<td>' + alpha + '</td>'
+            output += '<td><a href= "/deck/' + query[i]["dataValues"]["deck_code"] + '">' + query[i]["dataValues"]["deck_name"] + '</a></td>'
+            output += '<th><img src= "rsrc/set_' + query[i]["dataValues"]["set_id"] + '.png" width="32px" height="32px" /></th>'
+            output += '<td><img src= "rsrc/house_' + query[i]["dataValues"]["house1"] + '.png" width="48px" height="48px" />'
+            output += '<img src= "rsrc/house_' + query[i]["dataValues"]["house2"] + '.png" width="48px" height="48px" />'
+            output += '<img src= "rsrc/house_' + query[i]["dataValues"]["house3"] + '.png" width="48px" height="48px" /></td>'
+            output += '</tr>'
+        }
+    }
+    catch (e) {
+        console.log('Error converting query to HTML')
+        return '<div class="text-danger">No results found</div>'
     }
 
     return output
