@@ -66,20 +66,16 @@ module.exports = function(sequelize, Sequelize) {
         defaultValue: null
     },
     pod_score: {
-        type: DataTypes.SMALLINT,
-        allowNull: false
+        type: DataTypes.SMALLINT
     },
     pod_e: {
-        type: DataTypes.DECIMAL,
-        allowNull: false
+        type: DataTypes.DECIMAL
     },
     pod_a: {
-        type: DataTypes.DECIMAL,
-        allowNull: false
+        type: DataTypes.DECIMAL
     },
     pod_c: {
-        type: DataTypes.DECIMAL,
-        allowNull: false
+        type: DataTypes.DECIMAL
     },
     pod_f: {
         type: DataTypes.DECIMAL
@@ -91,8 +87,7 @@ module.exports = function(sequelize, Sequelize) {
         type: DataTypes.DECIMAL
     },
     pod_bob: {
-        type: DataTypes.SMALLINT,
-        allowNull: false
+        type: DataTypes.SMALLINT
     },
     pod_scaling_a: {
         type: DataTypes.SMALLINT
@@ -107,15 +102,13 @@ module.exports = function(sequelize, Sequelize) {
         type: DataTypes.SMALLINT
     },
     pod_creatures: {
-        type: DataTypes.SMALLINT,
-        allowNull: false
+        type: DataTypes.SMALLINT
     },
     pod_artifacts: {
         type: DataTypes.SMALLINT
     },
     pod_actions: {
-        type: DataTypes.SMALLINT,
-        allowNull: false
+        type: DataTypes.SMALLINT
     },
     pod_upgrades: {
         type: DataTypes.SMALLINT

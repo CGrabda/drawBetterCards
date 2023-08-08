@@ -18,6 +18,7 @@ const sequelize = new Sequelize({
         acquire: 30000,
         idle: 10000
     }
-})
+});
+Sequelize.postgres.DECIMAL.parse = function (value) { return parseFloat(value); };
 
 module.exports = sequelize

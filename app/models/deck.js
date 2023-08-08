@@ -67,6 +67,46 @@ module.exports = function(sequelize, Sequelize) {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW,
         },
+        total_e: {
+            type: DataTypes.DECIMAL,
+            defaultValue: 0,
+        },
+        total_a: {
+            type: DataTypes.DECIMAL,
+            defaultValue: 0,
+        },
+        total_c: {
+            type: DataTypes.DECIMAL,
+            defaultValue: 0,
+        },
+        total_f: {
+            type: DataTypes.DECIMAL,
+            defaultValue: 0,
+        },
+        total_d: {
+            type: DataTypes.DECIMAL,
+            defaultValue: 0,
+        },
+        total_r: {
+            type: DataTypes.DECIMAL,
+            defaultValue: 0,
+        },
+        total_bob: {
+            type: DataTypes.SMALLINT,
+            defaultValue: 0,
+        },
+        total_scaling_a: {
+            type: DataTypes.SMALLINT,
+            defaultValue: 0,
+        },
+        total_wipes: {
+            type: DataTypes.SMALLINT,
+            defaultValue: 0,
+        },
+        total_cheats: {
+            type: DataTypes.SMALLINT,
+            defaultValue: 0,
+        },
     },
     {
         timestamps: false 

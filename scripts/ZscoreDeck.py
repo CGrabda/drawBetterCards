@@ -574,6 +574,11 @@ def getScore(decklist, pods, deckInfo):
         # Values for scoring/counting/returning
         # score/cardScore distinction is for debugging purposes
         score += cardScore
+
+    for pod in pods:
+        for value in pods[pod]:
+            if pods[pod][value] == 0:
+                pods[pod][value] = None
     
     return score, pods
 
@@ -735,6 +740,7 @@ def main():
             else:
                 try:
                     deckInfo = analyzeDeck(deckLink)
+                    print(dumps(deckInfo))
                     #with open("deck.json", "w") as file:
                     #    file.write(dumps(deckInfo))
                     print(deckInfo["deck_info"])

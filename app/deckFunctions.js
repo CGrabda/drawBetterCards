@@ -52,6 +52,7 @@ async function addDeck(deck_info, pod_info) {
     var houseStrings = Object.keys(pod_info);
     var houses = [];
     var i = ''
+    var pods = []
     
     // Retrieve houses within deck
     for (i in houseStrings) {
@@ -60,8 +61,8 @@ async function addDeck(deck_info, pod_info) {
         }
     }
 
-    return sequelize.transaction(function (t) {
-        return Deck.create({
+    return sequelize.transaction(async function (t) {
+        return await Deck.create({
             deck_code: deck_info["code"],
             deck_name: deck_info["name"],
             raw_score: deck_info["score"],
@@ -71,12 +72,15 @@ async function addDeck(deck_info, pod_info) {
             set_id: deck_info["set"],
             attributes: {},
             token: deck_info["token"]
-        }, {transaction: t}).then(async function (deck) {
+        }, {transaction: t})
+        .then(async function (deck) {
+            console.log(deck)
             for (i in houses) {
                 var house = houses[i]
                 var pod = pod_info[house]
+
                 // add the 3 houses of the deck
-                await Pod.create({
+                pods.push(await Pod.create({
                     deck_id: deck.deck_id,
                     house_id: house,
                     card1: pod["cards"][0],
@@ -108,12 +112,12 @@ async function addDeck(deck_info, pod_info) {
                     pod_artifacts: pod["artifacts"],
                     pod_actions: pod["actions"],
                     pod_upgrades: pod["upgrades"]
-                }, {transaction: t})
+                }, {transaction: t}))
             }
 
             // add the adjustment house (no cards)
             pod = pod_info["1"]
-            await Pod.create({
+            pods.push(await Pod.create({
                 deck_id: deck.deck_id,
                 house_id: 1,
                 pod_score: pod["score"],
@@ -132,16 +136,19 @@ async function addDeck(deck_info, pod_info) {
                 pod_artifacts: pod["artifacts"],
                 pod_actions: pod["actions"],
                 pod_upgrades: pod["upgrades"]
-            }, {transaction: t});
+            }, {transaction: t}));
 
-            return [deck.deck_id, deck.deck_code]
+            return [[deck.deck_id, deck.deck_code], deck, pods]
         }).catch(function (err) {
             console.log(err)
             throw new Error('Error importing Deck')
         })
-    }).then(results => {
+    }).then(async results => {
         // transaction successful
-        return results
+        // Update all the deck totals
+        await updateDeckTotals(results[1], results[2])
+
+        return results[0]
     }).catch(e=> {
         console.log(e)
         throw new Error('Deck already imported');
@@ -654,14 +661,41 @@ async function rescoreDeck(deck_object) {
             adjustment_pod = pod
         }
     }
-    // Sum scores of pods and update raw score
-    deck_object.raw_score = raw_score
+    
+    return await updateDeckTotals(deck_object, pods)
+}
 
-    // Update adjusted score from adjustment pod
-    deck_object.adj_score = raw_score + adjustment_pod.pod_score
+
+
+async function updateDeckTotals(deck_object, pods) {
+    deck_object.adj_score = 0
+    deck_object.total_e = 0
+    deck_object.total_a = 0
+    deck_object.total_c = 0
+    deck_object.total_f = 0
+    deck_object.total_d = 0
+    deck_object.total_r = 0
+    deck_object.total_bob = 0
+    deck_object.total_scaling_a = 0
+    deck_object.total_wipes = 0
+    deck_object.total_cheats = 0
+
+    for (var i = 0; i < 4; i++) {
+        deck_object.adj_score += (pods[i].pod_score || 0)
+        deck_object.total_e += (parseInt(pods[i].pod_e) || 0)
+        deck_object.total_a += (parseInt(pods[i].pod_a) || 0)
+        deck_object.total_c += (parseInt(pods[i].pod_c) || 0)
+        deck_object.total_f += (pods[i].pod_f || 0)
+        deck_object.total_d += (pods[i].pod_d || 0)
+        deck_object.total_r += (pods[i].pod_r || 0)
+        deck_object.total_bob += (pods[i].pod_bob || 0)
+        deck_object.total_scaling_a += (pods[i].pod_scaling_a || 0)
+        deck_object.total_wipes += (pods[i].pod_wipes || 0)
+        deck_object.total_cheats += (pods[i].pod_cheats || 0)
+    };
 
     // Push updates to db
-    return await deck_object.save()
+    return await deck_object.save();
 }
 
 

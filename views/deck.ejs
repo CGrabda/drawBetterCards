@@ -282,7 +282,7 @@
                     <th><%= query.dataValues.Pods[2].dataValues.pod_e %></th>
                     <th><%= query.dataValues.Pods[3].dataValues.pod_e %></th>
                     <th><%= parseInt(query.dataValues.Pods[0].dataValues.pod_e) || '' %></th>
-                    <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_e) + parseInt(query.dataValues.Pods[2].dataValues.pod_e) + parseInt(query.dataValues.Pods[3].dataValues.pod_e) + parseInt(query.dataValues.Pods[0].dataValues.pod_e) %></th>
+                    <th><%= parseInt(query.dataValues.total_e) %></th>
                     <th style="text-align:left">E</th>
                 </tr>
                 <tr>
@@ -291,7 +291,7 @@
                     <th><%= query.dataValues.Pods[2].dataValues.pod_a %></th>
                     <th><%= query.dataValues.Pods[3].dataValues.pod_a %></th>
                     <th><%= parseInt(query.dataValues.Pods[0].dataValues.pod_a) || '' %></th>
-                    <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_a) + parseInt(query.dataValues.Pods[2].dataValues.pod_a) + parseInt(query.dataValues.Pods[3].dataValues.pod_a) + parseInt(query.dataValues.Pods[0].dataValues.pod_a) %></th>
+                    <th><%= parseInt(query.dataValues.total_a) %></th>
                     <th style="text-align:left">A</th>
                 </tr>
                 <tr>
@@ -300,7 +300,7 @@
                     <th><%= query.dataValues.Pods[2].dataValues.pod_c %></th>
                     <th><%= query.dataValues.Pods[3].dataValues.pod_c %></th>
                     <th><%= parseInt(query.dataValues.Pods[0].dataValues.pod_c) || '' %></th>
-                    <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_c) + parseInt(query.dataValues.Pods[2].dataValues.pod_c) + parseInt(query.dataValues.Pods[3].dataValues.pod_c) + parseInt(query.dataValues.Pods[0].dataValues.pod_c) %></th>
+                    <th><%= parseInt(query.dataValues.total_c) %></th>
                     <th style="text-align:left">C</th>
                 </tr>
                 <tr>
@@ -309,7 +309,7 @@
                     <th><%= query.dataValues.Pods[2].dataValues.pod_f %></th>
                     <th><%= query.dataValues.Pods[3].dataValues.pod_f %></th>
                     <th><%= query.dataValues.Pods[0].dataValues.pod_f %></th>
-                    <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_f || 0) + parseInt(query.dataValues.Pods[2].dataValues.pod_f || 0) + parseInt(query.dataValues.Pods[3].dataValues.pod_f || 0) + parseInt(query.dataValues.Pods[0].dataValues.pod_f || 0) %></th>
+                    <th><%= parseInt(query.dataValues.total_f) %></th>
                     <th style="text-align:left">F</th>
                 </tr>
                 <tr>
@@ -318,7 +318,7 @@
                     <th><%= query.dataValues.Pods[2].dataValues.pod_d %></th>
                     <th><%= query.dataValues.Pods[3].dataValues.pod_d %></th>
                     <th><%= query.dataValues.Pods[0].dataValues.pod_d %></th>
-                    <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_d || 0) + parseInt(query.dataValues.Pods[2].dataValues.pod_d || 0) + parseInt(query.dataValues.Pods[3].dataValues.pod_d || 0) + parseInt(query.dataValues.Pods[0].dataValues.pod_d || 0) %></th>
+                    <th><%= parseInt(query.dataValues.total_d) %></th>
                     <th style="text-align:left">D</th>
                 </tr>
                 <tr>
@@ -327,7 +327,7 @@
                     <th><%= query.dataValues.Pods[2].dataValues.pod_r %></th>
                     <th><%= query.dataValues.Pods[3].dataValues.pod_r %></th>
                     <th><%= query.dataValues.Pods[0].dataValues.pod_r %></th>
-                    <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_r || 0) + parseInt(query.dataValues.Pods[2].dataValues.pod_r || 0) + parseInt(query.dataValues.Pods[3].dataValues.pod_r || 0) + parseInt(query.dataValues.Pods[0].dataValues.pod_r || 0) %></th>
+                    <th><%= parseInt(query.dataValues.total_r) %></th>
                     <th style="text-align:left">R</th>
                 </tr>
                 <tr>
@@ -336,7 +336,7 @@
                     <th><%= query.dataValues.Pods[2].dataValues.pod_bob %></th>
                     <th><%= query.dataValues.Pods[3].dataValues.pod_bob %></th>
                     <th><%= parseInt(query.dataValues.Pods[0].dataValues.pod_bob) || '' %></th>
-                    <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_bob) + parseInt(query.dataValues.Pods[2].dataValues.pod_bob) + parseInt(query.dataValues.Pods[3].dataValues.pod_bob) + parseInt(query.dataValues.Pods[0].dataValues.pod_bob) %></th>
+                    <th><%= parseInt(query.dataValues.total_bob) %></th>
                     <th style="text-align:left">BoB</th>
                 </tr>
                 <tr>
@@ -345,7 +345,7 @@
                     <th><%= query.dataValues.Pods[2].dataValues.pod_scaling_a %></th>
                     <th><%= query.dataValues.Pods[3].dataValues.pod_scaling_a %></th>
                     <th><%= query.dataValues.Pods[0].dataValues.pod_scaling_a %></th>
-                    <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_scaling_a || 0) + parseInt(query.dataValues.Pods[2].dataValues.pod_scaling_a || 0) + parseInt(query.dataValues.Pods[3].dataValues.pod_scaling_a || 0) + parseInt(query.dataValues.Pods[0].dataValues.pod_scaling_a || 0) %></th>
+                    <th><%= parseInt(query.dataValues.total_scaling_a) %></th>
                     <th style="text-align:left">Scaling A</th>
                 </tr>
                 <tr>
@@ -354,7 +354,7 @@
                     <th><%= query.dataValues.Pods[2].dataValues.pod_wipes %></th>
                     <th><%= query.dataValues.Pods[3].dataValues.pod_wipes %></th>
                     <th><%= query.dataValues.Pods[0].dataValues.pod_wipes %></th>
-                    <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_wipes || 0) + parseInt(query.dataValues.Pods[2].dataValues.pod_wipes || 0) + parseInt(query.dataValues.Pods[3].dataValues.pod_wipes || 0) + parseInt(query.dataValues.Pods[0].dataValues.pod_wipes || 0) %></th>
+                    <th><%= parseInt(query.dataValues.total_wipes) %></th>
                     <th style="text-align:left">Wipes</td>
                 </tr>
                 <tr>
@@ -363,7 +363,7 @@
                     <th><%= query.dataValues.Pods[2].dataValues.pod_cheats %></th>
                     <th><%= query.dataValues.Pods[3].dataValues.pod_cheats %></th>
                     <th><%= query.dataValues.Pods[0].dataValues.pod_cheats %></th>
-                    <th><%= parseInt(query.dataValues.Pods[1].dataValues.pod_cheats || 0) + parseInt(query.dataValues.Pods[2].dataValues.pod_cheats || 0) + parseInt(query.dataValues.Pods[3].dataValues.pod_cheats || 0) + parseInt(query.dataValues.Pods[0].dataValues.pod_cheats || 0) %></th>
+                    <th><%= parseInt(query.dataValues.total_cheats) %></th>
                     <th style="text-align:left">Cheats</td>
                 </tr>
                 <% if (query.Token) { %>

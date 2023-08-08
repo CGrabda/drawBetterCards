@@ -61,16 +61,15 @@ const op_array = ['>', '<', '=']
 const search_to_db_name = {
     'Score': 'adj_score',
     'E': 'total_e',
-    'A': null,
-    'C': null,
-    'F': null,
-    'D': null,
-    'R': null,
-    'BoB': null,
-    'ScaleA': null,
-    'Wipes': null,
-    'Cheats': null,
-    'Tokens': null
+    'A': 'total_a',
+    'C': 'total_c',
+    'F': 'total_f',
+    'D': 'total_d',
+    'R': 'total_r',
+    'BoB': 'total_bob',
+    'ScaleA': 'total_scaling_a',
+    'Wipes': 'total_wipes',
+    'Cheats': 'total_cheats'
 }
 
 
@@ -145,7 +144,7 @@ async function searchDeck(data, req_page, req_user_id=null) {
         include_query = { model: Collection }
     }
 
-    console.log('Query:', deck_query, include_query, '\n')
+    //console.log('Query:', deck_query, include_query, '\n')
 
     return await Deck.findAll({
         include: include_query,
@@ -153,7 +152,6 @@ async function searchDeck(data, req_page, req_user_id=null) {
         limit: 15,
         offset: 15 * parseInt(req_page),
         order: [['adj_score', 'DESC'], ['createdAt', 'DESC']],
-        logging: console.log
     })
     .catch(e=> {
         console.log('Error searching')
