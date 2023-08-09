@@ -74,7 +74,6 @@ async function addDeck(deck_info, pod_info) {
             token: deck_info["token"]
         }, {transaction: t})
         .then(async function (deck) {
-            console.log(deck)
             for (i in houses) {
                 var house = houses[i]
                 var pod = pod_info[house]
