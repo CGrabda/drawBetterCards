@@ -20,7 +20,6 @@ const passport = require('passport');
 const path = require('path');
 const rateLimit = require('express-rate-limit');
 const session = require('express-session');
-const SessionStore = require('express-session-sequelize')(session.Store);
 const svgCaptcha = require('svg-captcha-fixed');
 const toobusy = require('toobusy-js');
 const util = require('util');
@@ -35,6 +34,11 @@ const {PythonShell} = require('python-shell')
 const deckFunctions = require('./app/deckFunctions.js');
 const userFunctions = require('./app/userFunctions.js');
 const deckSearch = require('./app/search.js')
+const SessionStore = require('express-session-sequelize')(session.Store);
+const sequelizeSessionStore = new SessionStore({
+    db: sequelize,
+    expiration: 86400000 * 28
+})
 const token = require('./app/models/token.js');
 
 // Associate decks and users to Collections
@@ -60,12 +64,13 @@ app.use(rateLimit({
 app.use(flash())
 app.use(session({
     cookie: {
-        maxAge: 604800000,
+        maxAge: 86400000 * 28,
         sameSite: true,
         httpOnly: true,
         
     },
     secret: process.env.SESSION_SECRET,
+    store: sequelizeSessionStore,
     resave: false,
     saveUninitialized: false
 }))
