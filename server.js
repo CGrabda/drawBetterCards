@@ -20,6 +20,7 @@ const passport = require('passport');
 const path = require('path');
 const rateLimit = require('express-rate-limit');
 const session = require('express-session');
+const SessionStore = require('express-session-sequelize')(session.Store);
 const svgCaptcha = require('svg-captcha-fixed');
 const toobusy = require('toobusy-js');
 const util = require('util');
