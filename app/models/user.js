@@ -49,6 +49,10 @@ module.exports = function(sequelize, Sequelize) {
             type: DataTypes.BOOLEAN,
             defaultValue: null
         },
+        unlimited_user: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: null
+        },
         payment_date: {
             type: DataTypes.TIME,
             defaultValue: null

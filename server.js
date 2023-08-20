@@ -55,8 +55,8 @@ app.set('view-engine', 'ejs')
 app.use(express.urlencoded({ extended: false, limit: "1kb" }))
 app.use(express.json({ limit: "1kb" }))
 app.use(rateLimit({
-	windowMs: 1 * 60 * 1000, // 15 minutes
-	max: 200, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+	windowMs: 1 * 60 * 1000, // 1 minute
+	max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
 	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 }))
@@ -145,17 +145,26 @@ app.use(function(req, res, next) {
 
 
 // Scheduled tasks
-// Updates Patreon tiers from payments within the past 15 minutes
+// Updates Patreon tiers from payments within the past 3 minutes, runs every 2 minutes
 cron.schedule('*/2 * * * *', () => {
-    userFunctions.updateTiers(3);
+    userFunctions.updateTiers(3)
+    .then(async function () {
+        return userFunctions.processRewards()
+        .then(async function () {
+            return userFunctions.offloadOldPatreons()
+        })
+    })
 });
 
 // Updates Patreon tiers for anyone with history in the past 3 months
 // Runs daily at midnight 
-// Former patreons handled here by the daily update
+// Former patreons (removed subs) handled here by the daily update
 cron.schedule('0 0 * * *', () => {
     userFunctions.updateTiers();
 });
+
+// at start of month
+// give all users +5 imports (check if less than 30k to prevent db errors)
 
 
 
@@ -215,7 +224,7 @@ app.get('/register', isNOTAuthenticated, (req, res) => {
     
     return res.render('register.ejs', { captcha_image: captcha.data, isLoggedIn: req.isAuthenticated() })
 })
-/*
+
 // Post register
 app.post('/register', isNOTAuthenticated, passedCaptcha, validateInput, async (req, res) => {
     try {
@@ -223,7 +232,8 @@ app.post('/register', isNOTAuthenticated, passedCaptcha, validateInput, async (r
         User.create({
             username: req.body.username,
             email: req.body.email,
-            password: hashedPassword
+            password: hashedPassword,
+            imports: 30
         })
         .then(function() {
             console.log(`Created User ${req.body.username}`)
@@ -237,7 +247,7 @@ app.post('/register', isNOTAuthenticated, passedCaptcha, validateInput, async (r
         console.log(e)
         res.redirect('/register')
     }
-})*/
+})
 
 
 // Logout post
@@ -618,6 +628,18 @@ app.get("/admin/:path", isAdmin, isAuthenticated, function(req, res) {
             res.render('admin.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user }) 
         })
     }
+    else if (path == 'setUnlimited') {
+        // Adjust the scores and get attributes of all decks
+        userFunctions.setUnlimited()
+        .then(function () {
+            req.flash('error', ['Unlimited users have been initialized.'])
+            res.render('admin.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user }) 
+        })
+        .catch(e=> {
+            req.flash('error', ['An unexpected error occurred, please contact a team member.'])
+            res.render('admin.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user }) 
+        })
+    }
 })
 
 
@@ -784,7 +806,7 @@ function validateInput(req, res, next) {
 
     if (error_messages.length > 0) {
         req.flash('error', error_messages)
-        return res.render('register.ejs')
+        return res.redirect('register')
     }
     
     next();
@@ -850,7 +872,7 @@ function passedCaptcha(req, res, next) {
         return next()
     }
 
-    req.flash('error', 'Invalid captcha')
+    req.flash('error', ['Invalid captcha'])
     res.redirect('/register')
 }
 
