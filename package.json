@@ -18,7 +18,7 @@
     "nodemailer": "^6.9.3",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
-    "pg": "^8.11.0",
+    "pg": "^8.11.2",
     "python-shell": "^5.0.0",
     "sequelize": "^6.31.1",
     "svg-captcha-fixed": "^1.5.2",
