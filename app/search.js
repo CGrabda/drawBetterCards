@@ -86,7 +86,7 @@ async function searchDeck(data, req_page, req_user_id=null) {
     }
 
     // If set exists, is a number, and is between 1 and the number of sets, add set searches to query
-    if (data.set && (data.set.every( (val, i, arr) => (typeof val === 'number' && val > 0 && val < number_of_sets)))) {
+    if (data.set && (data.set.every( (val, i, arr) => (typeof val === 'number' && val > 0 && val < 2000)))) {
         var additional_query = { set_id: data.set }
 
         // If query is not empty add onto query with 'and', else, initialize query
@@ -199,7 +199,7 @@ async function getQueryData(request_query, request_query_polluted) {
         }
     }
     // If set is not array, add single set to data
-    else if (single_set_search && typeof single_set_search === 'number' && single_set_search > 0 && single_set_search < number_of_sets) {
+    else if (single_set_search && typeof single_set_search === 'number' && single_set_search > 0 && single_set_search < 2000) {
         data["set"] = [single_set_search]
     }
     
