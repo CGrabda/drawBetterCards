@@ -17,17 +17,12 @@
                 <div class="card px-5 py-5" id="form1">
                     <div class="form-data" v-if="!submitted">
                         <form action="/register" method="POST">
-                            <div class="forms-inputs mb-4"> <label for="user">Username</label> <input id="username" name="username" autocomplete="off" type="text" v-bind:class="{'form-control':true, 'is-invalid' : !validEmail(email) && emailBlured}" v-on:blur="emailBlured = true" required>
-                                <div class="invalid-feedback">
-                                    <% if (messages.error) { %>
-                                        <div class="error-messages">
-                                            <% messages.error.forEach(function(error) { %>
-                                                    <%= error %>
-                                            <% }); %>
-                                        </div>
-                                    <% } %>
+                            <% if (messages.error) { %>
+                                <div class="text-danger">
+                                    <%= messages.error %>
                                 </div>
-                            </div>
+                            <% } %>
+                            <div class="forms-inputs mb-4"> <label for="user">Username</label> <input id="username" name="username" autocomplete="off" type="text" v-bind:class="{'form-control':true, 'is-invalid' : !validEmail(email) && emailBlured}" v-on:blur="emailBlured = true" required></div>
                             <div class="forms-inputs mb-4"> <label for="email">Email</label> <input id="email" name="email" autocomplete="off" type="email" v-model="email"  required> </div>
                             <div class="forms-inputs mb-4"> <label for="password">Password</label> <input id="password" name="password" autocomplete="off" type="password" v-model="password" v-bind:class="{'form-control':true, 'is-invalid' : !validPassword(password) && passwordBlured}" v-on:blur="passwordBlured = true" required> </div>
                             

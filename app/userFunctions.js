@@ -7,8 +7,8 @@ const {PythonShell} = require('python-shell')
 
 // Dict for setting the number of imports and alphas for backers
 var rewardDict = {
-    "100": [20, 1],
-    "200": [100, 5],
+    "100": [30, 1],
+    "200": [150, 5],
     "300": [10000, 10]
 }
 
@@ -23,9 +23,9 @@ async function updateTiers(lookback_minutes = 131490) {
 
     try {
         // Get the list of current patreons
-        await PythonShell.run(process.env.SCRIPT_PATH + 'getPatreons.py', options)
+        return await PythonShell.run(process.env.SCRIPT_PATH + 'getPatreons.py', options)
         .then(async messages=> {
-            // Check if the python output is an error, then prase json results
+            // Check if the python output is an error, then parse json results
             if (messages[0] instanceof Error) {
                 return new Error('Deck import error')
             }
@@ -66,7 +66,20 @@ async function processRewards() {
             var tier = query[i]["dataValues"]["patreon_rank"].toString()
             
             var rewards = rewardDict[tier]
-            var new_imports = rewards[0] + Math.floor(0.5*old_imports)
+
+            // Checks if unlimited user first
+            if (query[i]["dataValues"]["patreon_rank"]["unlimited_user"]) {
+                var new_imports = 15000
+            }
+            // If more than 40 imports, adds half of old them
+            else if (old_imports > 40) {
+                var new_imports = rewards[0] + Math.floor(0.5*old_imports)
+            }
+            // If 40 or less imports, adds full value. This is due to the 30 bonus imports for new users
+            // This ensures a new user after becoming a $1 tier is given 60 imports
+            else {
+                var new_imports = rewards[0] + old_imports
+            }
             
             // Update the user's rewards and last_payment
             await User.update(
@@ -80,6 +93,52 @@ async function processRewards() {
     })
 }
 
+
+// If a user is not a patreon AND not an unlimited user and has over 150 imports, sets imports to 150
+async function offloadOldPatreons() {
+    return await User.findAll({
+        where: { [Op.and]: [{ patreon_rank: 0 }, { unlimited_user: false }] }
+    })
+    .then(async query=> {
+        // Loop over each user that has not yet been updated
+        for (var i in query) {
+            var user_id = query[i]["dataValues"]["id"]
+            var imports = query[i]["dataValues"]["imports"]
+
+            if (!(query[i]["dataValues"]["patreon_rank"]["unlimited_user"]) && imports > 150) {
+                imports = 150
+            }
+
+            await User.update(
+                { imports: imports },
+                { where: { id: user_id } }
+            )
+        }
+    })
+}
+
+// Sets the initial state of unlimited for an unlimited user
+// Then they will continue to be unlimited
+async function setUnlimited() {
+    return await User.findAll({
+        where: { unlimited_user: true }
+    })
+    .then(async query=> {
+        // Loop over each user
+        for (var i in query) {
+            // Checks if unlimited user has less than 8192 imports, then sets them back to 15000
+            if (query[i]["dataValues"]["imports"] < 8192) {
+                User.update(
+                    { imports: 15000 },
+                    { where: { id: query[i]["dataValues"]["id"] } }
+                )
+            }
+        }
+    })
+    .catch(e=>{
+        console.log(e)
+    })
+}
 
 // Retrieves a a user's email and returns it, else null if the user does not exist
 async function getEmail(user_email) {
@@ -186,3 +245,5 @@ module.exports.getUserObjectFromToken = getUserObjectFromToken
 module.exports.addToCollection = addToCollection
 module.exports.removeFromCollection = removeFromCollection
 module.exports.isDeckInCollection = isDeckInCollection
+module.exports.offloadOldPatreons = offloadOldPatreons
+module.exports.setUnlimited = setUnlimited

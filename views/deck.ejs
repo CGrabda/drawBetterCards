@@ -56,6 +56,10 @@
             }
         }
 
+        // Create temp dict of card duplicates (for displaying proper score within tooltip)
+        // This dict is updated as cards are displayed, not before
+        var duplicates = {}
+
 
         // Generates the tooltip for a card
         getCardTooltip = function(card) {
@@ -69,30 +73,43 @@
             try {
                 var card_set = card_info['card_setnum_to_abbrev'][card_set_number]
                 var card_scoring_name = card_info['card_id_to_name'][card.card_id]
-                var card_score = card_info['scoring_dict'][card_set][card_scoring_name]['score']
+                // try retrieveing duplicate value
+                duplicates[card.card_id] += 1
+
+                if (duplicates[card.card_id]) {
+                    var card_score = parseInt(card_info['scoring_dict'][card_set][card_scoring_name]['score']) + parseInt(card_info['scoring_dict'][card_set][card_scoring_name]['multiples'][(duplicates[card.card_id] - 1)  < 5 ? (duplicates[card.card_id] - 1): 4])
+                }
+                else {
+                    // This is the first instance of the card in the dict, value is base
+                    duplicates[card.card_id] = 1
+                    var card_score = card_info['scoring_dict'][card_set][card_scoring_name]['score']
+                }
             }
             catch {
+                console.log(card_scoring_name)
                 console.log('Error displaying card ' + card.card_id + ':' + card.card_name)
             }
 
 
 
             // Map the multiples array to the actual score of the card when of that value
-            var multiples = card.Multiple.dataValues.multiples.map(multiples => multiples + parseInt(card_score))
+            var multiples = card.Multiple.dataValues.multiples.map(multiples => multiples + parseInt(card_info['scoring_dict'][card_set][card_scoring_name]['score']))
 
 
             // Form the output
-            outstring += card.card_name + '\n'
+            outstring += card.card_name.replace(/"/, '&quot;').replace(/"/, '&quot;') + '\n'
             outstring += 'Score: ' + card_score + '\n'
             outstring += 'Multiples: ' + multiples
 
             return outstring;
         }
 
-        getCardDisplay = function(pod, card) {
+        getCardDisplay = function(pod, cardPodNum) {
             var outstring = ''
-            var card = query.dataValues.Pods[pod]["card_" + card]
+            var card = query.dataValues.Pods[pod]["card_" + cardPodNum]
             var card_number = card.card_id.toString()
+            outstring += '<td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay=\'{"show":250, "hide":100}\' data-bs-title="'
+            outstring+= getCardTooltip(query.dataValues.Pods[pod]["card_" + cardPodNum]) + '">'
             outstring += card.card_name
 
             // If a card has enhancements, pop the list of enhancements and add to card
@@ -108,6 +125,8 @@
                 }
             }
 
+            
+            outstring += '</td>'
             return outstring
         }
         %>
@@ -199,97 +218,97 @@
 
                 <tr>
                     <td></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_1) %>"><%- getCardDisplay(1, 1) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_1) %>"><%- getCardDisplay(2, 1) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_1) %>"><%- getCardDisplay(3, 1) %></td>
+                    <%- getCardDisplay(1, 1) %>
+                    <%- getCardDisplay(2, 1) %>
+                    <%- getCardDisplay(3, 1) %>
                     <td></td>
                     <th><%= query.dataValues.Pods[0].dataValues.pod_score + query.dataValues.Pods[1].dataValues.pod_score + query.dataValues.Pods[2].dataValues.pod_score + query.dataValues.Pods[3].dataValues.pod_score %></th>
                 </tr>
                 <tr>
                     <td></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_2) %>"><%- getCardDisplay(1, 2) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_2) %>"><%- getCardDisplay(2, 2) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_2) %>"><%- getCardDisplay(3, 2) %></td>
+                    <%- getCardDisplay(1, 2) %>
+                    <%- getCardDisplay(2, 2) %>
+                    <%- getCardDisplay(3, 2) %>
                     <td></td>
                     <th>Creatures</th>
                 </tr>
                 <tr>
                     <td></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_3) %>"><%- getCardDisplay(1, 3) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_3) %>"><%- getCardDisplay(2, 3) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_3) %>"><%- getCardDisplay(3, 3) %></td>
+                    <%- getCardDisplay(1, 3) %>
+                    <%- getCardDisplay(2, 3) %>
+                    <%- getCardDisplay(3, 3) %>
                     <td></td>
                     <th><%= query.dataValues.Pods[1].dataValues.pod_creatures + query.dataValues.Pods[2].dataValues.pod_creatures + query.dataValues.Pods[3].dataValues.pod_creatures %></th>
                 </tr>
                 <tr>
                     <td></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_4) %>"><%- getCardDisplay(1, 4) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_4) %>"><%- getCardDisplay(2, 4) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_4) %>"><%- getCardDisplay(3, 4) %></td>
+                    <%- getCardDisplay(1, 4) %>
+                    <%- getCardDisplay(2, 4) %>
+                    <%- getCardDisplay(3, 4) %>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
                     <td></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_5) %>"><%- getCardDisplay(1, 5) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_5) %>"><%- getCardDisplay(2, 5) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_5) %>"><%- getCardDisplay(3, 5) %></td>
+                    <%- getCardDisplay(1, 5) %>
+                    <%- getCardDisplay(2, 5) %>
+                    <%- getCardDisplay(3, 5) %>
                     <td></td>
                     <th>Actions</th>
                 </tr>
                 <tr>
                     <td></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_6) %>"><%- getCardDisplay(1, 6) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_6) %>"><%- getCardDisplay(2, 6) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_6) %>"><%- getCardDisplay(3, 6) %></td>
+                    <%- getCardDisplay(1, 6) %>
+                    <%- getCardDisplay(2, 6) %>
+                    <%- getCardDisplay(3, 6) %>
                     <td></td>
                     <th><%= query.dataValues.Pods[1].dataValues.pod_actions + query.dataValues.Pods[2].dataValues.pod_actions + query.dataValues.Pods[3].dataValues.pod_actions %></th>
                 </tr>
                 <tr>
                     <td></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_7) %>"><%- getCardDisplay(1, 7) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_7) %>"><%- getCardDisplay(2, 7) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_7) %>"><%- getCardDisplay(3, 7) %></td>
+                    <%- getCardDisplay(1, 7) %>
+                    <%- getCardDisplay(2, 7) %>
+                    <%- getCardDisplay(3, 7) %>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
                     <td></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_8) %>"><%- getCardDisplay(1, 8) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_8) %>"><%- getCardDisplay(2, 8) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_8) %>"><%- getCardDisplay(3, 8) %></td>
+                    <%- getCardDisplay(1, 8) %>
+                    <%- getCardDisplay(2, 8) %>
+                    <%- getCardDisplay(3, 8) %>
                     <td></td>
                     <th>Artifacts</th>
                 </tr>
                 <tr>
                     <td></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_9) %>"><%- getCardDisplay(1, 9) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_9) %>"><%- getCardDisplay(2, 9) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_9) %>"><%- getCardDisplay(3, 9) %></td>
+                    <%- getCardDisplay(1, 9) %>
+                    <%- getCardDisplay(2, 9) %>
+                    <%- getCardDisplay(3, 9) %>
                     <td></td>
                     <th><%= query.dataValues.Pods[1].dataValues.pod_artifacts + query.dataValues.Pods[2].dataValues.pod_artifacts + query.dataValues.Pods[3].dataValues.pod_artifacts %></th>
                 </tr>
                 <tr>
                     <td></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_10) %>"><%- getCardDisplay(1, 10) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_10) %>"><%- getCardDisplay(2, 10) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_10) %>"><%- getCardDisplay(3, 10) %></td>
+                    <%- getCardDisplay(1, 10) %>
+                    <%- getCardDisplay(2, 10) %>
+                    <%- getCardDisplay(3, 10) %>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
                     <td></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_11) %>"><%- getCardDisplay(1, 11) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_11) %>"><%- getCardDisplay(2, 11) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_11) %>"><%- getCardDisplay(3, 11) %></td>
+                    <%- getCardDisplay(1, 11) %>
+                    <%- getCardDisplay(2, 11) %>
+                    <%- getCardDisplay(3, 11) %>
                     <td></td>
                     <th>Upgrades</th>
                 </tr>
                 <tr>
                     <td></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[1].card_12) %>"><%- getCardDisplay(1, 12) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[2].card_12) %>"><%- getCardDisplay(2, 12) %></td>
-                    <td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay='{"show":250, "hide":100}' data-bs-title="<%= getCardTooltip(query.dataValues.Pods[3].card_12) %>"><%- getCardDisplay(3, 12) %></td>
+                    <%- getCardDisplay(1, 12) %>
+                    <%- getCardDisplay(2, 12) %>
+                    <%- getCardDisplay(3, 12) %>
                     <td></td>
                     <th><%= query.dataValues.Pods[1].dataValues.pod_upgrades + query.dataValues.Pods[2].dataValues.pod_upgrades + query.dataValues.Pods[3].dataValues.pod_upgrades %></th>
                 </tr>
