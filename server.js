@@ -165,7 +165,9 @@ cron.schedule('0 0 * * *', () => {
 
 // at start of month
 // give all users +5 imports (check if less than 30k to prevent db errors)
-
+cron.schedule('0 0 1 * *', () => {
+    // give all +5
+});
 
 
 
@@ -194,7 +196,13 @@ app.get('/', (req, res) => {
 })
 
 
-// login page
+// About page
+app.get('/about', (req, res) => {
+    return res.render('about.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user })
+})
+
+
+// Login page
 app.get('/login', isNOTAuthenticated, (req, res) => {
     return res.render('login.ejs', { isLoggedIn: req.isAuthenticated() })
 })
