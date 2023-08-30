@@ -1,5 +1,5 @@
 '''
-Takes cards.htm, carDetails.htm, and KF card scores files
+Takes cardDetails.htm, and KF card scores files
 Parses card traits, card name to trait, card id to name
     card scores, card multiples
 

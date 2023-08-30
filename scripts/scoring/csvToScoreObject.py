@@ -4,8 +4,8 @@ Written by SoutherlyElf
 from csv import reader
 from json import dumps
 
-filename = "scripts/scoring/KF Card Analysis - Card Scores.csv"
-outFile = "scripts/scoring/scoreDict.json"
+filename = "scripts/rsrc/KF Card Analysis - Card Scores.csv"
+outFile = "scripts/data/scoreDict.json"
 
 
 def scoreCard(scoreDict, line):
