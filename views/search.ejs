@@ -9,9 +9,11 @@
 </head>
 <body>
     <%- include('partials/navbar.ejs') %>
-    <%- include('partials/searchNav.ejs') %>
+    <div class="px-4 bg-dark">
+        <%- include('partials/searchNav.ejs') %>
+    </div>
 
-    <div class="bg-dark px-2 pb-4 text-white">
+    <div class="bg-dark px-4 pb-4 text-white">
         <h1 class="mx-1">All Decks</h1>
         <table class="table mx-1 table-striped" data-bs-theme="dark">
             <thead>

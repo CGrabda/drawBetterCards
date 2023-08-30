@@ -26,7 +26,12 @@
     
             <div class="my-2">
                 <h4 class="text-warning">Scoring</h4>
-                <ul style="list-style-type:none;">
+                <div class="ps-4 mt-2 mb-3">
+                    Deck scores are calculated by summing the score of each card in the deck.
+                    The score of a card may change depending on how many duplicates of that card exist.
+                    Each card in the game is scored accordingly within its set to the following:
+                </div>
+                <ul style="list-style-type:none;" class="ps-5">
                     <li>0 = Terrible</li>
                     <li>1 = Bad</li>
                     <li>2 = Below Average</li>
@@ -43,18 +48,18 @@
             <div class="my-2">
                 <h4 class="text-warning">Additional Metrics</h4>
                 <ul style="list-style-type:none;">
-                    <li class="pt-1">E = Easy AEmber Gain - Number of cards that easily gain at least one aember.</li>
-                    <li class="ps-5 pb-1">Note: This is not a metric that is quantifying how much aember is being gained. Just how many cards are expected to yield at least 1 aember on play.</li>
-                    <li class="py-1">A = AEmber Control - Number of cards that can keep your opponent from forging with aember at the start of their turn. Even if it is a single aember, the card will be counted.</li>
-                    <li class="py-1">C = Creature Control - Number of cards that negatively impact your opponent's creatures.</li>
-                    <li class="py-1">F = Efficiency - Number of cards that increase the rate at which you can move through your deck.</li>
-                    <li class="py-1">D = Disruption - Number of cards that significantly disrupt your opponent with ease.</li>
-                    <li class="py-1">R = Hard Artifact Removal - Number of cards that can remove an opponent's artifact from play.</li>
-                    <li class="py-1">BoB = Bodies on the Board - Number of creatures with "survivable" power. Typically this means they have 4 or more combined Power + Armor, or some other trait that keeps them in play longer. </li>
-                    <li class="py-1">Scaling A = Scaling AEmber Control - Number of cards that can control massive amounts of aember.</li>
-                    <li class="py-1">Wipes = Board Wipes - Number of cards that can kill large amounts of creatures.</li>
-                    <li class="py-1">Cheats = Key Cheats - Number of cards that can reliably be used as a Key Cheat.</li>
-                    <li class="py-1">Tokens = Token Generation - Number of cards that make at least 1 Token.</li>
+                    <li class="pt-1"><span class="text-warning">E = Easy AEmber Gain</span> - Number of cards that easily gain at least one aember.</li>
+                    <li class="ps-5 pb-1 fw-light">Note: This is not a metric that is quantifying how much aember is being gained. Just how many cards are expected to yield at least 1 aember on play.</li>
+                    <li class="py-1"><span class="text-warning">A = AEmber Control</span> - Number of cards that can keep your opponent from forging with aember at the start of their turn. Even if it is a single aember, the card will be counted.</li>
+                    <li class="py-1"><span class="text-warning">C = Creature Control</span> - Number of cards that negatively impact your opponent's creatures.</li>
+                    <li class="py-1"><span class="text-warning">F = Efficiency</span> - Number of cards that increase the rate at which you can move through your deck.</li>
+                    <li class="py-1"><span class="text-warning">D = Disruption</span> - Number of cards that significantly disrupt your opponent with ease.</li>
+                    <li class="py-1"><span class="text-warning">R = Hard Artifact Removal</span> - Number of cards that can remove an opponent's artifact from play.</li>
+                    <li class="py-1"><span class="text-warning">BoB = Bodies on the Board</span> - Number of creatures with "survivable" power. Typically this means they have 4 or more combined Power + Armor, or some other trait that keeps them in play longer. </li>
+                    <li class="py-1"><span class="text-warning">Scaling A = Scaling AEmber Control</span> - Number of cards that can control massive amounts of aember.</li>
+                    <li class="py-1"><span class="text-warning">Wipes = Board Wipes</span> - Number of cards that can kill large amounts of creatures.</li>
+                    <li class="py-1"><span class="text-warning">Cheats = Key Cheats</span> - Number of cards that can reliably be used as a Key Cheat.</li>
+                    <li class="py-1"><span class="text-warning">Tokens = Token Generation</span> - Number of cards that make at least 1 Token.</li>
                 </ul>
             </div>
     
@@ -63,25 +68,25 @@
                 <h4 class="text-warning">Alpha Score</h4>
                 <div class="mt-2 mb-3">
                     Alpha scores are manual ratings assigned after the deck is analyzed by a member of the AC team.
-                    Archons Corner Patreons receive a set number of Alpha Scores per month based on their Patreon rank.
-                    The analysis is based on metrics and card interactions based on paper how the deck should perform based on the experience of the grade.
+                    Archons Corner Patreons may request a set number of Alpha Scores per month according to their Patreon rank.
+                    The deck is assessed on metrics and card interactions based on how the deck should perform on paper, subject to the experience of the grader.
                     Before requesting a re-score, it's highly suggested that the user gets more competitive reps with the deck to get a comprehensive feel for it.
                     A re-score does not guarantee that the original score will differ from the new score, only that more time has been spent in the assessment.
                 </div>
                 <ul style="list-style-type:none;">
-                    <li class="py-1">A (Vault Deck):
+                    <li class="py-1"><span class="text-warning">A</span> (Vault Deck):
                         Based on the deck composition alone it is believed the deck can routinely make day two of an archon event at Top Level KeyForge events. </li>
-                    <li class="py-1">A- (Doorstep to Vault):
+                    <li class="py-1"><span class="text-warning">A-</span> (Doorstep to Vault):
                         Almost there. Just is missing one element (usually due to the current competitive meta) to make it fully an A-tier deck.</li>
-                    <li class="py-1">B+ (Top Competitive):	
+                    <li class="py-1"><span class="text-warning">B+</span> (Top Competitive):	
                         With a lot of skill can be competitive at a top-level event, but has one potential weakness or element that the player must account for or make up for through personal play experience and or practice with the deck.</li>
-                    <li class="py-1">B (Competitive): 	
+                    <li class="py-1"><span class="text-warning">B</span> (Competitive): 	
                         Very good decks that are expected to have high success at local competitive play. Not likely to make day two at a top-level event. A lot of decks that are very inconsistent fall in this range even though they may have some draws that may near auto-win games.</li>
-                    <li class="py-1">B- (Low Competitive):	
+                    <li class="py-1"><span class="text-warning">B-</span> (Low Competitive):	
                         Close to B but typically has one area of critical failure to account for a vital aspect of the game, but the deck is otherwise very good. Great to play locally and should occasionally win a less competitive local.</li>
-                    <li class="py-1">C+ through D (Fun Times):	
+                    <li class="py-1"><span class="text-warning">C+ through D</span> (Fun Times):	
                         Decks that have fun things going on in them, but have too many things dragging them down to achieve consistent success.</li>
-                    <li class="py-1">F (Poor):
+                    <li class="py-1"><span class="text-warning">F</span> (Poor):
                         Decks that are hard to win with and cannot even be used for reversal.</li>
                 </ul>
             </div>
@@ -101,7 +106,7 @@
                 </div>
                 
                 <div class="my-5">
-                    <h4>Our Band of Misfits</h4>
+                    <h4 class="text-warning">Our Band of Misfits</h4>
                     <div class="ms-3">
                         <h5 class="text-info fw-bold">The W O O K I E</h5>
                         <h6 class="pb-3">The creator of Archons Corner, host of Archons Corner, and master editor for all that is AC podcasting.
@@ -125,7 +130,7 @@
 
                         <h5 class="text-info fw-bold">SoutherlyElf</h5>
                         <h6 class="pb-3">Resident pirate, Archons Corner Lead Dev, and captain of Tavern Brawlers.
-                            After being frustrated with manually entering cards into spreadsheets, Southerly took the initiative to bring AC technical endeavors to life.</h6>
+                            Southerly took the initiative to bring AC technical endeavors to life after being frustrated with watching people manually enter card names into spreadsheets.</h6>
                     </div>
                 </div>
             </div>

@@ -8,14 +8,14 @@
     <link rel="stylesheet" href ="/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="bg-dark px-2 pb-4 text-white">
+    <div class="bg-dark ps-3 pe-4 pb-4 text-white">
         <%- include('partials/navbar.ejs') %>
         <%- include('partials/imports.ejs') %>
         <%- include('partials/searchNav.ejs') %>
 
 
-        <h1><%= user.username %>'s decks</h1>
-        <table class="table table-striped" data-bs-theme="dark">
+        <h1 class="mx-1"><%= user.username %>'s decks</h1>
+        <table class="table mx-1 table-striped" data-bs-theme="dark">
             <tr>
                 <th>Score</th>
                 <th>Alpha</th>
