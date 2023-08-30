@@ -29,5 +29,9 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-    User.findByPk(id).then(function(user) { done(null, user); });
+    User.findByPk(id)
+    .then(function(user) { done(null, user); })
+    .catch(e=> {
+        console.log("PassportDeserializeError:", id)
+    })
 });

@@ -153,6 +153,12 @@ cron.schedule('*/2 * * * *', () => {
         .then(async function () {
             return userFunctions.offloadOldPatreons()
         })
+        .catch(e=> {
+            console.log("processRewardsError")
+        })
+    })
+    .catch(e=> {
+        console.log("updateTiersError")
     })
 });
 

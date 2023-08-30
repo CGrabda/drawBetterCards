@@ -115,6 +115,9 @@ async function offloadOldPatreons() {
             )
         }
     })
+    .catch(e=> {
+        console.log("OffloadOldPatreonsError")
+    })
 }
 
 // Sets the initial state of unlimited for an unlimited user
