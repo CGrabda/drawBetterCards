@@ -7,9 +7,10 @@
   
               <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                   <li><a href="/" class="nav-link px-2 text-secondary">Draw Better Cards</a></li>
-                  <li><a href="/search" class="nav-link px-2 text-white">All Decks</a></li>
+                  <li><a href="/about" class="nav-link px-2 text-white">About</a></li>
+                  <li><a href="/search" class="nav-link px-2 text-info">All Decks</a></li>
                   <% if (isLoggedIn) { %>
-                      <li><a href="/mydecks" class="nav-link px-2 text-white">My Decks</a></li>
+                      <li><a href="/mydecks" class="nav-link px-2 text-info">My Decks</a></li>
                       
 
                       <% if (user.is_admin === true) { %>

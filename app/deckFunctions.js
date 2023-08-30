@@ -55,9 +55,9 @@ async function addDeck(deck_info, pod_info) {
     var pods = []
     
     // Retrieve houses within deck
-    for (i in houseStrings) {
-        if (houseStrings[i] != '1') {
-            houses.push(Number(houseStrings[i]));
+    for (let j in houseStrings) {
+        if (houseStrings[j] != '1') {
+            houses.push(Number(houseStrings[j]));
         }
     }
 
@@ -74,7 +74,7 @@ async function addDeck(deck_info, pod_info) {
             token: deck_info["token"]
         }, {transaction: t})
         .then(async function (deck) {
-            for (i in houses) {
+            for (let i in houses) {
                 var house = houses[i]
                 var pod = pod_info[house]
 

@@ -11,110 +11,132 @@
     <%- include('partials/navbar.ejs') %>
 
     <div class="bg-dark text-white ps-3 pb-5">
-        <h1>About</h1>
-        <h4>Z Score
+        <h1>About Draw Better Cards</h1>
 
-            What the heck is a Z Score?
-            
-            Technically a Z-score is a statistical measurement that describes a value's relationship to the mean of a group of values. 
-            
-            This site however brings you a Z Score without a “-”. Therefore it is an entirely different thing 🙂.
-            
-            The Z Score card scoring system was designed to analyze the computational card value of a Set and compare the card values between sets of KeyForge. Furthermore, it lets users see differences between House values within sets and House values across sets.
-            
-            This information was derived by assigning a value to all cards in KeyForge with a rating of 0 to 6. 
-            
-            0 = Terrible 
-            1 = Bad 
-            2 = Below Average 
-            3 = Average 
-            4 = Good 
-            5 = Great 
-            6 = A+ Tier 
-            
-            All scores are based on a purely competitive lens. The 0 to 6 rating highly depends on whether the card leads to winning KeyForge games in the competitive meta. 
-            These scores were then weighted by their rarity to derive weighted average scores to assess their impact on House/Set value.
-            A few members of the community wanted to see if this data could be transferable to deriving a Z Score for a deck. After some resistance at first, the data that was being yielded was surprisingly beneficial and now we bring you Z Score on a broader scale. 
-            
-            
-            Additional Metrics
-            Other than Z Score the site breaks down some key indicators for a quick review:
-            
-            E = Easy Amber Gain - Number of cards that easily gain at least one amber. 
-            Note: This is not a metric that is quantifying how much amber is being gained. Just how many cards are nearly always expected to yield at least 1 amber on play. 
+        <div class="px-4">
+            <div class="my-4">
+                <h4 class="text-warning">What the heck is Z Score?</h4>
+                <div class="ps-4">
+                    <p>Z score (not to be confused with the statistics term) started out as a card scoring system developed by Zarathustra, also known as Z. This system was designed to analyze the sum of card values of a KeyForge set and compare the overall strength of sets. Furthermore, it lets users analyze differences between house strengths within and across sets.</p>
+                    <p>All scores are based on a purely competitive lens. Each card is rated from 0-6 and the rating greatly depends on whether the card leads to winning KeyForge games in the competitive meta. 
+                        These scores were then weighted by their rarity to derive weighted average scores to assess the strength of houses and sets. This information can be found in the 'KF Card Analysis' sheet provided to Archons Corner Patreons.
+                        A few members of the community wanted to see if this data could be useful as a metric by deriving a deck score based on the sum of card values for any given deck. After some resistance at first, the data that was being yielded was surprisingly beneficial. And now we bring you Z Score on a broader scale.</p>
+                </div>
+            </div>
+    
+            <div class="my-2">
+                <h4 class="text-warning">Scoring</h4>
+                <ul style="list-style-type:none;">
+                    <li>0 = Terrible</li>
+                    <li>1 = Bad</li>
+                    <li>2 = Below Average</li>
+                    <li>3 = Average</li>
+                    <li>4 = Good</li>
+                    <li>5 = Great</li>
+                    <li>6 = Chase Card</li>
+                </ul>
+                <div>
+                    
+                </div>
+            </div>
 
-            A = Amber Control - Number of cards that can keep your opponent from forging with amber at the start of their turn. Even if it is a single amber, the card will be counted.
-            C = Creature Control - Number of cards that negatively impact your opponent’s creatures.
-            F = Efficiency - Number of cards that increase the rate at which you can move through your deck.
-            D = Disruption - Number of cards that significantly disrupt your opponent with ease. 
-            B = Bodies - Number of creatures with staying power. Typically this means they have 4 or more combined Power + Armor or some other trait that keeps them in play longer. 
-            Big A = Large Amber Control - Number of cards that can control massive amounts of amber.
-            Clear = Board Clear - Number of cards that can kill large amounts of creatures.
-            Hard R = Artifact Removal - Number of cards that can remove an opponent’s artifact from play.
-            KC = Key Cheat - Number of cards that can reliably be used as a Key Cheat. 
-            Tokens = Number of cards that make at least 1 Token.
+            <div class="my-2">
+                <h4 class="text-warning">Additional Metrics</h4>
+                <ul style="list-style-type:none;">
+                    <li class="pt-1">E = Easy AEmber Gain - Number of cards that easily gain at least one aember.</li>
+                    <li class="ps-5 pb-1">Note: This is not a metric that is quantifying how much aember is being gained. Just how many cards are expected to yield at least 1 aember on play.</li>
+                    <li class="py-1">A = AEmber Control - Number of cards that can keep your opponent from forging with aember at the start of their turn. Even if it is a single aember, the card will be counted.</li>
+                    <li class="py-1">C = Creature Control - Number of cards that negatively impact your opponent's creatures.</li>
+                    <li class="py-1">F = Efficiency - Number of cards that increase the rate at which you can move through your deck.</li>
+                    <li class="py-1">D = Disruption - Number of cards that significantly disrupt your opponent with ease.</li>
+                    <li class="py-1">R = Hard Artifact Removal - Number of cards that can remove an opponent's artifact from play.</li>
+                    <li class="py-1">BoB = Bodies on the Board - Number of creatures with "survivable" power. Typically this means they have 4 or more combined Power + Armor, or some other trait that keeps them in play longer. </li>
+                    <li class="py-1">Scaling A = Scaling AEmber Control - Number of cards that can control massive amounts of aember.</li>
+                    <li class="py-1">Wipes = Board Wipes - Number of cards that can kill large amounts of creatures.</li>
+                    <li class="py-1">Cheats = Key Cheats - Number of cards that can reliably be used as a Key Cheat.</li>
+                    <li class="py-1">Tokens = Token Generation - Number of cards that make at least 1 Token.</li>
+                </ul>
+            </div>
+    
             
-            Alpha Score
-            
-            A (Vault Deck):
-            Based on the deck composition alone it is believed the deck can routinely make day two of an archon event at Top Level KeyForge events. 
-            
-            A- (Doorstep to Vault):
-            Almost there. Just is missing one element (usually due to the current competitive meta) to make it fully an A-tier deck.
-            
-            B+ (Top Competitive):	
-            With a lot of skill can be competitive at a top-level event, but has one potential weakness or element that the player must account for or make up for through personal play experience and or practice with the deck. 
-            
-            B (Competitive): 	
-            Very good decks that are expected to have high success at local competitive play. Not likely to make day two at a top-level event. A lot of decks that are very inconsistent fall in this range even though they may have some draws that may near auto-win games.
-            
-            B- (Low Competitive):	
-            Close to B but typically has one area of critical failure to account for a vital aspect of the game, but the deck is otherwise very good. Great to play locally and should occasionally win a less competitive local.
-            
-            D to C (Fun Times):	
-            Decks that have fun things going on in them, but have way too many things dragging them down to achieve consistent success.
-            
-            F (Bad):	
-            Decks that are not fun and cannot even attempt a reversal.
-            
-            The alpha scores are assigned after the deck is analyzed by a member of the AC team. The analysis is based on metrics and card interactions based on paper how the deck should perform based on the experience of the grade. A ‘Re-score’ of the Alpha Score requires the scorer to play reps on the deck to get a more comprehensive score for the deck prior to assigning the score the second time. A re-score does not guarantee that the original score will differ from the new score, only that more time has been spent in the assessment. 
-            
-            
-            
-            Archons Corner
-            Archons Corner has evolved from a small one-person podcast about KeyForge to take on many forms over the last four years.
-            
-            Archons Corner is in fact several things:
-            
-            One of the most listened to/downloaded KeyForge podcasts.
-            A robust and active discord community.
-            A team that brings the community weekly online events.
-            Event organizers that hosted KeyForge LIVE in 2021.
-            A group of friends that enjoy investing time in KeyForge, probably more than his healthy.
-            Now Archons Corner is here to bring you an additional data and deck analysis tool.
-            
-            
-            Our Band of Misfits
-            
-            The W O O K I E
-            The originator of Archons Corner, host of the Archons Corner, and master editor for all that is AC podcasting. None of AC would be here together without the blood, sweat, and tears of The Wookie. 
-            
-            Big Z
-            Joining early on in the heyday of KF, Big Z was brought on to discuss high-end competitive strategy. He has gone on to help coordinate and organize online and real-life events for the community and is now the founder of the Z Score analysis system. 
-            
-            DrSheep
-            Our resident grumpus was added to “liven” up the show. Sheep is in charge of running the many weekly events that are hosted on the Archons Corner Discord. Father of Shredder and President of the AABD (Archons Against Broken Decks). 
-            
-            EwokJR
-            Long time real-life friend of Sheep, JR joined us when one of our cast took a hiatus and has been an invaluable positive influence on all of us. He has thrived in his role as WokBot and keeps us honest when discussing factual data about cards and historic events.
-            
-            Drazkor
-            I am not sure anyone knows how Drazkor joined the AC crew/cast, but without him, we would not get to share the treasured Drazkor experience with the rest of the archons across The Crucible.
-            
-            SoutherlyElf
-            After a bad experience with another tech expert, Archons Corner is beyond delighted with the amazing efforts of Southerly as our newly appointed AC Lead Dev.
-            </h4>
-    </div>
+            <div class="my-2">
+                <h4 class="text-warning">Alpha Score</h4>
+                <div class="mt-2 mb-3">
+                    Alpha scores are manual ratings assigned after the deck is analyzed by a member of the AC team.
+                    Archons Corner Patreons receive a set number of Alpha Scores per month based on their Patreon rank.
+                    The analysis is based on metrics and card interactions based on paper how the deck should perform based on the experience of the grade.
+                    Before requesting a re-score, it's highly suggested that the user gets more competitive reps with the deck to get a comprehensive feel for it.
+                    A re-score does not guarantee that the original score will differ from the new score, only that more time has been spent in the assessment.
+                </div>
+                <ul style="list-style-type:none;">
+                    <li class="py-1">A (Vault Deck):
+                        Based on the deck composition alone it is believed the deck can routinely make day two of an archon event at Top Level KeyForge events. </li>
+                    <li class="py-1">A- (Doorstep to Vault):
+                        Almost there. Just is missing one element (usually due to the current competitive meta) to make it fully an A-tier deck.</li>
+                    <li class="py-1">B+ (Top Competitive):	
+                        With a lot of skill can be competitive at a top-level event, but has one potential weakness or element that the player must account for or make up for through personal play experience and or practice with the deck.</li>
+                    <li class="py-1">B (Competitive): 	
+                        Very good decks that are expected to have high success at local competitive play. Not likely to make day two at a top-level event. A lot of decks that are very inconsistent fall in this range even though they may have some draws that may near auto-win games.</li>
+                    <li class="py-1">B- (Low Competitive):	
+                        Close to B but typically has one area of critical failure to account for a vital aspect of the game, but the deck is otherwise very good. Great to play locally and should occasionally win a less competitive local.</li>
+                    <li class="py-1">C+ through D (Fun Times):	
+                        Decks that have fun things going on in them, but have too many things dragging them down to achieve consistent success.</li>
+                    <li class="py-1">F (Poor):
+                        Decks that are hard to win with and cannot even be used for reversal.</li>
+                </ul>
+            </div>
+
+            <div class="my-2">
+                <h4 class="text-warning">Archons Corner</h4>
+                <div class="ms-3">
+                    <h5>Archons Corner is several things:</h5>
+                    <ul>
+                        <li class="py-1">One of the most listened to/downloaded KeyForge podcasts</li>
+                        <li class="py-1">A robust and active discord community</li>
+                        <li class="py-1">A team that brings the community weekly online events</li>
+                        <li class="py-1">Event organizers that hosted KeyForge LIVE in 2021</li>
+                        <li class="pt-1">A group of friends that enjoy investing time in KeyForge, probably more than is healthy</li>
+                    </ul>
+                    <h5 class="text-warning fst-italic">And now Archons Corner is here to bring you a new deck analysis metric!</h5>
+                </div>
+                
+                <div class="my-5">
+                    <h4>Our Band of Misfits</h4>
+                    <div class="ms-3">
+                        <h5 class="text-info fw-bold">The W O O K I E</h5>
+                        <h6 class="pb-3">The creator of Archons Corner, host of Archons Corner, and master editor for all that is AC podcasting.
+                        None of AC would be here together without the blood, sweat, and tears of The Wookie.</h6>
+
+                        <h5 class="text-info fw-bold py-">Big Z</h5>
+                        <h6 class="pb-3">Joining early on in the heyday of KF, Big Z was brought on to discuss high-end competitive strategy.
+                            He has gone on to help coordinate and organize online and real-life events for the community, and is now the founder of the Z Score analysis system.</h6>
+
+                        <h5 class="text-info fw-bold">DrSheep</h5>
+                        <h6 class="pb-3">Our resident grumpus was added to “liven” up the show.
+                            Sheep is in charge of running the many weekly events that are hosted on the Archons Corner Discord.
+                            Father of Shredder and President of the AABD (Archons Against Broken Decks).</h6>
+
+                        <h5 class="text-info fw-bold">EwokJR</h5>
+                        <h6 class="pb-3">Long time real-life friend of Sheep, JR joined us when one of our cast took a hiatus and has been an invaluable positive influence on all of us.
+                            He has thrived in his role as WokBot and keeps us honest when discussing factual data about cards and historic events.</h6>
+
+                        <h5 class="text-info fw-bold">Drazkor</h5>
+                        <h6 class="pb-3">I am not sure anyone knows how Drazkor joined the AC crew/cast, but without him, we would not get to share the treasured Drazkor experience with the rest of the archons across The Crucible.</h6>
+
+                        <h5 class="text-info fw-bold">SoutherlyElf</h5>
+                        <h6 class="pb-3">Resident pirate, Archons Corner Lead Dev, and captain of Tavern Brawlers.
+                            After being frustrated with manually entering cards into spreadsheets, Southerly took the initiative to bring AC technical endeavors to life.</h6>
+                    </div>
+                </div>
+            </div>
+
+                
+                
+                
+                
+            </div>
+        </div>
+        
 
     <script src="/js/bootstrap.min.js"></script>
 </body>
