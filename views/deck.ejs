@@ -33,6 +33,202 @@
 
 
         <%
+        // For card name error handling
+        function getStatsFromCard(card_name, card_set) {
+            var card_stats = card_info['scoring_dict'][card_set][card_name]
+            if (card_stats) {
+                return card_stats
+            }
+            else {
+                var tokens = card_name.split(" ")
+                var first_word = tokens[0]
+                var card_stats_ouptut = null
+
+                if (first_word == "It's") {
+                    card_stats_ouptut = card_info['scoring_dict']["MM"]["It's Coming"]
+                }
+
+                // MM Velum/Hyde (WC is covered in document)
+                else if (first_word == "Hyde" || first_word == "Velum") {
+                    card_stats_ouptut = card_info['scoring_dict']["MM"]["Hyde/Velum"]
+                }
+                
+                // TT for non-COTA sets
+                else if (first_word == "Timetraveller") {
+                    card_stats_ouptut = card_info['scoring_dict']["COTA"]["Timetraveller"]
+                }
+
+                // HFFS for non-COTA sets
+                else if (first_word == "Help") {
+                    card_stats_ouptut = card_info['scoring_dict']["COTA"]["Help From Future Self"]
+                }
+
+                // Hings/Gross from non-DT sets
+                else if (first_word == "Com.") {
+                    if (tokens[2] == "Hings") {
+                        card_stats_ouptut = card_info['scoring_dict']["DT"]["Com. Officer Hings"]
+                    }
+                    else if (tokens[2] == "Gross") {
+                        card_stats_ouptut = card_info['scoring_dict']["DT"]["Com. Officer Gross"]
+                    }
+                }
+                
+                // Z-Force from non-DT sets
+                else if (first_word[0] == "Z") {
+                    if (tokens[1] == "Agent") {
+                        card_stats_ouptut = card_info['scoring_dict']["MM"]["Z-Force Agent 14"]
+                    }
+                    else if (tokens[1] == "Tracker") {
+                        card_stats_ouptut = card_info['scoring_dict']["MM"]["Z-Particle Tracker"]
+                    }
+                    else if (tokens[1] == "Blaster") {
+                        card_stats_ouptut = card_info['scoring_dict']["MM"]["Z-Ray Blaster"]
+                    }
+                    else if (tokens[1] == "Emitter") {
+                        card_stats_ouptut = card_info['scoring_dict']["MM"]["Z-Wave Emitter"]
+                    }
+                }
+                
+                // Dexus from non-WC decks
+                else if (first_word == "Dexus") {
+                    card_stats_ouptut = card_info['scoring_dict']["WC"]["Dexus"]
+                }
+
+                // Toad from non-WC decks
+                else if (first_word == "Toad") {
+                    card_stats_ouptut = card_info['scoring_dict']["WC"]["Toad"]
+                }
+
+                // Scylla from non-MM decks
+                else if (first_word == "Scylla") {
+                    card_stats_ouptut = card_info['scoring_dict']["MM"]["Scylla"]
+                }
+
+                // Charybdis from non-MM decks
+                else if (first_word == "Charybdis") {
+                    card_stats_ouptut = card_info['scoring_dict']["MM"]["Charybdis"]
+                }
+
+                // Gigantic creatures
+                // Ultra Gravitron
+                else if (first_word == "Ultra") {
+                    card_stats_ouptut = card_info['scoring_dict']["MM"]["Ultra Big Set"]
+                }
+
+                // Niffle Kong
+                else if (first_word == "Niffle") {
+                    card_stats_ouptut = card_info['scoring_dict']["MM"]["Kong Big Set"]
+                }
+
+                // Deusillus
+                else if (first_word == "Deusillus") {
+                    card_stats_ouptut = card_info['scoring_dict']["MM"]["Deus Big Set"]
+                }
+                    
+                // WC Mega Brobnar creatures
+                else if (first_word == "Mega") {
+                    card_stats_ouptut = card_info['scoring_dict']["WC"][card_name.slice(5)]
+                }
+
+                // Shiz Buggies, removes single quotes
+                else if (first_word.slice(0, 3) == "Shi") {
+                    card_stats_ouptut = card_info['scoring_dict']["WOE"][card_name]
+                }
+
+                // Dive Deep
+                else if (first_word == "Dive") {
+                    card_stats_ouptut = card_info['scoring_dict']["DT"]["Dive Deep"]
+                }
+
+                // Drawn Down
+                else if (first_word == "Drawn") {
+                    card_stats_ouptut = card_info['scoring_dict']["DT"]["Drawn Down"]
+                }
+
+                // Ortannu the Chained
+                else if (first_word == "Ortannu") {
+                    card_stats_ouptut = card_info['scoring_dict']["AOA"]["Ortannu the Chained"]
+                }
+                
+                // Ortannu's Binding
+                else if (first_word == "Ortannu's") {
+                    card_stats_ouptut = card_info['scoring_dict']["AOA"]["Ortannu's Binding"]
+                }
+
+                // Handle anomaly cards
+                else if (first_word == "Ghostform") {
+                    card_stats_ouptut = card_info['scoring_dict']["WC"]["Ghostform"]
+                } 
+
+                else if (first_word == "Infomancer") {
+                    card_stats_ouptut = card_info['scoring_dict']["WC"]["Infomancer"]
+                }
+
+                else if (first_word == "Lateral") {
+                    card_stats_ouptut = card_info['scoring_dict']["WC"]["Lateral Shift"]
+                }
+
+                else if (first_word == "Memolith") {
+                    card_stats_ouptut = card_info['scoring_dict']["WC"]["Memolith"]
+                }
+
+                else if (first_word == "Nizak,") {
+                    card_stats_ouptut = card_info['scoring_dict']["WC"]["Nizak, The Forgotten"]
+                }
+
+                else if (first_word == "The") {
+                    if (tokens[1] == "Grim") {
+                        card_stats_ouptut = card_info['scoring_dict']["WC"]["The Grim Reaper"]
+                    }
+                    else if (tokens[1] == "Red") {
+                        card_stats_ouptut = card_info['scoring_dict']["WC"]["The Red Baron"]
+                    }
+                }
+
+                else if (first_word == "Timequake") {
+                    card_stats_ouptut = card_info['scoring_dict']["WC"]["Timequake"]
+                }
+
+                else if (first_word == "Near-Future") {
+                    card_stats_ouptut = card_info['scoring_dict']["WOE"]["Near-Future Lens"]
+                }
+
+                else if (first_word == "Curse") {
+                    card_stats_ouptut = card_info['scoring_dict']["WOE"]["Curse of Forgetfulness"]
+                }
+                // anomalies finished
+
+                // World's Collide variants
+                // Brobnar brews
+                else if (tokens.length > 1) {
+                    if (tokens[1] == "Brew") {
+                        card_stats_ouptut = card_info['scoring_dict']["WC"]["Brew"]
+                    }
+
+                    // Dis banes
+                    else if (tokens[1] == "Bane") {
+                        card_stats_ouptut = card_info['scoring_dict']["WC"]["Bane"]
+                    }
+                }
+
+                if (!card_stats_ouptut) {
+                    // add console message error adding card
+                    console.log('Error adding card: ' + card_name)
+                }
+                return card_stats_ouptut
+            }
+        }
+
+
+
+
+
+
+
+
+
+        
+
         // Handle ordering the pods
         query.dataValues.Pods.sort(function(a, b){return a.house_id - b.house_id})
 
@@ -62,7 +258,7 @@
 
 
         // Generates the tooltip for a card
-        getCardTooltip = function(card) {
+        getCardTooltip = function(card, card_proper_name) {
             var outstring = ''
 
             // If card is an anomaly, shorter card ID, else longer card ID
@@ -73,31 +269,34 @@
             try {
                 var card_set = card_info['card_setnum_to_abbrev'][card_set_number]
                 var card_scoring_name = card_info['card_id_to_name'][card.card_id]
+                var card_stats = getStatsFromCard(card_scoring_name, card_set)
+                var raw_score = parseInt(card_stats['score'])
                 // try retrieveing duplicate value
                 duplicates[card.card_id] += 1
 
                 if (duplicates[card.card_id]) {
-                    var card_score = parseInt(card_info['scoring_dict'][card_set][card_scoring_name]['score']) + parseInt(card_info['scoring_dict'][card_set][card_scoring_name]['multiples'][(duplicates[card.card_id] - 1)  < 5 ? (duplicates[card.card_id] - 1): 4])
+                    var card_score = raw_score + parseInt(card_stats['multiples'][(duplicates[card.card_id] - 1) < 4 ? (duplicates[card.card_id] - 1): 4])
                 }
                 else {
                     // This is the first instance of the card in the dict, value is base
                     duplicates[card.card_id] = 1
-                    var card_score = card_info['scoring_dict'][card_set][card_scoring_name]['score']
+                
+                    var card_score = raw_score
                 }
             }
-            catch {
-                console.log(card_scoring_name)
+            catch(e) {
+                console.log(e)
                 console.log('Error displaying card ' + card.card_id + ':' + card.card_name)
             }
 
 
 
             // Map the multiples array to the actual score of the card when of that value
-            var multiples = card.Multiple.dataValues.multiples.map(multiples => multiples + parseInt(card_info['scoring_dict'][card_set][card_scoring_name]['score']))
+            var multiples = card.Multiple.dataValues.multiples.map(multiples => multiples + raw_score)
 
 
             // Form the output
-            outstring += card.card_name.replace(/"/, '&quot;').replace(/"/, '&quot;') + '\n'
+            outstring += card_proper_name.replace(/"/, '&quot;').replace(/"/, '&quot;') + '\n'
             outstring += 'Score: ' + card_score + '\n'
             outstring += 'Multiples: ' + multiples
 
@@ -108,9 +307,10 @@
             var outstring = ''
             var card = query.dataValues.Pods[pod]["card_" + cardPodNum]
             var card_number = card.card_id.toString()
+            var card_proper_name = card_info['card_id_to_name'][card_number]
             outstring += '<td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay=\'{"show":250, "hide":100}\' data-bs-title="'
-            outstring+= getCardTooltip(query.dataValues.Pods[pod]["card_" + cardPodNum]) + '">'
-            outstring += card.card_name
+            outstring+= getCardTooltip(query.dataValues.Pods[pod]["card_" + cardPodNum], card_proper_name) + '">'
+            outstring += card_proper_name
 
             // If a card has enhancements, pop the list of enhancements and add to card
             if (enhancements[card_number]) {
@@ -140,7 +340,7 @@
                 <% // Check if user is logged in %>
                 <% if (isLoggedIn) { %>
                     <% // Mine/Not Mine deck buttons, display if user is patreon or admin %>
-                    <% if (user.patreon_rank > -1 || user.is_admin) { %>
+                    <% if (user.patreon_rank > 1 || user.is_admin || user.unlimited_user) { %>
                         <tr>
                             <td>
                                 <% if (isInCollection) { %>
