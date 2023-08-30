@@ -169,10 +169,11 @@ cron.schedule('0 0 * * *', () => {
     userFunctions.updateTiers();
 });
 
-// at start of month
-// give all users +5 imports (check if less than 30k to prevent db errors)
+// At the first of the month give all users +x imports
+// This number is a constant and can be changed in the raw query within function
+// CURRENTLY SET TO: +5
 cron.schedule('0 0 1 * *', () => {
-    // give all +5
+    userFunctions.monthlyImportHit();
 });
 
 

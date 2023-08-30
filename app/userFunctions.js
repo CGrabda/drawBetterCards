@@ -200,6 +200,12 @@ async function getUserObjectFromToken(token) {
     })
 }
 
+// Adds a set number of imports to all users at the start of each month
+// Uses raw query, query is constant and conceptually simple with SQL, but not with ORM
+async function monthlyImportHit() {
+    console.log("MonthlyImportAddition running")
+    return await sequelize.query('UPDATE "Users" SET imports = imports + 5;')
+}
 
 async function addToCollection(user_id, deck_id) {
     return await Collection.create({
@@ -250,3 +256,4 @@ module.exports.removeFromCollection = removeFromCollection
 module.exports.isDeckInCollection = isDeckInCollection
 module.exports.offloadOldPatreons = offloadOldPatreons
 module.exports.setUnlimited = setUnlimited
+module.exports.monthlyImportHit = monthlyImportHit
