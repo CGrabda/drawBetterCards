@@ -9,6 +9,7 @@ from requests import request
 from time import sleep
 
 scoreFile = "./scripts/data/scoreDict.json"
+cardIdToNameFile = "./scripts/data/cardIDToName.json"
 
 TOKENS = {
     "Berserker": 1,
@@ -43,6 +44,9 @@ TOKENS = {
 
 with open(scoreFile) as file:
     scoreDict = loads(file.readline())
+
+with open(cardIdToNameFile) as file:
+    cardIdToName = loads(file.readline())
 
 debug = False
 
@@ -211,7 +215,7 @@ def getScore(decklist, pods, deckInfo):
         cardScore = 0
 
         # Saves the name of the card, this is to handle specials
-        cardName = card[0]["card_title"]
+        cardName = card[0]["card_title"].strip()
 
         # Saves the name of the set, this is to handle specials
         setTuple = IDENTIFY_SET[str(card[0]["expansion"])]
@@ -221,6 +225,7 @@ def getScore(decklist, pods, deckInfo):
         try:
             # Create the card ID
             cardID = int(str(setNum) + str(card[0]["card_number"]))
+
 
             # retrieves the full scoring object of the card from the scoring dictionary
             try:
@@ -240,6 +245,8 @@ def getScore(decklist, pods, deckInfo):
                     # Master Vault fix, attempts to use the set of the deck
                     cardSet = deckInfo["setName"]
                     cardDetails = scoreDict[cardSet][cardName]
+                    cardID = int(str(cardSet) + str(card[0]["card_number"]))
+
 
         except KeyError as e:
             # Handle special cards
