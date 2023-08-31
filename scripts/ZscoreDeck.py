@@ -90,6 +90,17 @@ IDENTIFY_SET = {
     "609": ("VM", 500),
 }
 
+SET_TO_ID = {
+    "COTA": 1,
+    "AOA": 2,
+    "WC": 3,
+    "MM": 4,
+    "DT": 5,
+    "WOE": 6,
+    "U23": 1001,
+    "VM": 500,
+}
+
 
 def validateLink(deckLink):
     '''
@@ -242,10 +253,10 @@ def getScore(decklist, pods, deckInfo):
                 try:
                     cardDetails = scoreDict[cardSet][cardName]
                 except:
-                    # Master Vault fix, attempts to use the set of the deck
+                    # Master Vault fix, attempts to get score from the set of the deck
                     cardSet = deckInfo["setName"]
                     cardDetails = scoreDict[cardSet][cardName]
-                    cardID = int(str(cardSet) + str(card[0]["card_number"]))
+                    # Some card IDs from VM do not exist in VM set in db or scoring. Fix?
 
 
         except KeyError as e:
