@@ -169,10 +169,9 @@ var job1 = new CronJob(
 );
 
 // Updates Patreon tiers for anyone with history in the past 3 months
-// Runs daily at midnight 
-// Former patreons (removed subs) handled here by the daily update
+// Former patreons that then create an account handled here
 var job2 = new CronJob(
-    '1 0 0 * * *',
+    '1 */10 * * * *',
     function() {
         userFunctions.updateTiers();
     },
