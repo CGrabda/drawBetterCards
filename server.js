@@ -7,7 +7,6 @@ const app = express()
 
 // node package requirements
 const bcrypt = require('bcrypt');
-const cron = require('node-cron');
 const crypto = require('crypto');
 const flash = require('express-flash');
 const fs = require('fs');
@@ -145,37 +144,55 @@ app.use(function(req, res, next) {
 
 
 // Scheduled tasks
+var CronJob = require('cron').CronJob;
 // Updates Patreon tiers from payments within the past 3 minutes, runs every 2 minutes
-cron.schedule('*/2 * * * *', () => {
-    userFunctions.updateTiers(3)
-    .then(async function () {
-        return userFunctions.processRewards()
+var job1 = new CronJob(
+    '*/2 * * * *',
+    function() {
+        userFunctions.updateTiers(3)
         .then(async function () {
-            return userFunctions.offloadOldPatreons()
+            return userFunctions.processRewards()
+            .then(async function () {
+                return userFunctions.offloadOldPatreons()
+            })
+            .catch(function() {
+                console.log("processRewardsError")
+            })
         })
-        .catch(e=> {
-            console.log("processRewardsError")
+        .catch(function() {
+            console.log("updateTiersError")
         })
-    })
-    .catch(e=> {
-        console.log("updateTiersError")
-    })
-});
+    },
+    null,
+    true,
+    'America/New_York'
+);
 
 // Updates Patreon tiers for anyone with history in the past 3 months
 // Runs daily at midnight 
 // Former patreons (removed subs) handled here by the daily update
-cron.schedule('0 0 * * *', () => {
-    userFunctions.updateTiers();
-});
+var job2 = new CronJob(
+    '0 0 * * *',
+    function() {
+        userFunctions.updateTiers();
+    },
+    null,
+    true,
+    'America/New_York'
+);
 
 // At the first of the month give all users +x imports
 // This number is a constant and can be changed in the raw query within function
 // CURRENTLY SET TO: +5
-cron.schedule('0 0 1 * *', () => {
-    userFunctions.monthlyImportHit();
-});
-
+var job3 = new CronJob(
+    '0 0 1 * *',
+    function() {
+        userFunctions.monthlyImportHit();
+    },
+    null,
+    true,
+    'America/New_York'
+);
 
 
 
