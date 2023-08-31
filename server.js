@@ -946,8 +946,16 @@ else if (process.env.NODE_ENV == "production") {
     // require HTTPS connections
     app.use(helmet.hsts());
 
-    // trust proxt
-    app.set("trust proxy", true); 
+    // trust proxy
+    const cloudflareIPs = require('cloudflare-ips');
+    cloudflareIPs(
+        ips => app.set('trust proxy', ['loopback', ...ips]),
+        err => console.error(err.stack),
+    );
+       
+    cloudflareIPs((err, ips) => {
+        app.set('trust proxy', ['loopback', ...ips]);
+    });
 
     // setup pki certs
     const options = {
