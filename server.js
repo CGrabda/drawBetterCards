@@ -944,7 +944,10 @@ if (process.env.NODE_ENV !== 'production') {
 // prod server, https encrypted
 else if (process.env.NODE_ENV == "production") {
     // require HTTPS connections
-    app.use(helmet.hsts()); 
+    app.use(helmet.hsts());
+
+    // trust proxt
+    app.set("trust proxy", true); 
 
     // setup pki certs
     const options = {
