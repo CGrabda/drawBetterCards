@@ -269,9 +269,9 @@ app.post('/register', isNOTAuthenticated, passedCaptcha, validateInput, async (r
         .then(function() {
             console.log(`Created User ${req.body.username}`)
             res.redirect('/login')
-        }).catch(function () {
+        }).catch(e=> {
             console.log(e)
-            req.flash('error', 'User or Email already taken')
+            req.flash('error', 'An error occurred creating the user')
             res.redirect('/register')
         })
     }
