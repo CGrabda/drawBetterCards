@@ -149,6 +149,7 @@ var CronJob = require('cron').CronJob;
 var job1 = new CronJob(
     '*/2 * * * *',
     function() {
+        console.log("Running job1")
         userFunctions.updateTiers(3)
         .then(async function () {
             return userFunctions.processRewards()
