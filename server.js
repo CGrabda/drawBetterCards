@@ -147,7 +147,7 @@ app.use(function(req, res, next) {
 var CronJob = require('cron').CronJob;
 // Updates Patreon tiers from payments within the past 3 minutes, runs every 2 minutes
 var job1 = new CronJob(
-    '*/2 * * * *',
+    '1 */2 * * * *',
     function() {
         console.log("Running job1")
         userFunctions.updateTiers(3)
@@ -173,7 +173,7 @@ var job1 = new CronJob(
 // Runs daily at midnight 
 // Former patreons (removed subs) handled here by the daily update
 var job2 = new CronJob(
-    '0 0 * * *',
+    '1 0 0 * * *',
     function() {
         userFunctions.updateTiers();
     },
@@ -186,7 +186,7 @@ var job2 = new CronJob(
 // This number is a constant and can be changed in the raw query within function
 // CURRENTLY SET TO: +5
 var job3 = new CronJob(
-    '0 0 1 * *',
+    '1 0 0 1 * *',
     function() {
         userFunctions.monthlyImportHit();
     },
