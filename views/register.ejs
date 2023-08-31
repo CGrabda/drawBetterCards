@@ -22,9 +22,22 @@
                                     <%= messages.error %>
                                 </div>
                             <% } %>
-                            <div class="forms-inputs mb-4"> <label for="user">Username</label> <input id="username" name="username" autocomplete="off" type="text" v-bind:class="{'form-control':true, 'is-invalid' : !validEmail(email) && emailBlured}" v-on:blur="emailBlured = true" required></div>
-                            <div class="forms-inputs mb-4"> <label for="email">Email</label> <input id="email" name="email" autocomplete="off" type="email" v-model="email"  required> </div>
-                            <div class="forms-inputs mb-4"> <label for="password">Password</label> <input id="password" name="password" autocomplete="off" type="password" v-model="password" v-bind:class="{'form-control':true, 'is-invalid' : !validPassword(password) && passwordBlured}" v-on:blur="passwordBlured = true" required> </div>
+                            <div class="forms-inputs mb-4">
+                                <label for="user">Username</label>
+                                <input id="username" name="username" autocomplete="off" type="text" v-bind:class="{'form-control':true, 'is-invalid' : !validEmail(email) && emailBlured}" v-on:blur="emailBlured = true" required>
+                                <h5>Username requirements: minimum length of 4 characters (A-Z, a-z, 0-9, _$!#)</h5>
+                            </div>
+
+                            <div class="forms-inputs mb-4">
+                                <label for="email">Email</label>
+                                <input id="email" name="email" autocomplete="off" type="email" v-model="email"  required>
+                                <h5>Password requirements: minimum length of 10 characters</h5>
+                            </div>
+
+                            <div class="forms-inputs mb-4">
+                                <label for="password">Password</label>
+                                <input id="password" name="password" autocomplete="off" type="password" v-model="password" v-bind:class="{'form-control':true, 'is-invalid' : !validPassword(password) && passwordBlured}" v-on:blur="passwordBlured = true" required>
+                            </div>
                             
                         
                             <div>

@@ -14,7 +14,7 @@ module.exports = function(sequelize, Sequelize) {
             allowNull: false,
             unique: true,
             validate: {
-                is: /^[a-zA-Z0-9_]+$/i,
+                is: /^[a-zA-Z0-9_$!#]+$/i,
                 notEmpty: true,
                 len: [4, 30]
             }
