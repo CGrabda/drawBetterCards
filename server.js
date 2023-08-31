@@ -475,7 +475,7 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
     var deckAction = req.params.deckAction
 
     // Add deck to a user's collection
-    if (deckAction === 'mine' && req.user.patreon_rank > 1) {
+    if (deckAction === 'mine' && (req.user.patreon_rank > 1 || req.user.unlimited_user)) {
         Decks.findOne({ where: { deck_code: deck_code } })
         .then(query=> {
             userFunctions.addToCollection(req.user.id, query["dataValues"]["deck_id"])
