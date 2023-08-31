@@ -444,7 +444,8 @@ app.get("/deck/:deck_code", isValidCode, function(req, res) {
     deckFunctions.getAllDeckInfo(path)
     .then(results=> {
         if (results == null) {
-            throw new Error();
+            req.flash('error', 'Deck is not yet imported');
+            return res.redirect('/');
         }
 
 
@@ -464,7 +465,7 @@ app.get("/deck/:deck_code", isValidCode, function(req, res) {
         
 
     // On error, flash error message and redirect to index
-    }).catch(e=> { req.flash('error', 'Error viewing deck, contact a team member'); console.log(e); res.redirect('/'); })
+    }).catch(e=> { req.flash('error', 'Error viewing deck, contact a team member'); console.log(e); return res.redirect('/'); })
 })
 
 
