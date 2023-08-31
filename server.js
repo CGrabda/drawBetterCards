@@ -952,10 +952,6 @@ else if (process.env.NODE_ENV == "production") {
         ips => app.set('trust proxy', ['loopback', ...ips]),
         err => console.error(err.stack),
     );
-       
-    cloudflareIPs((err, ips) => {
-        app.set('trust proxy', ['loopback', ...ips]);
-    });
 
     // setup pki certs
     const options = {
