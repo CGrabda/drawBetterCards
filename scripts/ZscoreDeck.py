@@ -390,12 +390,12 @@ def getScore(decklist, pods, deckInfo):
                 # Ortannu the Chained
                 elif firstWord == "ortannu":
                     cardName = "Ortannu the Chained"
-                    cardSet = "AoA"
+                    cardSet = "AOA"
                 
                 # Ortannu's Binding
                 elif firstWord == "ortannu's":
                     cardName = "Ortannu's Binding"
-                    cardSet = "AoA"
+                    cardSet = "AOA"
 
                 # ---Vault Master Fixes--- #
                 elif firstWord == "chenille":
