@@ -71,14 +71,15 @@ async function processRewards() {
             if (query[i]["dataValues"]["patreon_rank"]["unlimited_user"]) {
                 var new_imports = 15000
             }
-            // If more than 40 imports, adds half of old them
+            // If more than 40 imports, adds all of old imports
+            // Can scale degradation by changing 1 to decimal
             else if (old_imports > 40) {
-                var new_imports = rewards[0] + Math.floor(0.5*old_imports)
+                new_imports = rewards[0] + Math.floor(1 * old_imports)
             }
             // If 40 or less imports, adds full value. This is due to the 30 bonus imports for new users
             // This ensures a new user after becoming a $1 tier is given 60 imports
             else {
-                var new_imports = rewards[0] + old_imports
+                new_imports = rewards[0] + old_imports
             }
             
             // Update the user's rewards and last_payment

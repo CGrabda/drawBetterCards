@@ -149,7 +149,6 @@ var CronJob = require('cron').CronJob;
 var job1 = new CronJob(
     '1 */2 * * * *',
     function() {
-        console.log("Running job1")
         userFunctions.updateTiers(3)
         .then(async function () {
             return userFunctions.processRewards()
@@ -664,8 +663,23 @@ app.get("/admin/:path", isAdmin, isAuthenticated, function(req, res) {
         })
     }
     else if (path == 'setUnlimited') {
-        // Adjust the scores and get attributes of all decks
+        // Sets unlimited users and updates all patreon tiers/rewards manually
         userFunctions.setUnlimited()
+        .then(function() {
+            userFunctions.updateTiers()
+            .then(async function () {
+                return userFunctions.processRewards()
+                .then(async function () {
+                    return userFunctions.offloadOldPatreons()
+                })
+                .catch(function() {
+                    console.log("processRewardsError")
+                })
+            })
+            .catch(function() {
+                console.log("updateTiersError")
+            })
+        })
         .then(function () {
             req.flash('error', ['Unlimited users have been initialized.'])
             res.render('admin.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user }) 
