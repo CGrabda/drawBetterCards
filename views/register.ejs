@@ -25,13 +25,17 @@
                             <div class="forms-inputs mb-4">
                                 <label for="user">Username</label>
                                 <input id="username" name="username" autocomplete="off" type="text" v-bind:class="{'form-control':true, 'is-invalid' : !validEmail(email) && emailBlured}" v-on:blur="emailBlured = true" required>
-                                <h5>Username requirements: minimum length of 4 characters (A-Z, a-z, 0-9, _$!#)</h5>
+                                <div>
+                                    <small>Username requirements: minimum length of 4 characters (A-Z, a-z, 0-9, _$!#)</small>
+                                </div>
                             </div>
 
                             <div class="forms-inputs mb-4">
                                 <label for="email">Email</label>
                                 <input id="email" name="email" autocomplete="off" type="email" v-model="email"  required>
-                                <h5>Password requirements: minimum length of 10 characters</h5>
+                                <div>
+                                    <small>Password requirements: minimum length of 10 characters</small>
+                                </div>
                             </div>
 
                             <div class="forms-inputs mb-4">
