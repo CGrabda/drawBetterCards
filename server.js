@@ -230,9 +230,9 @@ app.post('/login', isNOTAuthenticated, passport.authenticate('local', {
 // Register page
 app.get('/register', isNOTAuthenticated, (req, res) => {
     var captcha = svgCaptcha.create({
-        size: 6,
-        ignoreChars: '0o1iIlJ', // filter out some characters like 0o1i
-        noise: 3, // number of noise lines
+        size: 5,
+        ignoreChars: '0o1iIlJj', // filter out some characters like 0o1i
+        noise: 2, // number of noise lines
         color: true
     });
     req.session.captcha = captcha.text;
