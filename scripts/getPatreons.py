@@ -93,7 +93,7 @@ def parseMembers(membersResponse, timeMinutesCheck=131490):
                 continue
 
             # If user isn't an active patron, sets tier to 0
-            if patronStatus == "former_patron":
+            if patronStatus == "former_patron" or patronStatus == "declined_patron":
                 members.append([ email, 0, None ])
                 continue
 
