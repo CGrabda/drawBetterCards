@@ -41,6 +41,7 @@ async function updateTiers(lookback_minutes = 131490) {
             }
         })
         .catch(e=> {
+            console.log(e)
             throw new Error('Error updating patreon tiers')
         })
     }
@@ -117,6 +118,7 @@ async function offloadOldPatreons() {
         }
     })
     .catch(e=> {
+        console.log(e)
         console.log("OffloadOldPatreonsError")
     })
 }
