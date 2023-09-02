@@ -678,6 +678,7 @@ async function updateDeckTotals(deck_object, pods) {
     deck_object.total_scaling_a = 0
     deck_object.total_wipes = 0
     deck_object.total_cheats = 0
+    deck_object.total_tokens = 0
 
     for (var i = 0; i < 4; i++) {
         deck_object.adj_score += (pods[i].pod_score || 0)
@@ -691,6 +692,7 @@ async function updateDeckTotals(deck_object, pods) {
         deck_object.total_scaling_a += (pods[i].pod_scaling_a || 0)
         deck_object.total_wipes += (pods[i].pod_wipes || 0)
         deck_object.total_cheats += (pods[i].pod_cheats || 0)
+        deck_object.total_tokens += (pods[i].pod_tokens || 0)
     };
 
     // Push updates to db

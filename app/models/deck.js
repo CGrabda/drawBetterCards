@@ -107,6 +107,10 @@ module.exports = function(sequelize, Sequelize) {
             type: DataTypes.SMALLINT,
             defaultValue: 0,
         },
+        total_tokens: {
+            type: DataTypes.SMALLINT,
+            defaultValue: 0,
+        },
     },
     {
         timestamps: false 

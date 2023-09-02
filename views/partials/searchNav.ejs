@@ -15,7 +15,26 @@
         <div class="d-flex flex-row px-5 mb-4">
             <% // Deck name input %>
             <div class="d-flex col-xs-2 mb-2 mx-1">
-                <div class="forms-group my-3"> <input id="name" name="name" placeholder="Deck Name" autocomplete="off" type="text"> </div>
+                <div class="forms-group my-3">
+                    <input id="name" name="name" placeholder="Deck Name" autocomplete="off" type="text">
+                    <div class="forms-inputs my-1" id="attribute-searches">
+                        <select id="attribute" name="sort" placeholder="sort">
+                            <option value="" disbled selected>Sort</option>
+                            <option> Score </option>
+                            <option> E </option>
+                            <option> A </option>
+                            <option> C </option>
+                            <option> F </option>
+                            <option> D </option>
+                            <option> R </option>
+                            <option> BoB </option>
+                            <option> ScalingA </option>
+                            <option> Wipes </option>
+                            <option> Cheats </option>
+                            <option> Tokens </option>
+                        </select>
+                    </div>
+                </div>
             </div>
             
             <% // Buttons to show/hide inputs %>

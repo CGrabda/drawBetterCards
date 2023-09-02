@@ -69,7 +69,8 @@ const search_to_db_name = {
     'BoB': 'total_bob',
     'ScaleA': 'total_scaling_a',
     'Wipes': 'total_wipes',
-    'Cheats': 'total_cheats'
+    'Cheats': 'total_cheats',
+    'Tokens': 'total_tokens'
 }
 
 
@@ -154,7 +155,7 @@ async function searchDeck(data, req_page, req_user_id=null) {
         where: deck_query,
         limit: 15,
         offset: 15 * parseInt(req_page),
-        order: [['adj_score', 'DESC'], ['createdAt', 'DESC']],
+        order: [[data.sort ? data.sort: 'adj_score', 'DESC'], ['createdAt', 'DESC']],
     })
     .catch(e=> {
         console.log('Error searching')
@@ -171,6 +172,7 @@ async function getQueryData(request_query, request_query_polluted) {
     var data = {}
 
     var name_search = request_query.name
+    var sort_query = request_query.sort
     var single_set_search = parseInt(request_query.set)
     var single_house_search = parseInt(request_query.house)
     var single_attribute_search = request_query.attr
@@ -252,6 +254,13 @@ async function getQueryData(request_query, request_query_polluted) {
                 data["attr"] = [[single_attribute_search, single_op_search, single_val_search]]
             }
         }
+    }
+
+    // Add sort information to data, else default to sort by score
+    if (sort_query) {
+        try {
+            data["sort"] = search_to_db_name[sort_query]
+        } catch {}
     }
 
 
