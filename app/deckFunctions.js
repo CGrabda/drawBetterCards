@@ -210,8 +210,9 @@ async function rescoreAllDecks() {
         for (var deck_object in query) {
             await rescoreDeck(query[deck_object])
             .catch(e=> {
-                console.log("Error Rescoring:", query[deck_object])
-                throw new Error(e)
+                console.log("Error Rescoring:", query[deck_object].deck_code)
+                console.log(e)
+                return e
             })
         }
         
@@ -454,6 +455,59 @@ async function getStatsFromCard(card_name) {
         }
     }
 
+    // Handle anomalies
+    if (card_name == "Orb of Wonder") {
+        card_stats_ouptut = SCORING_DICT["MM"][card_name]
+    }
+    
+    else if (card_name == "Valoocanth") {
+        card_stats_ouptut = SCORING_DICT["DT"][card_name]
+    }
+        
+    else if (card_name == "Ghostform") {
+        card_stats_ouptut = SCORING_DICT["WC"][card_name]
+    }
+
+    else if (card_name == "Infomancer") {
+        card_stats_ouptut = SCORING_DICT["WC"][card_name]
+    }
+
+    else if (card_name == "Lateral Shift") {
+        card_stats_ouptut = SCORING_DICT["WC"][card_name]
+    }
+
+    else if (card_name == "Nizak, The Forgotten") {
+        card_stats_ouptut = SCORING_DICT["WC"][card_name]
+    }
+
+    else if (card_name == "The Grim Reaper") {
+        card_stats_ouptut = SCORING_DICT["WC"][card_name]
+    }
+
+    else if (card_name == "The Red Baron") {
+        card_stats_ouptut = SCORING_DICT["WC"][card_name]
+    }
+
+    else if (card_name == "Timequake") {
+        card_stats_ouptut = SCORING_DICT["WC"][card_name]
+    }
+
+    else if (card_name == "Memolith") {
+        card_stats_ouptut = SCORING_DICT["WC"][card_name]
+    }
+
+    else if (card_name == "Ecto-Charge") {
+        card_stats_ouptut = SCORING_DICT["WOE"][card_name]
+    }
+
+    else if (card_name == "Near-Future Lens") {
+        card_stats_ouptut = SCORING_DICT["WOE"][card_name]
+    }
+
+    else if (card_name == "Curse of Forgetfulness") {
+        card_stats_ouptut = SCORING_DICT["WOE"][card_name]
+    }
+
     if (!card_stats_ouptut) {
         // add console message error adding card
         console.log('Error adding card: ' + card_name)
@@ -567,7 +621,13 @@ async function rescoreDeck(deck_object) {
             for (i = 1; i < 13; i++) {
                 // Get card information
                 var card = pod["card_" + i.toString()]
-                var card_name = card.card_name
+                try {
+                    var card_name = card.card_name
+                }
+                catch {
+                    console.log(pod)
+                    console.log(i)
+                }
                 var set_id = card.card_id.toString().slice(0, -3)
                 var set_abbrev = IDENTIFY_SET[set_id]
                 var card_stats = null
@@ -589,7 +649,7 @@ async function rescoreDeck(deck_object) {
                         card_stats = output
                     })
                     .catch(e=> {
-                        throw new Error('Error getting stats from cards')
+                        throw new Error(e)
                     })
                     //console.log(card_stats)
                 }
