@@ -210,6 +210,7 @@ async function rescoreAllDecks() {
         for (var deck_object in query) {
             await rescoreDeck(query[deck_object])
             .catch(e=> {
+                console.log("Error Rescoring:", deck_object.deck_code)
                 throw new Error(e)
             })
         }
