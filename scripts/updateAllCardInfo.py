@@ -479,6 +479,10 @@ for id in cardIDToTraitDict:
             cardName = oldCardName
             cardSet = "COTA"
 
+        elif firstWord == "monument":
+            cardName = oldCardName
+            cardSet = "MM"
+
         # World's Collide variants
         # Brobnar brews
         elif len(tokens) > 1:
@@ -494,8 +498,8 @@ for id in cardIDToTraitDict:
         if cardName == None:
             print("DeckImportError")
             print("\nError adding the card " + oldCardName + " to the query")
-            print("Exiting...")
-            exit()
+            print("DO NOT USE THIS OUTPUT")
+            continue
 
     # format into (card_id, card_name, traits, multiples)
     if len(multiplesString) > 1:

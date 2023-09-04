@@ -2529,7 +2529,7 @@ Headhunter,Brobnar,VM,C,Creature,2,,,,,,1,,,,,2,,0,0,0,0,,4,2,6,2,8,2,10,2
 Lollop the Titanic,Brobnar,VM,C,Creature,3,,,,,,1,,,,,3,,0,0,0,0,,6,3,9,3,12,3,15,3
 Rant and Rive,Brobnar,VM,C,Action,5,1,1,,,,,1,,,,5,,0,-1,-3,-4,,10,5,14,4.666666667,16,4,17,3.4
 Rowdy Skald,Brobnar,VM,C,Creature,4,1,,1,,,1,,,,,4,,0,0,0,0,,8,4,12,4,16,4,20,4
-,Dis,VM,,,,19,6,19,6,5,18,0,1,2,1,93.25,,,,,,,,,,,,,,
+,Dis,VM,,,,19,7,19,6,5,19,0,1,2,1,94,,,,,,,,,,,,,,
 A Fair Game,Dis,VM,R,Action,2,1,,,,,,,,,,0.5,,0,0,0,0,,4,2,6,2,8,2,10,2
 Ancient Yurk,Dis,VM,R,Creature,3,,,,1,,1,,,,,0.75,,-1,-2,-2,-2,,5,2.5,6,2,7,1.75,8,1.6
 Collar of Subordination,Dis,VM,R,Upgrade,6,,,1,,,,,,,,1.5,,0,0,0,0,,12,6,18,6,24,6,30,6
@@ -2550,6 +2550,7 @@ Sinestra,Dis,VM,R,Creature,3,,1,,,,1,,,,,0.75,,0,0,0,0,,6,3,9,3,12,3,15,3
 Snaglet,Dis,VM,R,Creature,2,,,,,,,,,,,0.5,,-1,-2,-2,-2,,3,1.5,3,1,3,0.75,3,0.6
 The Pale Star,Dis,VM,R,Artifact,2,,,1,,,,,,,,0.5,,0,-2,-2,-2,,4,2,4,1.333333333,4,1,4,0.8
 Truebaru,Dis,VM,R,Creature,2,,,,,,1,,,,,0.5,,-2,-2,-2,-2,,2,1,2,0.6666666667,2,0.5,2,0.4
+Dexus,Dis,VM,R,Creature,3,,1,,,,1,,,,,0.75,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 Double Doom,Dis,VM,U,Action,2,,,1,,,,,,,,1,,0,0,0,0,,4,2,6,2,8,2,10,2
 Drumble,Dis,VM,U,Creature,3,,1,,,,,,,,,1.5,,1,0,-1,-1,,7,3.5,10,3.333333333,12,3,14,2.8
 Essence Scale,Dis,VM,U,Artifact,4,1,,,,,,,,,,2,,0,0,0,0,,8,4,12,4,16,4,20,4
@@ -2582,7 +2583,7 @@ The Terror,Dis,VM,C,Creature,3,,,,,,1,,,,,3,,0,-1,-2,-2,,6,3,8,2.666666667,9,2.2
 Tocsin,Dis,VM,C,Creature,2,,,,,,,,,,,2,,0,0,0,0,,4,2,6,2,8,2,10,2
 Unlocked Gateway,Dis,VM,C,Action,3,,,1,,,,,1,,,3,,-1,-3,-5,-7,,5,2.5,5,1.666666667,3,0.75,-1,-0.2
 Yurk,Dis,VM,C,Creature,3,,,,1,,,,,,,3,,0,0,0,0,,6,3,9,3,12,3,15,3
-,Logos,VM,,,,19,9,7,22,3,12,2,0,0,0,93,,,,,,,,,,,,,,
+,Logos,VM,,,,21,9,7,24,3,12,2,0,0,0,96,,,,,,,,,,,,,,
 Academy Training,Logos,VM,R,Upgrade,2,1,,,1,,,,,,,0.5,,0,0,0,0,,4,2,6,2,8,2,10,2
 Adaptoid,Logos,VM,R,Creature,3,,1,1,1,,1,,,,,0.75,,0,0,0,0,,6,3,9,3,12,3,15,3
 Chaos Portal,Logos,VM,R,Artifact,1,,,,,,,,,,,0.25,,0,0,0,0,,2,1,3,1,4,1,5,1
@@ -2603,6 +2604,8 @@ TT+HFFS,Logos,VM,R,Creature,6,1,,,1,,,,,,,1.5,,2,2,2,2,,14,7,22,7.333333333,30,7
 Universal Keylock,Logos,VM,R,Artifact,2,1,1,,,,,,,,,0.5,,0,0,0,0,,4,2,6,2,8,2,10,2
 Vespilon Theorist,Logos,VM,R,Creature,2,,,,,,,,,,,0.5,,0,0,0,0,,4,2,6,2,8,2,10,2
 Zenzizenzizenzic,Logos,VM,R,Creature,5,,,,1,,1,,,,,1.25,,0,0,0,0,,10,5,15,5,20,5,25,5
+Help From Future Self,Logos,VM,R,Action,6,1,,,1,,,,,,,1.50,,1,1,1,1,,13,6.5,20,6.7,27,6.75,34,6.8
+Timetraveller,Logos,VM,R,Creature,6,1,,,1,,,,,,,1.50,,1,1,1,1,,13,6.5,20,6.7,27,6.75,34,6.8
 Archon's Callback,Logos,VM,U,Action,2,,,,1,,,,,,,1,,-1,-2,-3,-4,,3,1.5,3,1,2,0.5,0,0
 Bouncing Deathquark,Logos,VM,U,Action,4,,,1,,,,,,,,2,,0,-1,-3,-3,,8,4,11,3.666666667,12,3,13,2.6
 C.AE.N.D.L.E. Unit,Logos,VM,U,Creature,4,,1,,,1,1,,,,,2,,1,2,2,2,,9,4.5,15,5,21,5.25,27,5.4
@@ -2656,7 +2659,12 @@ Shatter Storm,Mars,VM,R,Action,4,,1,,,,,1,,,,1,,0,-2,-2,-2,,8,4,10,3.333333333,1
 Sniffer,Mars,VM,R,Artifact,1,1,,,,,,,,,,0.25,,-1,-2,-2,-2,,1,0.5,0,0,-1,-0.25,-2,-0.4
 Swap Widget,Mars,VM,R,Artifact,2,,,,,,,,,,,0.5,,-1,-2,-2,-2,,3,1.5,3,1,3,0.75,3,0.6
 Yxlyx Stimrager,Mars,VM,R,Creature,2,,,1,,,1,,,,,0.5,,0,0,0,0,,4,2,6,2,8,2,10,2
-Airlock,Mars,VM,U,Artifact,3,,,,1,,,,,,,1.5,,1,2,0,0,,7,3.5,12,4,15,3.75,18,3.6
+Nautilixian,Mars,VM,R,Creature,0,,,,,,,,,,,0.00,,0,0,0,0,,0,0,0,0.0,0,0,0,0
+Green Aeronaut,Mars,VM,R,Creature,0,,,,,,,,,,,0.00,,0,0,0,0,,0,0,0,0.0,0,0,0,0
+Purple Aeronaut,Mars,VM,R,Creature,0,,,,,,,,,,,0.00,,0,0,0,0,,0,0,0,0.0,0,0,0,0
+Red Aeronaut,Mars,VM,R,Creature,0,,,,,,,,,,,0.00,,0,0,0,0,,0,0,0,0.0,0,0,0,0
+White Aeronaut,Mars,VM,R,Creature,0,,,,,,,,,,,0.00,,0,0,0,0,,0,0,0,0.0,0,0,0,0
+Airlock,Mars,VM,U,Artifact,3,,,,1,,,,,,,1.5,,1,2,0,0,,7,3.5,12,4.0,15,3.75,18,3.6
 Battle Fleet,Mars,VM,U,Action,6,1,,,1,,,,,,,3,,2,3,4,4,,14,7,23,7.666666667,33,8.25,43,8.6
 Blypyp,Mars,VM,U,Creature,1,,,,,,,,,,,0.5,,0,0,0,0,,2,1,3,1,4,1,5,1
 Combat Pheromones,Mars,VM,U,Artifact,3,1,,,,,,,,,,1.5,,-1,-1,-2,-2,,5,2.5,7,2.333333333,8,2,9,1.8
@@ -2741,7 +2749,7 @@ Ostracize,Saurian,VM,C,Action,3,,,1,,,,,,,,3,,0,-1,-2,-2,,6,3,8,2.666666667,9,2.
 Praefectus Ludo,Saurian,VM,C,Creature,5,,,,,1,1,,,,,5,,1,1,0,0,,11,5.5,17,5.666666667,22,5.5,27,5.4
 The Golden Spiral,Saurian,VM,C,Artifact,3,1,,,,,,,,,,3,,0,0,-1,-2,,6,3,9,3,11,2.75,12,2.4
 Tricerian Legionary,Saurian,VM,C,Creature,3,,,,,,1,,,,,3,,0,0,0,0,,6,3,9,3,12,3,15,3
-,Star Alliance,VM,,,,28,9,8,11,3,10,0,1,2,0,95.25,,,,,,,,,,,,,,
+,Star Alliance,VM,,,,28,9,8,12,3,10,0,1,2,0,97.5,,,,,,,,,,,,,,
 AEmbertracker,Star Alliance,VM,R,Creature,2,,,1,,,,,,,,0.5,,-1,-1,-1,-1,,3,1.5,4,1.333333333,5,1.25,6,1.2
 Book of leQ,Star Alliance,VM,R,Artifact,2,1,,,1,,,,,,,0.5,,-2,-4,-4,-4,,2,1,0,0,-2,-0.5,-4,-0.8
 Captain Val Jericho,Star Alliance,VM,R,Creature,6,1,,,1,,1,,,,,1.5,,1,1,1,1,,13,6.5,20,6.666666667,27,6.75,34,6.8
@@ -2762,6 +2770,8 @@ Pupgrade,Star Alliance,VM,R,Creature,2,,,,,,,,,,,0.5,,0,0,0,0,,4,2,6,2,8,2,10,2
 Quixxle Stone,Star Alliance,VM,R,Artifact,1,1,,1,,1,,,,,,0.25,,0,-4,-4,-4,,2,1,-1,-0.3333333333,-4,-1,-7,-1.4
 Tachyon Pulse,Star Alliance,VM,R,Action,5,1,,,,,,,,1,,1.25,,-1,-3,-3,-3,,9,4.5,11,3.666666667,13,3.25,15,3
 Techivore Pulpate,Star Alliance,VM,R,Creature,2,,,,,,1,,,1,,0.5,,0,0,0,0,,4,2,6,2,8,2,10,2
+Com. Officer Hings,StarAlliance,VM,R,Creature,6,,,,1,,,,,,,1.50,,1,2,2,2,,13,6.5,21,7.0,29,7.25,37,7.4
+Com. Officer Gross,StarAlliance,VM,R,Creature,3,,,,,,,,,,,0.75,,1,2,2,2,,7,3.5,12,4.0,17,4.25,22,4.4
 ANT1-10NY,Star Alliance,VM,U,Creature,4,,1,,,,1,,,,,2,,1,0,0,0,,9,4.5,13,4.333333333,17,4.25,21,4.2
 Badge of Unity,Star Alliance,VM,U,Upgrade,3,1,,,,,,,,,,1.5,,0,0,0,0,,6,3,9,3,12,3,15,3
 Collector Boren,Star Alliance,VM,U,Creature,3,1,,,,,,,,,,1.5,,0,-1,-1,-1,,6,3,8,2.666666667,10,2.5,12,2.4
@@ -2794,7 +2804,7 @@ Stealth Mode,Star Alliance,VM,C,Action,6,1,,,,1,,,,,,6,,1,1,1,1,,13,6.5,20,6.666
 Subject Kirby,Star Alliance,VM,C,Creature,6,,,,1,,,,,,,6,,0,0,0,0,,12,6,18,6,24,6,30,6
 Survey,Star Alliance,VM,C,Action,3,1,,,1,,,,,,,3,,0,0,0,0,,6,3,9,3,12,3,15,3
 Zap,Star Alliance,VM,C,Action,3,1,,1,,,,,,,,3,,0,-1,-1,-1,,6,3,8,2.666666667,10,2.5,12,2.4
-,Untamed,VM,,,,30,5,8,7,2,11,0,1,1,1,88,,,,,,,,,,,,,,
+,Untamed,VM,,,,32,5,8,7,2,11,0,1,1,1,88.75,,,,,,,,,,,,,,
 Blossom Drake,Untamed,VM,R,Creature,3,,,,,,1,,,,,0.75,,-1,-2,-2,-2,,5,2.5,6,2,7,1.75,8,1.6
 Pokemon,Untamed,VM,R,Creature,1,1,,,,,,,,,,0.25,,1,2,2,2,,3,1.5,6,2,9,2.25,12,2.4
 Chonkers,Untamed,VM,R,Creature,2,,,,,,,,,,,0.5,,-1,-2,-2,-2,,3,1.5,3,1,3,0.75,3,0.6
@@ -2815,6 +2825,9 @@ Teliga,Untamed,VM,R,Creature,5,1,,,,1,,,,,,1.25,,1,1,1,1,,11,5.5,17,5.666666667,
 Vineapple Tree,Untamed,VM,R,Artifact,2,1,1,,,,,,,,,0.5,,1,1,1,1,,5,2.5,8,2.666666667,11,2.75,14,2.8
 Word of Returning,Untamed,VM,R,Action,3,1,,,,,,,,,,0.75,,0,-1,-1,-1,,6,3,8,2.666666667,10,2.5,12,2.4
 World Tree,Untamed,VM,R,Artifact,2,,,,1,,,,,,,0.5,,-2,-2,-2,-2,,2,1,2,0.6666666667,2,0.5,2,0.4
+Chenille,Untamed,VM,R,Creature,0,,,,,,,,,,,0.00,,1,2,2,2,,1,0.5,3,1.0,5,1.25,7,1.4
+Bombyx,Untamed,VM,R,Creature,1,1,,,,,,,,,,0.25,,1,2,2,2,,3,1.5,6,2.0,9,2.25,12,2.4
+Fifalde,Untamed,VM,R,Creature,2,1,,,,,,,,,,0.50,,1,2,2,2,,5,2.5,9,3.0,13,3.25,17,3.4
 AEmberspine Mongrel,Untamed,VM,U,Creature,4,,,,,,,,,,,2,,1,1,1,1,,9,4.5,14,4.666666667,19,4.75,24,4.8
 Commune,Untamed,VM,U,Action,1,1,,,,,,,,,,0.5,,-2,-3,-4,-4,,0,0,-2,-0.6666666667,-5,-1.25,-8,-1.6
 Fangtooth Cavern,Untamed,VM,U,Artifact,4,1,,1,,,,,,,,2,,1,2,2,2,,9,4.5,15,5,21,5.25,27,5.4

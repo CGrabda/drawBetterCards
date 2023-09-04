@@ -444,7 +444,7 @@ async function getStatsFromCard(card_name) {
 
     // World's Collide variants
     // Brobnar brews
-    else if (tokens.length() > 1) {
+    else if (tokens.length > 1) {
         if (tokens[1] == "Brew") {
             card_stats_ouptut = SCORING_DICT["WC"]["Brew"]
         }
