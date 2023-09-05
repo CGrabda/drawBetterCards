@@ -435,8 +435,8 @@ async function getStatsFromCard(card_name) {
         card_stats_ouptut = SCORING_DICT["WC"]["Timequake"]
     }
 
-    else if (first_word == "Ecto-Charge") {
-        card_stats_ouptut = SCORING_DICT["WOE"][card_name]
+    else if (card_name == "Ecto-Charge") {
+        card_stats_ouptut = SCORING_DICT["WOE"]["Ecto-Charge"]
     }
 
     else if (first_word == "Near-Future") {
@@ -464,7 +464,7 @@ async function getStatsFromCard(card_name) {
 
     if (!card_stats_ouptut) {
         // add console message error adding card
-        console.log('Error adding card: ' + card_name)
+        console.log('Error adding card:', card_name, first_word)
     }
     return card_stats_ouptut
 }
