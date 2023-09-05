@@ -436,7 +436,7 @@ async function getStatsFromCard(card_name) {
     }
 
     else if (first_word == "Ecto-Charge") {
-        card_stats_ouptut = SCORING_DICT["WOE"][card_name]
+        card_stats_ouptut = SCORING_DICT["WOE"]["Ecto-Charge"]
     }
 
     else if (first_word == "Near-Future") {
