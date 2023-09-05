@@ -876,6 +876,7 @@ function doesDeckExist(req, res, next) {
     }
     catch {
         req.flash('error', 'Error importing deck, invalid deck code')
+        console.log('Invalid Deck Code ' + req.user.username + ':' + output["deck_info"]["code"])
         return res.redirect('/')
     }
 
@@ -886,6 +887,7 @@ function doesDeckExist(req, res, next) {
             if (results != null) {
                 // Deck already exists, redirect to deck page
                 req.flash('success', 'Deck already imported')
+                console.log('Duplicate ' + req.user.username + ':' + output["deck_info"]["code"])
                 return res.redirect('/deck/' + results.dataValues.deck_code)
             }
             else {

@@ -139,8 +139,7 @@ async function addDeck(deck_info, pod_info) {
 
             return [[deck.deck_id, deck.deck_code], deck, pods]
         }).catch(function (err) {
-            console.log(err)
-            throw new Error('Error importing Deck')
+            throw new Error('Error adding score addDeck')
         })
     }).then(async results => {
         // transaction successful
@@ -149,8 +148,7 @@ async function addDeck(deck_info, pod_info) {
 
         return results[0]
     }).catch(e=> {
-        console.log(e)
-        throw new Error('Deck already imported');
+        throw new Error('Error updating deck totals');
     });
 }
 
