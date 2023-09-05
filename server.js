@@ -808,7 +808,7 @@ app.get('*', function(req, res){
 // eslint-disable-next-line no-unused-vars
 app.use(function(err, req, res, next) {
     console.log(err.message)
-    req.flash('error', ['An unexpected error occurred, please contact a team member.'])
+    console.log(req)
     return res.redirect('/')
 });
 
