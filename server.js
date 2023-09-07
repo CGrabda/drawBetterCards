@@ -887,7 +887,7 @@ function doesDeckExist(req, res, next) {
             if (results != null) {
                 // Deck already exists, redirect to deck page
                 req.flash('success', 'Deck already imported')
-                console.log('Duplicate ' + req.user.username + ':' + results.deck_info.code)
+                console.log('Duplicate ' + req.user.username + ':' + results.dataValues.deck_code)
                 return res.redirect('/deck/' + results.dataValues.deck_code)
             }
             else {
