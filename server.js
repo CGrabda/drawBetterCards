@@ -876,7 +876,7 @@ function doesDeckExist(req, res, next) {
     }
     catch {
         req.flash('error', 'Error importing deck, invalid deck code')
-        console.log('Invalid Deck Code ' + req.user.username + ':' + output["deck_info"]["code"])
+        console.log('Invalid Deck Code ' + req.user.username + ':' + req.body.deckLink)
         return res.redirect('/')
     }
 
