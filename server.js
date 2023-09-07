@@ -204,11 +204,11 @@ const ALPHA_SCORES = ['F', 'D', 'C-', 'C', 'C+', 'B-', 'B', 'B+', 'A-', 'A', 'A+
 app.get('/', (req, res) => {
     Promise.all([
         Decks.findAll({
+            where: { createdAt: { [Op.gte]: moment().subtract(30, 'days').toDate() } },
             limit: 5,
             order: [['adj_score', 'DESC' ], ['createdAt', 'DESC']],
         }), 
         Decks.findAll({
-            where: { createdAt: { [Op.gte]: moment().subtract(30, 'days').toDate() } },
             limit: 5,
             order: [['createdAt', 'DESC' ]]
         })
