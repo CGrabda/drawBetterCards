@@ -549,10 +549,10 @@ async function scoreMeta(deck_object, attributes) {
         if (pods[i]["house_id"] != 1) {
             var house_name = IDENTIFY_HOUSE[pods[i]["house_id"].toString()]
             // No C in a house -1
-            pods[i]["pod_c"] === null ? attributes["No C in " + house_name] = -1 : null
+            pods[i]["pod_c"] === null || parseInt(pods[i]["pod_c"]) == 0 ? attributes["No C in " + house_name] = -1 : null
 
             // No A in a house -2
-            pods[i]["pod_a"] === null ? attributes["No A in " + house_name] = -2 : null
+            pods[i]["pod_a"] === null || parseInt(pods[i]["pod_a"]) == 0 ? attributes["No A in " + house_name] = -2 : null
         }
     }
 
