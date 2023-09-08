@@ -319,19 +319,19 @@ def getScore(decklist, pods, deckInfo):
                 elif firstWord[0] == "z":
                     if tokens[1] == "agent":
                         cardName = "Z-Force Agent 14"
-                        cardID = 4252
+                        cardID = 4353
 
                     elif tokens[1] == "tracker":
                         cardName = "Z-Particle Tracker"
-                        cardID = 4253
+                        cardID = 4354
 
                     elif tokens[1] == "blaster":
                         cardName = "Z-Ray Blaster"
-                        cardID = 4255
+                        cardID = 4355
 
                     elif tokens[1] == "emitter":
                         cardName = "Z-Wave Emitter"
-                        cardID = 4256
+                        cardID = 4356
                         
                     cardDetails = scoreDict["MM"][cardName]
                     cardSet = "MM"
