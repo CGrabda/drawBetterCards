@@ -33,14 +33,14 @@
                             <div class="forms-inputs mb-4">
                                 <label for="email">Email</label>
                                 <input id="email" name="email" autocomplete="off" type="email" v-model="email"  required>
-                                <div>
-                                    <small>Password requirements: minimum length of 10 characters</small>
-                                </div>
                             </div>
 
                             <div class="forms-inputs mb-4">
                                 <label for="password">Password</label>
                                 <input id="password" name="password" autocomplete="off" type="password" v-model="password" v-bind:class="{'form-control':true, 'is-invalid' : !validPassword(password) && passwordBlured}" v-on:blur="passwordBlured = true" required>
+                                <div>
+                                    <small>Password requirements: minimum length of 10 characters</small>
+                                </div>
                             </div>
                             
                         
