@@ -549,10 +549,10 @@ async function scoreMeta(deck_object, attributes) {
         if (pods[i]["house_id"] != 1) {
             var house_name = IDENTIFY_HOUSE[pods[i]["house_id"].toString()]
             // No C in a house -1
-            pods[i]["pod_c"] === null || parseInt(pods[i]["pod_c"]) == 0 ? attributes["No C in " + house_name] = -1 : null
+            pods[i]["pod_c"] === null ? attributes["No C in " + house_name] = -1 : null
 
             // No A in a house -2
-            pods[i]["pod_a"] === null || parseInt(pods[i]["pod_a"]) == 0 ? attributes["No A in " + house_name] = -2 : null
+            pods[i]["pod_a"] === null ? attributes["No A in " + house_name] = -2 : null
         }
     }
 
@@ -765,6 +765,15 @@ async function rescoreDeck(deck_object) {
             raw_score += pod.pod_score
 
             // Handle card values which may be null, if 0 set to null
+            if (!pod.pod_e) {
+                pod.pod_e = null
+            }
+            if (!pod.pod_a) {
+                pod.pod_a = null
+            }
+            if (!pod.pod_c) {
+                pod.pod_c = null
+            }
             if (!pod.pod_f) {
                 pod.pod_f = null
             }
