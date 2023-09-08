@@ -646,6 +646,7 @@ app.get("/admin/:path", isAdmin, isAuthenticated, function(req, res) {
         })
         .catch(e=> {
             req.flash('error', ['An unexpected error occurred, please contact a team member.'])
+            console.log(e)
             return res.redirect('/')
         })
     }

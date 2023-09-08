@@ -193,6 +193,7 @@ async function adjustScoreOnAllDecks() {
         return
     })
     .catch(e=> {
+        console.log(e)
         throw new Error('Error adjusting scores on all decks')
     })
 }
@@ -279,6 +280,21 @@ const IDENTIFY_SET = {
     '6': "WOE",
     '7': "GR",
     '500': "VM"
+}
+
+const IDENTIFY_HOUSE = {
+    '2': 'Brobnar',
+    '3': 'Dis',
+    '4': 'Logos',
+    '5': 'Mars',
+    '6': 'Sanctum',
+    '7': 'Shadows',
+    '8': 'Untamed',
+    '9': 'Saurian',
+    '10': 'Star Alliance',
+    '11': 'Unfathomable',
+    '12': 'Ekwidon',
+    '13': 'Geistoid',
 }
 
 async function getStatsFromCard(card_name) {
@@ -492,51 +508,155 @@ async function scoreTokens(deck_object, attributes) {
     }
 }
 
+async function scoreMeta(deck_object, attributes) {
+    var pods = deck_object.Pods
+
+    // 0R       -2
+    // 2R       +1
+
+    // 0Clears  -4
+    // 2Clears  +2
+
+    // <1F      -5
+    // 1-5F     -2
+    // 9+F      +2
+    
+    // <6C      -4
+    // 10+C     +2
+    
+    // 2R different houses +1
+    // 2Wipes different houses +2
+    // No C in a house -1
+    // No A in a house -2
+
+
+    // stat totalling and house considerations
+    var r_count = 0
+    var wipes_count = 0
+    var f_count = 0
+    var c_count = 0
+    var houses_with_r_count = 0
+    var houses_with_clears_count = 0
+
+    for (var i in pods) {
+        r_count += pods[i]["pod_r"]
+        wipes_count += pods[i]["pod_wipes"]
+        f_count += pods[i]["pod_f"]
+        c_count += pods[i]["pod_c"]
+        pods[i]["pod_r"] > 0 ? houses_with_r_count +=1 : null
+        pods[i]["pod_wipes"] > 0 ? houses_with_clears_count +=1 : null
+
+        if (pods[i]["house_id"] != 1) {
+            var house_name = IDENTIFY_HOUSE[pods[i]["house_id"].toString()]
+            // No C in a house -1
+            pods[i]["pod_c"] === null ? attributes["No C in " + house_name] = -1 : null
+
+            // No A in a house -2
+            pods[i]["pod_a"] === null ? attributes["No A in " + house_name] = -2 : null
+        }
+    }
+
+
+    // R scoring
+    if (r_count == 0) {
+        attributes["No R"] = -2
+    }
+    else if (r_count >= 2) {
+        attributes["2+ R"] = 1
+    }
+
+    // Wipes scoring
+    if (wipes_count == 0) {
+        attributes["No Board Wipes"] = -4
+    }
+    else if (wipes_count >= 2) {
+        attributes["2+ Board Wipes"] = 2
+    }
+
+    // F scoring
+    if (f_count < 1) {
+        attributes["No F"] = -5
+    }
+    else if (f_count < 5) {
+        attributes["1 to 5 F"] = -2
+    }
+    else if (f_count >= 9) {
+        attributes["9+ F"] = 2
+    }
+    
+    // <6C      -4
+    // 10+C     +2
+    if (c_count < 6) {
+        attributes["Less than 6 C"] = -4
+    }
+    else if (c_count > 10) {
+        attributes["10+ C"] = 2
+    }
+    
+    // 2R different houses +1
+    if (houses_with_r_count > 1) {
+        attributes["2+ R in different houses"] = 1
+    }
+
+    // 2Wipes different houses +2
+    if (houses_with_clears_count > 1) {
+        attributes["2+ Board Wipes in different houses"] = 2
+    }
+}
+
 async function parseAttributes(deck_object) {
     var attributes = {}
 
     // Score tokens and updates attributes dict
     return await scoreTokens(deck_object, attributes)
     .then(async function() {
-        // Goes through each attribute of the deck and tallies score adjustment
-        var score_adj = 0
-        for (var key in attributes) {
-            score_adj += attributes[key]
-        }
-
-        // Round value to nearest int
-        score_adj = Math.round(score_adj)
-
-        // Calculate adjusted score
-        var adjusted_score = deck_object.raw_score + score_adj
-
-
-        // Retrieve adjustment Pod
-        var adjustment_pod = null
-        for (var i in deck_object.Pods) {
-            if (deck_object.Pods[i].house_id == 1) {
-                adjustment_pod = deck_object.Pods[i]
-                break
+        return await scoreMeta(deck_object, attributes)
+        .then(async function() {
+            // Goes through each attribute of the deck and tallies score adjustment
+            var score_adj = 0
+            for (var key in attributes) {
+                score_adj += attributes[key]
             }
-        }
-
-
-        // Stage deck values, attributes from the script response to deck
-        deck_object.set({
-            adj_score: adjusted_score,
-            attributes: JSON.stringify(attributes),
-            UpdatedAt: sequelize.literal('CURRENT_TIMESTAMP')
+    
+            // Round value to nearest int
+            score_adj = Math.round(score_adj)
+    
+            // Calculate adjusted score
+            var adjusted_score = deck_object.raw_score + score_adj
+    
+    
+            // Retrieve adjustment Pod
+            var adjustment_pod = null
+            for (var i in deck_object.Pods) {
+                if (deck_object.Pods[i].house_id == 1) {
+                    adjustment_pod = deck_object.Pods[i]
+                    break
+                }
+            }
+    
+    
+            // Stage deck values, attributes from the script response to deck
+            deck_object.set({
+                adj_score: adjusted_score,
+                attributes: JSON.stringify(attributes),
+                updatedAt: sequelize.literal('CURRENT_TIMESTAMP')
+            })
+    
+            
+            // Stage adjustment pod values
+            adjustment_pod.pod_score = score_adj
+    
+            // Update db
+            await adjustment_pod.save()
+            await deck_object.save()
         })
-
-        
-        // Stage adjustment pod values
-        adjustment_pod.pod_score = score_adj
-
-        // Update db
-        await adjustment_pod.save()
-        await deck_object.save()
+        .catch(e=> {
+            console.log(e)
+            throw new Error('Error updating bad meta score')
+        })
     })
     .catch(e=> {
+        console.log(e)
         throw new Error('Error updating token scores')
     })
 }
