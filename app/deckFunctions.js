@@ -138,8 +138,8 @@ async function addDeck(deck_info, pod_info) {
             }, {transaction: t}));
 
             return [[deck.deck_id, deck.deck_code], deck, pods]
-        }).catch(function (err) {
-            throw new Error('Error adding score addDeck')
+        }).catch(e=> {
+            throw new Error(e)
         })
     }).then(async results => {
         // transaction successful
