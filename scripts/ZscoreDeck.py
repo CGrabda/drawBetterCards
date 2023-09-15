@@ -432,6 +432,11 @@ def getScore(decklist, pods, deckInfo):
                     cardID = 5377
 
 
+                elif firstWord == "monument":
+                    cardName = oldCardName
+                    cardSet = "MM"
+
+
                 # World's Collide variants
                 # Brobnar brews
                 elif len(tokens) > 1:
