@@ -148,7 +148,7 @@ async function addDeck(deck_info, pod_info) {
 
         return results[0]
     }).catch(e=> {
-        throw new Error('Error updating deck totals');
+        throw new Error(e);
     });
 }
 
