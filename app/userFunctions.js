@@ -82,6 +82,11 @@ async function processRewards() {
             else {
                 new_imports = rewards[0] + old_imports
             }
+
+            // Stops unintended values from being reached
+            if (new_imports > 15000)  {
+                var new_imports = 15000
+            }
             
             // Update the user's rewards and last_payment
             await User.update(
