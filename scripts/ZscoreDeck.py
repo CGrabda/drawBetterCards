@@ -246,7 +246,7 @@ def getScore(decklist, pods, deckInfo):
             except:
                 # Attempt to handle special characters æ and Æ in names
                 # (which are omitted from the spreadsheet)
-                cardName = cardName.replace("Æ", "AE").replace("æ", "ae").replace("’", "'").replace("”", "\"").replace("“", "\"")
+                cardName = cardName.replace("Æ", "AE").replace("æ", "ae").replace("’", "'").replace("”", "\"").replace("“", "\"").replace("…", "...")
 
                 # Replace Ekwidon unicode characters with the standard letter
                 if not cardName.isascii():
@@ -406,6 +406,10 @@ def getScore(decklist, pods, deckInfo):
                 elif firstWord == "drawn":
                     cardName = "Drawn Down"
                     cardSet = "DT"
+                
+                elif firstWord == "dark":
+                    cardName = "Dark Discovery"
+                    cardSet = "DT"
 
                 # Ortannu the Chained
                 elif firstWord == "ortannu":
@@ -462,18 +466,17 @@ def getScore(decklist, pods, deckInfo):
 
         # Handle anomaly cards
         except ValueError as e:
+            exceptionHandled = False
             if cardName == "Orb of Wonder":
                 setNum = 4
                 cardSet="MM"
                 cardID = 4173
-                cardDetails = scoreDict[cardSet][cardName]
                 exceptionHandled = True
             
             elif cardName == "Valoocanth":
                 setNum = 5
                 cardSet="DT"
                 cardID = 5350
-                cardDetails = scoreDict[cardSet][cardName]
                 exceptionHandled = True
                 
             elif (card[0]["card_number"][0]) == "A":
@@ -484,11 +487,53 @@ def getScore(decklist, pods, deckInfo):
                     setNum = 3
                     cardSet = "WC"
                 cardID = -int(str(setNum) + str(card[0]["card_number"][1:]))
-                cardDetails = scoreDict[cardSet][cardName]
                 exceptionHandled = True
             
-
-            if not exceptionHandled:
+            # Revenants
+            elif cardName == "Xenos Darkshadow":
+                setNum = 7
+                cardSet="GR"
+                cardID = -int(str(setNum) + str(card[0]["card_number"][1:]))
+                exceptionHandled = True
+            elif cardName == "Spectral Ruth":
+                setNum = 7
+                cardSet="GR"
+                cardID = -int(str(setNum) + str(card[0]["card_number"][1:]))
+                exceptionHandled = True
+            elif cardName == "Revived Za-Orha":
+                setNum = 7
+                cardSet="GR"
+                cardID = -int(str(setNum) + str(card[0]["card_number"][1:]))
+                exceptionHandled = True
+            elif cardName == "Qyxxlyxx Grave Master":
+                setNum = 7
+                cardSet="GR"
+                cardID = -int(str(setNum) + str(card[0]["card_number"][1:]))
+                exceptionHandled = True
+            elif cardName == "Portalmonster":
+                setNum = 7
+                cardSet="GR"
+                cardID = -int(str(setNum) + str(card[0]["card_number"][1:]))
+                exceptionHandled = True
+            elif cardName == "Phantom Drummernaut":
+                setNum = 7
+                cardSet="GR"
+                cardID = -int(str(setNum) + str(card[0]["card_number"][1:]))
+                exceptionHandled = True
+            elif cardName == "Immortal Greking":
+                setNum = 7
+                cardSet="GR"
+                cardID = -int(str(setNum) + str(card[0]["card_number"][1:]))
+                exceptionHandled = True
+            elif cardName == "Duma the Returned":
+                setNum = 7
+                cardSet="GR"
+                cardID = -int(str(setNum) + str(card[0]["card_number"][1:]))
+                exceptionHandled = True
+            
+            if exceptionHandled:
+                cardDetails = scoreDict[cardSet][cardName]
+            else:
                 print("DeckImportError")
                 print(e)
                 print("\nError adding the anomaly " + card[0]["card_title"] + " to the score")

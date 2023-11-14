@@ -326,7 +326,24 @@ for id in cardIDToTraitDict:
     setId = id[:-3]
     if setId == "-":
         if (scoreName[0] == "E" or scoreName[0] == "C" or scoreName[:2] == "Ne"):
-            cardSet="WOE"
+            cardSet = "WOE"
+        # Revenants
+        elif cardName == "Xenos Darkshadow":
+            cardSet = "GR"
+        elif cardName == "Spectral Ruth":
+            cardSet = "GR"
+        elif cardName == "Revived Za-Orha":
+            cardSet = "GR"
+        elif cardName == "Qyxxlyxx Grave Master":
+            cardSet = "GR"
+        elif cardName == "Portalmonster":
+            cardSet = "GR"
+        elif cardName == "Phantom Drummernaut":
+            cardSet = "GR"
+        elif cardName == "Immortal Greking":
+            cardSet = "GR"
+        elif cardName == "Duma the Returned":
+            cardSet = "GR"
         else:
             cardSet = "WC"
     else:
@@ -441,6 +458,11 @@ for id in cardIDToTraitDict:
         elif firstWord[:3] == "shi":
             cardName = str.replace(oldCardName, "'", "")
             cardSet = "WOE"
+
+        # Dark Discovery
+        elif firstWord == "dark":
+            cardName = "Dark Discovery"
+            cardSet = "DT"
 
         # Dive Deep
         elif firstWord == "dive":

@@ -145,6 +145,11 @@
                     card_stats_ouptut = card_info['scoring_dict']["DT"]["Drawn Down"]
                 }
 
+                // Dark Discovery
+                else if (first_word == "Dark") {
+                    card_stats_ouptut = card_info['scoring_dict']["DT"]["Dark Discovery"]
+                }
+
                 // Ortannu the Chained
                 else if (first_word == "Ortannu") {
                     card_stats_ouptut = card_info['scoring_dict']["AOA"]["Ortannu the Chained"]
@@ -311,12 +316,17 @@
         getCardDisplay = function(pod, cardPodNum) {
             var outstring = ''
             var card = query.dataValues.Pods[pod]["card_" + cardPodNum]
+            console.log(card)
+            console.log(cardPodNum)
             var card_number = card.card_id.toString()
             var card_proper_name = card_info['card_id_to_name'][card_number]
             outstring += '<td data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay=\'{"show":250, "hide":100}\' data-bs-title="'
+            console.log(pod,cardPodNum);
             outstring+= getCardTooltip(query.dataValues.Pods[pod]["card_" + cardPodNum], card_proper_name) + '">'
+            console.log("Got Tooltip")
             outstring += card_proper_name
 
+            console.log(2)
             // If a card has enhancements, pop the list of enhancements and add to card
             if (enhancements[card_number]) {
                 var pips = enhancements[card_number].pop()
@@ -329,7 +339,6 @@
                     delete enhancements[card_number];
                 }
             }
-
             
             outstring += '</td>'
             return outstring

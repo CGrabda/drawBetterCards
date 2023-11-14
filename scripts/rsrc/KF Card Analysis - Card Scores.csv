@@ -2092,7 +2092,7 @@ Cleric,Sanctum,WOE,T,Token,3,,1/3,,,,,,,,,,,,,,,,6,3,9,3.0,12,3,15,3
 Defender,Sanctum,WOE,T,Token,4,,,,,,1/3,,,,,,,,,,,,8,4,12,4.0,16,4,20,4
 Disciple,Sanctum,WOE,T,Token,4,,,,,,1/3,,,,,,,,,,,,8,4,12,4.0,16,4,20,4
 Squire,Sanctum,WOE,T,Token,3,,,,,,,,,,,,,,,,,,6,3,9,3.0,12,3,15,3
-,Saurian,WOE,,,,23,7,16,2,2,19,0,3,1,0,82.50,9,,,,,,,,,,,,,
+,Saurian,WOE,,,,23,7,16,2,2,19,0,3,1,0,83,9,,,,,,,,,,,,,
 "Aquilia, Lone Hero",Saurian,WOE,C,Creature,3,,1,,,,1,,,,,3,,0,-1,-1,-1,,6,3,8,2.7,10,2.5,12,2.4
 Arm the Plebeians,Saurian,WOE,C,Action,2,1,,,,,,,,,,2,1,0,0,0,0,,4,2,6,2.0,8,2,10,2
 Ballistego,Saurian,WOE,C,Creature,2,,,1,,,1,,,,,2,,0,0,0,0,,4,2,6,2.0,8,2,10,2
@@ -2149,7 +2149,7 @@ Bellatoran Warrior,Saurian,WOE,T,Token,5,,,,,,1,,,,,,,,,,,,10,5,15,5.0,20,5,25,5
 Scholar,Saurian,WOE,T,Token,3,,,,1/4,,,,,,,,,,,,,,6,3,9,3.0,12,3,15,3
 Senator,Saurian,WOE,T,Token,2,,1/4,,,,,,,,,,,,,,,,4,2,6,2.0,8,2,10,2
 Trooper,Saurian,WOE,T,Token,2,,,,,,1,,,,,,,,,,,,4,2,6,2.0,8,2,10,2
-,Star Alliance,WOE,,,,25,5,11,7,2,7,0,1,1,0,85.25,8,,,,,,,,,,,,,
+,Star Alliance,WOE,,,,25,5,11,7,2,7,0,1,1,0,85,8,,,,,,,,,,,,,
 C.R. Officer Hawkins,Star Alliance,WOE,C,Creature,4,1,,,,,,,,,,4,,0,0,0,0,,8,4,12,4.0,16,4,20,4
 CPO Zytar,Star Alliance,WOE,C,Creature,5,,,1,1,,1,,,,,5,,0,0,0,0,,10,5,15,5.0,20,5,25,5
 Echo Reflector,Star Alliance,WOE,C,Upgrade,3,1,1,,,,,,,,,3,,0,0,0,0,,6,3,9,3.0,12,3,15,3
@@ -2206,7 +2206,7 @@ AEmberling,Star Alliance,WOE,T,Token,3,1/4,,,,,,,,,,,,,,,,,6,3,9,3.0,12,3,15,3
 B0-T,Star Alliance,WOE,T,Token,1,,,,,,,,,,,,,,,,,,2,1,3,1.0,4,1,5,1
 Cadet,Star Alliance,WOE,T,Token,3,1/4,,,,,,,,,,,,,,,,,6,3,9,3.0,12,3,15,3
 Explorer,Star Alliance,WOE,T,Token,2,,,,,,,,,,,,,,,,,,4,2,6,2.0,8,2,10,2
-,Fish,WOE,,,,23,6,14,1,12,10,0,2,1,0,86.43,9,,,,,,,,,,,,,
+,Fish,WOE,,,,23,6,14,1,12,10,0,2,1,0,86,9,,,,,,,,,,,,,
 """Bubbles""",Fish,WOE,C,Creature,5,,,1,,1,1,,,,,5,,0,0,0,0,,10,5,15,5.0,20,5,25,5
 Abyssal Sight,Fish,WOE,C,Action,5,1,,,,1,,,,,,5,,0,0,0,0,,10,5,15,5.0,20,5,25,5
 Adult Swim,Fish,WOE,C,Action,3,1,,1,,,,,,,,3,,-1,-2,-3,-3,,5,2.5,6,2.0,6,1.5,6,1.2
@@ -2860,7 +2860,7 @@ Rustgnawer,Untamed,VM,C,Creature,2,,,,,,1,,,1,,2,,0,-1,-1,-1,,4,2,5,1.666666667,
 Savage Clash,Untamed,VM,C,Action,5,,,1,,,,,1,,,5,,-1,-3,-5,-7,,9,4.5,11,3.666666667,11,2.75,9,1.8
 They’re Everywhere!,Untamed,VM,C,Action,3,1,,1,,,,,,,,3,,0,0,-1,-1,,6,3,9,3,11,2.75,13,2.6
 Witch of the Eye,Untamed,VM,C,Creature,4,,,,1,,,,,,,4,,1,1,0,0,,9,4.5,14,4.666666667,18,4.5,22,4.4
-,Brobnar,GR,,,,17,6,26,6,4,19,2,2,1,1,98.75,,,,,,,,,,,,,,
+,Brobnar,GR,,,,16,6,27,5,3,20,2,2,1,1,97,,,,,,,,,,,,,,
 Berserker Slam,Brobnar,GR,C,Action,4,1,1,,,,,,,,,4,,0,0,0,0,,8,4,12,4.0,16,4,20,4
 Blunderbore,Brobnar,GR,C,Creature,4,,1,,,,1,,,,,4,,0,0,0,0,,8,4,12,4.0,16,4,20,4
 Brikk Nastee,Brobnar,GR,C,Creature,4,1,,,,,1,,,,,4,,1,2,2,2,,9,4.5,15,5.0,21,5.25,27,5.4
@@ -2876,7 +2876,7 @@ Cacophonous Riot,Brobnar,GR,C,Action,3,1,,1,,,,,,,,3,,0,0,0,0,,6,3,9,3.0,12,3,15
 Fiery Jark,Brobnar,GR,C,Creature,5,,,1,,,,,,,,5,,-1,-2,-3,-4,,9,4.5,12,4.0,14,3.5,15,3
 Lash Out,Brobnar,GR,C,Action,3,1,,1,,,,,,,,3,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 Ornar Skullface,Brobnar,GR,C,Creature,3,,,1,,,1,,,,,3,,0,0,0,0,,6,3,9,3.0,12,3,15,3
-Recklessness,Brobnar,GR,C,Action,5,1,,,1,1,,,,,,5,,0,0,0,0,,10,5,15,5.0,20,5,25,5
+Thunderdell,Brobnar,GR,C,Creature,3,,,1,,,1,,,,,3,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 Awakened Titan,Brobnar,GR,U,Creature,4,,,,1,,1,,,,,2,,1,1,1,1,,9,4.5,14,4.7,19,4.75,24,4.8
 Concussive Transfer,Brobnar,GR,U,Action,2,,,1,,,,,,,,1,,0,-1,-1,-1,,4,2,5,1.7,6,1.5,7,1.4
 Crim Torchtooth,Brobnar,GR,U,Creature,3,,,1,,,1,,,,,1.5,,0,0,0,0,,6,3,9,3.0,12,3,15,3
@@ -2940,7 +2940,7 @@ Outnegotiate,Ekwidon,GR,U,Action,4,1,1,,,,,,,,,2,,0,0,0,0,,8,4,12,4.0,16,4,20,4
 Pull Up Stakes,Ekwidon,GR,U,Action,5,1,,,,1,,,,,,2.5,,0,0,0,0,,10,5,15,5.0,20,5,25,5
 Sandwyrm,Ekwidon,GR,U,Creature,4,1,,,,,1,,,,,2,,1,2,2,2,,9,4.5,15,5.0,21,5.25,27,5.4
 Scrapscrounger,Ekwidon,GR,U,Creature,2,,,,,,1,,,,,1,,-1,-2,-2,-2,,3,1.5,3,1.0,3,0.75,3,0.6
-Technoarachnophobia,Ekwidon,GR,U,Action,2,1,1,,,,,,,,,1,,0,-1,-1,-1,,4,2,5,1.7,6,1.5,7,1.4
+Technorachnophobia,Ekwidon,GR,U,Action,2,1,1,,,,,,,,,1,,0,-1,-1,-1,,4,2,5,1.7,6,1.5,7,1.4
 Market Fluctuation,Ekwidon,GR,U,Action,3,1,,,1,1,,,,,,1.5,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 Pen Pal,Ekwidon,GR,U,Creature,2,,,,,,1,,,,,1,,0,0,0,0,,4,2,6,2.0,8,2,10,2
 Phobivore,Ekwidon,GR,U,Upgrade,2,1,,1,,,,,,,,1,,0,-1,-2,-3,,4,2,5,1.7,5,1.25,4,0.8
@@ -3040,7 +3040,7 @@ Shrink-ray Technician,Mars,GR,C,Creature,2,,,1,,,,,,,,2,,0,-1,-1,-2,,4,2,5,1.7,6
 U.F.O.,Mars,GR,C,Action,5,1,,,1,,,,,,,5,,1,2,2,3,,11,5.5,18,6.0,25,6.25,33,6.6
 Braindart,Mars,GR,C,Action,4,1,1,,,,,,,,,4,,0,0,0,0,,8,4,12,4.0,16,4,20,4
 Brash Grabber,Mars,GR,C,Creature,2,,,,,,,,,,,2,,0,0,0,0,,4,2,6,2.0,8,2,10,2
-Taret Ynxzdyl,Mars,GR,C,Creature,4,,,,1,,,,,,,4,,0,0,0,0,,8,4,12,4.0,16,4,20,4
+Target Yynxzdyl,Mars,GR,C,Creature,4,,,,1,,,,,,,4,,0,0,0,0,,8,4,12,4.0,16,4,20,4
 Terrible Teammates,Mars,GR,C,Action,3,1,,,1,,,,,,,3,,1,1,2,2,,7,3.5,11,3.7,16,4,21,4.2
 Phloxem Spewer,Mars,GR,C,Creature,2,,,1,,,,,,,,2,,0,0,0,0,,4,2,6,2.0,8,2,10,2
 Deep Probe,Mars,GR,U,Action,3,1,,1,,,,,,,,1.5,,1,1,1,1,,7,3.5,11,3.7,15,3.75,19,3.8
@@ -3080,7 +3080,7 @@ Revo Hooligans,Mars,GR,R,Creature,3,,,,,,1,,,,,0.75,,0,-1,-1,-1,,6,3,8,2.7,10,2.
 Sniffer,Mars,GR,R,Artifact,1,1,,,,,,,,,,0.25,,-1,-2,-2,-2,,1,0.5,0,0.0,-1,-0.25,-2,-0.4
 The Body Snatchers,Mars,GR,R,Action,6,,,,,,,,,,,1.5,,0,0,0,0,,12,6,18,6.0,24,6,30,6
 ,,GR,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
-,Star Alliance,GR,,,,32,7,8,15,3,8,0,0,1,1,85,,,,,,,,,,,,,,
+,Star Alliance,GR,,,,33,8,8,15,3,8,0,0,1,1,86,,,,,,,,,,,,,,
 Chief Engineer Walls,StarAlliance,GR,C,Creature,3,1,,,1,,,,,,,3,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 Essence Entangler,Star Alliance,GR,C,Upgrade,2,1,,,,,,,,,,2,,0,-1,-2,-2,,4,2,5,1.7,5,1.25,5,1
 Into the Warp,Star Alliance,GR,C,Action,3,,,1,,,,,,,,3,,-1,-2,-3,-4,,5,2.5,6,2.0,6,1.5,5,1
@@ -3089,6 +3089,7 @@ Proton Siphon,Star Alliance,GR,C,Upgrade,2,,,1,,,,,,,,2,,0,-1,-1,-2,,4,2,5,1.7,6
 Scout Pete,StarAlliance,GR,C,Creature,2,,,,,,1,,,,,2,,0,0,0,0,,4,2,6,2.0,8,2,10,2
 Sensor Chief Garcia,StarAlliance,GR,C,Creature,3,,1,,,,,,,,,3,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 Survey,StarAlliance,GR,C,Action,3,1,,,1,,,,,,,3,,0,0,0,0,,6,3,9,3.0,12,3,15,3
+Rogue Operation,Star Alliance,GR,C,Action,4,1,1,,,,,,,,,4,,0,0,0,0,,8,4,12,4.0,16,4,20,4
 Triangulator Newsome,Star Alliance,GR,C,Creature,3,,,,,,1,,,,,3,,-1,-2,-2,-2,,5,2.5,6,2.0,7,1.75,8,1.6
 Unprepared,Star Alliance,GR,C,Action,3,1,,,,,,,,,,3,,0,-1,-1,-1,,6,3,8,2.7,10,2.5,12,2.4
 Com. Officer Palik,Star Alliance,GR,C,Creature,3,,1,,,,,,,,,3,,0,0,0,0,,6,3,9,3.0,12,3,15,3
@@ -3104,7 +3105,7 @@ Event Horizon,Star Alliance,GR,U,Action,5,1,,,1,,,,,,,2.5,,1,2,2,3,,11,5.5,18,6.
 New Frontiers,StarAlliance,GR,U,Action,3,1,,,1,,,,,,,1.5,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 Quintrino Warp,Star Alliance,GR,U,Action,4,,,1,,,,,,,,2,,-1,-2,-4,-4,,7,3.5,9,3.0,9,2.25,9,1.8
 Staff Sergeant Rhea,Star Alliance,GR,U,Creature,3,1,,,,,,,,,,1.5,,0,0,0,0,,6,3,9,3.0,12,3,15,3
-Séance Scanner,Star Alliance,GR,U,Artifact,5,1,,,1,,,,,,,2.5,,1,1,1,1,,11,5.5,17,5.7,23,5.75,29,5.8
+Seance Scanner,Star Alliance,GR,U,Artifact,5,1,,,1,,,,,,,2.5,,1,1,1,1,,11,5.5,17,5.7,23,5.75,29,5.8
 Near-Future Lens,Star Alliance,GR,U,Artifact,6,1,,,1,,,,,,,3,,1,1,1,1,,13,6.5,20,6.7,27,6.75,34,6.8
 3LL-10T,Star Alliance,GR,U,Creature,3,1,,,1,,,,,,,1.5,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 Alien Horror,Star Alliance,GR,U,Creature,2,,,,,,1,,,,,1,,0,0,0,0,,4,2,6,2.0,8,2,10,2
@@ -3193,14 +3194,14 @@ Unsettling Ancestry,Fish,GR,R,Action,2,,,1,,,,,,,,0.5,,1,1,1,1,,5,2.5,8,2.7,11,2
 The Susurrus,Fish,GR,R,Artifact,2,,,,,,,,,,,0.5,,-1,-2,-2,-2,,3,1.5,3,1.0,3,0.75,3,0.6
 Weak Link,Fish,GR,R,Upgrade,1,1,,,,,,,,,,0.25,,0,0,0,0,,2,1,3,1.0,4,1,5,1
 ,,GR,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
-,Untamed,GR,,,,25,4,7,16,3,12,0,0,1,1,100.5,,,,,,,,,,,,,,
+,Untamed,GR,,,,25,4,7,16,3,12,0,0,1,1,96,,,,,,,,,,,,,,
 Regrowth,Untamed,GR,C,Action,3,1,,,1,,,,,,,3,,0,-1,-1,-1,,6,3,8,2.7,10,2.5,12,2.4
 Grave Pixie,Untamed,GR,C,Creature,3,1,,,,,,,,,,3,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 Invigorating Shower,Untamed,GR,C,Action,5,,,,1,,,,,,,5,,0,0,0,0,,10,5,15,5.0,20,5,25,5
 Reclaimed by Nature,Untamed,GR,C,Action,6,1,,,,,,,,1,,6,,0,-1,-2,-3,,12,6,17,5.7,21,5.25,24,4.8
 Skeletal Murmook,Untamed,GR,C,Creature,3,,1,,,,,,,,,3,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 Spoo-key Charge,Untamed,GR,C,Action,6,,,,,,,,,,1,6,,0,0,0,0,,12,6,18,6.0,24,6,30,6
-Warfaline,Untamed,GR,C,Creature,2,,,,,,,,,,,2,,0,-1,-1,-1,,4,2,5,1.7,6,1.5,7,1.4
+Warfaline,Untamed,GR,C,Creature,3,,,,,,,,,,,3,,0,-1,-1,-1,,6,3,8,2.7,10,2.5,12,2.4
 Witch of the Eye,Untamed,GR,C,Creature,4,,,,1,,,,,,,4,,1,1,0,0,,9,4.5,14,4.7,18,4.5,22,4.4
 AEmber Storm,Untamed,GR,C,Action,4,1,,1,,,,,,,,4,,0,0,0,0,,8,4,12,4.0,16,4,20,4
 Blernean Hydra,Untamed,GR,C,Creature,2,,,,,,1,,,,,2,,0,0,0,0,,4,2,6,2.0,8,2,10,2
@@ -3209,7 +3210,7 @@ Dew Faerie,Untamed,GR,C,Creature,2,,,,,,,,,,,2,,0,0,0,0,,4,2,6,2.0,8,2,10,2
 Floomf,Untamed,GR,C,Creature,2,,,,,,,,,,,2,,0,0,0,0,,4,2,6,2.0,8,2,10,2
 Haunting Witch,Untamed,GR,C,Creature,4,1,,,,,,,,,,4,,1,2,3,4,,9,4.5,15,5.0,22,5.5,30,6
 Witch of the Spore,Untamed,GR,C,Creature,2,,,1,,,1,,,,,2,,0,0,0,0,,4,2,6,2.0,8,2,10,2
-Lost in th Wild,Untamed,GR,C,Action,4,1,,1,,1,,,,,,4,,0,0,0,0,,8,4,12,4.0,16,4,20,4
+Lost in the Wild,Untamed,GR,C,Action,4,1,,1,,1,,,,,,4,,0,0,0,0,,8,4,12,4.0,16,4,20,4
 The Circle of Life,Untamed,GR,C,Action,2,1,,,,,,,,,,2,,0,0,0,0,0,4,2,6,2.0,8,2,10,2
 Cauldron,Untamed,GR,U,Artifact,5,,,,1,,,,,,,2.5,,1,2,2,2,,11,5.5,18,6.0,25,6.25,32,6.4
 Ghost Tree,Untamed,GR,U,Creature,2,,,,,,,,,,,1,,0,-1,-1,-1,,4,2,5,1.7,6,1.5,7,1.4
@@ -3253,14 +3254,14 @@ The Witching Hour,Untamed,GR,R,Action,3,,,,1,,,,,,,0.75,,0,0,0,0,,6,3,9,3.0,12,3
 ,,GR,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
 ,,GR,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
 GR LINK/REV,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Duma the Returned,All,GR,R,Creature,3,,,,1,,,,,,,0.75,,0,0,0,0,,6,3,9,3.0,12,3,15,3
-Immortal Greking,All,GR,R,Creature,5,,,1,,,1,,,,,1.25,,0,0,0,0,,10,5,15,5.0,20,5,25,5
-Spectral Ruth,All,GR,R,Creature,6,,,,1,,,,,,,1.5,,0,0,0,0,,12,6,18,6.0,24,6,30,6
-Xenos Darkshadow,All,GR,R,Creature,3,,,1,,,,,,,,0.75,,0,0,0,0,,6,3,9,3.0,12,3,15,3
-,,,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
-,,,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
-,,,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
-,,,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
+Duma the Returned,All,GR,*,Creature,3,,,,1,,,,,,,,,0,0,0,0,,6,3,9,3.0,12,3,15,3
+Immortal Greking,All,GR,*,Creature,5,,,1,,,1,,,,,,,0,0,0,0,,10,5,15,5.0,20,5,25,5
+Spectral Ruth,All,GR,*,Creature,6,,,,1,,,,,,,,,0,0,0,0,,12,6,18,6.0,24,6,30,6
+Xenos Darkshadow,All,GR,*,Creature,3,,,1,,,,,,,,,,0,0,0,0,,6,3,9,3.0,12,3,15,3
+Phantom Drummernaut,All,GR,*,Creature,5,,,,1,,1,,,,,,,1,1,1,1,,11,5.5,17,5.7,23,5.75,29,5.8
+Portalmonster,All,GR,*,Creature,4,,1,,,,,,,,,,,0,0,0,0,,8,4,12,4.0,16,4,20,4
+Qyxxlyxx Grave Master,All,GR,*,Creature,3,,,1,,,,,,,,,,0,0,0,0,,6,3,9,3.0,12,3,15,3
+Revived Za-Orha,All,GR,*,Creature,4,,,,,,1,,,,1,,,0,0,0,0,,8,4,12,4.0,16,4,20,4
 ,,,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
 ,,,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
 ,,,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
