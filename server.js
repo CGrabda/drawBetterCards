@@ -142,6 +142,10 @@ app.use(function(req, res, next) {
 });
 
 
+// Regexes
+const code_re = /^\w{8}-(\w{4}-){3}\w{12}$/;
+const link_re = /\w{8}-(\w{4}-){3}\w{12}/;
+
 
 // Scheduled tasks
 var CronJob = require('cron').CronJob;
@@ -534,6 +538,7 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
             try {
                 // if no score
                 if (query.alpha_score == null) {
+                    console.log("AlphaRequest:"  + query.dataValues.deck_id + ' ' + req.user.username)
                     query.updateAlpha("P")
                     // Decrement alpha_requests by 1
                     .then(results=> { req.user.requestedAlpha(); return results })
@@ -552,7 +557,7 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
                 else if (req.user.is_admin) {
                     // validate that the alpha score is a valid alpha score
                     if (ALPHA_SCORES.includes(req.body.alpha_score)) {
-                        console.log('Alpha score set on: ' + query.dataValues.deck_id + ' ' + req.user.username + ' ' + req.body.alpha_score)
+                        console.log('AlphaSet:' + query.dataValues.deck_id + ' ' + req.user.username + ' ' + req.body.alpha_score)
                         query.updateAlpha(req.body.alpha_score)
                         .then(function() { return res.status(200).send({ message: "Ok" }) })
                         .catch(e=> {
@@ -618,6 +623,7 @@ app.post('/deck/:deck_code/:deckAction', isAuthenticated, isValidCode, (req, res
 // admin pages
 app.get("/admin/:path", isAdmin, isAuthenticated, function(req, res) {
     var path = req.params.path
+    var deck_code = req.params.deck_code
 
     // render the paths
     if (path == 'landing') {
@@ -688,6 +694,32 @@ app.get("/admin/:path", isAdmin, isAuthenticated, function(req, res) {
             req.flash('error', ['An unexpected error occurred, please contact a team member.'])
             res.render('admin.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user }) 
         })
+    }
+
+
+    else if (path == 'reimportDeck') {
+        var deck_code = req.query.deck_code
+
+        if (link_re.test(deck_code)) {
+            var options = {
+                mode: 'text',
+                pythonPath: process.env.PYTHON_PATH,
+                args: [deck_code]
+            }
+
+            var deck_code = link_re.exec(deck_code)[0]
+
+            // Reimport deck
+            deckFunctions.reimportDeck(deck_code)
+            .then(results=> {
+                res.redirect('/deck/' + results)
+            })
+
+        }
+        else {
+            req.flash('error', 'Invalid deck code.')
+            res.render('admin.ejs', { isLoggedIn: req.isAuthenticated(), user: req.user }) 
+        }
     }
 })
 
@@ -809,7 +841,7 @@ app.get('*', function(req, res){
 // eslint-disable-next-line no-unused-vars
 app.use(function(err, req, res, next) {
     console.log(err.message)
-    console.log(req)
+    //console.log(req)
     return res.redirect('/')
 });
 
@@ -821,9 +853,6 @@ app.use(function(err, req, res, next) {
 
 
 // Middleware
-const code_re = /^\w{8}-(\w{4}-){3}\w{12}$/;
-const link_re = /\w{8}-(\w{4}-){3}\w{12}/;
-
 function isAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next()

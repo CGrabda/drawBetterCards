@@ -7,6 +7,7 @@ const Pod = require('./models/pod.js')(sequelize, DataTypes)
 const Card = require('./models/card.js')(sequelize, DataTypes)
 const Set = require('./models/set.js')(sequelize, DataTypes)
 const Token = require('./models/token.js')(sequelize, DataTypes)
+const Collection = require('./models/collection.js')(sequelize, DataTypes)
 
 
 // Import scoring dict from scripts/data
@@ -37,7 +38,7 @@ Pod.belongsTo(Card, { as: "card_11", foreignKey: "card11", targetKey: "card_id" 
 Pod.belongsTo(Card, { as: "card_12", foreignKey: "card12", targetKey: "card_id" })
 
 // Associate deck hash between pods and decks
-Deck.hasMany(Pod, { foreignKey: "deck_id", targetKey: "deck_id" })
+Deck.hasMany(Pod, { foreignKey: "deck_id", targetKey: "deck_id", onDelete: "cascade", hooks: true })
 
 // Associate sets between Deck and Set
 Deck.belongsTo(Set, { foreignKey: "set_id" } )
@@ -858,9 +859,93 @@ async function updateDeckTotals(deck_object, pods) {
 }
 
 
+async function reimportDeck(deck_code) {
+    // This method does not work because the deck_id is a key and cannot be set
+    // within collections to that of a deck that does not exist. It must first be deleted
+    // in collections and then re-added. Return deck_code and users collection was deleted
+    // from to server and then add back with userFunctions
+    /*
+    // Takes a deck code and then deletes and reimports the deck into the owner's collection
+    // Find deck
+    Deck.findOne({
+        where: { deck_code: deck_code }
+    })
+    .then(results=> {
+        var old_deck_id = results["dataValues"]["deck_id"]
+
+        // Set deck_id in Collections to 0 to prevent cascade errors
+        Collection.update(
+            { deck_id: 0 },
+            { where: { deck_id: old_deck_id } }
+        )
+        .then(()=>{
+            // Delete deck and pods associated with the deck_id (onDelete: cascade option set for relationship)
+            Deck.destroy({
+                where: { deck_id: old_deck_id }
+            })
+            .then(results=> {
+                if (results instanceof Error) {
+                    throw results
+                }
+    
+                // Import deck
+                try {
+                    var output = ""
+                    // Run python script
+                    return PythonShell.run(process.env.SCRIPT_PATH + 'ZscoreDeck.py', options)
+                    .then(messages=>{
+                        // messages is an array of the output from execution
+                        //console.log(messages)
+                        if (messages[0] instanceof Error) {
+                            return new Error('Deck import error')
+                        }
+                        output = JSON.parse(messages[0])
+        
+                        // Add deck to database
+                        console.log('Reimporting:' + output["deck_info"]["code"])
+                        return addDeck(output["deck_info"], output["pod_info"])
+                    })
+                    .then(deck_code=> {
+                        return deckFunctions.parseAttributesImport(deck_code)
+                        .then(output=> {
+                            if (output instanceof Error) {
+                                throw output
+                            }
+    
+                            // Get new deck_id
+                            return Deck.findOne({
+                                where: { deck_code: deck_code }
+                            })
+                            .then(results=> {
+                                var new_deck_id = results["dataValues"]["deck_id"]
+    
+                                // Set Collections where old deck_id to imported deck_id
+                                Collection.update(
+                                    { deck_id: new_deck_id },
+                                    { where: { deck_id: 0 } }
+                                )
+                                .then(()=>{
+                                    return deck_code
+                                })
+                            })
+                        }).catch(e => { console.log(e); throw e });
+                    }).catch(e => { console.log(e); throw e });
+                }
+                catch (PythonShellError) {
+                    console.log('Error importing deck')
+                    console.log(PythonShellError)
+                    throw PythonShellError
+                }
+            }) 
+        })
+    })
+    */
+}
+
 
 module.exports.addDeck = addDeck
 module.exports.getAllDeckInfo = getAllDeckInfo
 module.exports.parseAttributesImport = parseAttributesImport
 module.exports.adjustScoreOnAllDecks = adjustScoreOnAllDecks
 module.exports.rescoreAllDecks = rescoreAllDecks
+module.exports.reimportDeck = reimportDeck
