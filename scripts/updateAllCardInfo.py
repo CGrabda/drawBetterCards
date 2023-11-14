@@ -37,7 +37,9 @@ setDict = {
     "Worlds Collide": "3",
     "Mass Mutation": "4",
     "Dark Tidings": "5",
-    "Winds of Exchange": "6"
+    "Winds of Exchange": "6",
+    "Grim Reminders": "7",
+    "AEmber Skies": "8"
 }
 
 
@@ -291,6 +293,8 @@ IDENTIFY_SET = {
     "4": "MM",
     "5": "DT",
     "6": "WOE",
+    "7": "GR",
+    "8": "AS",
     "500": "VM",
 }
 
@@ -299,7 +303,11 @@ IDENTIFY_SET = {
 for id in cardIDNameDict:
     cardName = cardIDNameDict[id]
     # add in additional card information here. (card_id, card_name, traits, multiples, card_attributes)
-    idToTraitDict[id] = (cardName, cardNameToTraitDict[cardName])
+    try:
+        idToTraitDict[id] = (cardName, cardNameToTraitDict[cardName])
+    except:
+        print("Error getting traits:", cardName)
+        idToTraitDict[id] = (cardName, [])
 
 
 # create sql query
