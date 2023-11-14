@@ -98,7 +98,12 @@ def parseMembers(membersResponse, timeMinutesCheck=131490):
                 continue
 
             # Add email and tier to output
-            members.append([ email, TIER_TO_ID[tierData[0]["id"]], paymentDate ])
+            try:
+                members.append([ email, TIER_TO_ID[tierData[0]["id"]], paymentDate ])
+            except:
+                # active patreon but tier unknown, sets to $5 200 Corner Member tier because of history with this error on a user with that tier
+                # 10399027 tier unknown
+                members.append([ email, 200, paymentDate ])
 
     return members
 
@@ -106,7 +111,7 @@ def parseMembers(membersResponse, timeMinutesCheck=131490):
 def main():
     # Get the members
     # Add &fields[tier]=title at the end of request to see the tier the id is correlated with
-    membersResponse = patreonRequest("campaigns/" + campaign_id + "/members?include=currently_entitled_tiers&fields[member]=email,last_charge_date,last_charge_status,patron_status")
+    membersResponse = patreonRequest("campaigns/" + campaign_id + "/members?include=currently_entitled_tiers&fields[member]=email,full_name,lifetime_support_cents,last_charge_date,last_charge_status,patron_status")
     #print(membersResponse)
 
     # Takes the list of member id's and retrieve the member emails
@@ -117,6 +122,13 @@ def main():
         memberInfo = parseMembers(membersResponse)
     
     print(dumps({ "data": memberInfo }))
+
+    
+    # memberCount = 0
+    # for member in memberInfo:
+    #     if member[1] > 0:
+    #         memberCount +=1
+    # print("Patreons:", memberCount)
 
 
 if __name__ == "__main__":
