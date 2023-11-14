@@ -251,7 +251,7 @@ const TOKENS = {
     '18': '3',
     '19': '2',
     '20': '2',
-    '21': '4',
+    '21': '3',
     '22': '3',
     '23': '2',
     '24': '1',
@@ -267,8 +267,8 @@ const TOKEN_SCORE_ADJ = {
     '2': -0.5,
     '3': 0.25,
     '4': 0.5,
-    '5': 1,
-    '6': 1.5,
+    '5': 0.75,
+    '6': 1,
 }
 
 const IDENTIFY_SET = {
@@ -524,6 +524,9 @@ async function scoreMeta(deck_object, attributes) {
     // <6C      -4
     // 10+C     +2
     
+    // NoScaleA -2
+    // Two+ ScaleA
+
     // 2R different houses +1
     // 2Wipes different houses +2
     // No C in a house -1
@@ -535,6 +538,7 @@ async function scoreMeta(deck_object, attributes) {
     var wipes_count = 0
     var f_count = 0
     var c_count = 0
+    var scalingA_count = 0
     var houses_with_r_count = 0
     var houses_with_clears_count = 0
 
@@ -543,6 +547,7 @@ async function scoreMeta(deck_object, attributes) {
         wipes_count += pods[i]["pod_wipes"]
         f_count += pods[i]["pod_f"]
         c_count += pods[i]["pod_c"]
+        scalingA_count += pods[i]["pod_scaling_a"]
         pods[i]["pod_r"] > 0 ? houses_with_r_count +=1 : null
         pods[i]["pod_wipes"] > 0 ? houses_with_clears_count +=1 : null
 
@@ -584,13 +589,22 @@ async function scoreMeta(deck_object, attributes) {
         attributes["9+ F"] = 2
     }
     
-    // <6C      -4
-    // 10+C     +2
+    // C scoring
     if (c_count < 6) {
         attributes["Less than 6 C"] = -4
     }
     else if (c_count > 10) {
         attributes["10+ C"] = 2
+    }
+
+    // Scaling A scoring
+    // NoScaleA -2
+    // Two+ ScaleA
+    if (scalingA_count == 0) {
+        attributes["No Scaling AEmber Control"] = -2
+    }
+    else if (scalingA_count > 1) {
+        attributes["2+ Scaling AEmber Control"] = 1
     }
     
     // 2R different houses +1
