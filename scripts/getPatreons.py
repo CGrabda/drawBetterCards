@@ -71,7 +71,6 @@ def parseMembers(membersResponse, timeMinutesCheck=131490):
     # Adds [email, tierId] to the members list
     # tierId references the user the tier is assigned in the database, not the Patreon API
     for page in membersResponse:
-        print(page)
         for member in page["data"]:
             email = member["attributes"]["email"]
             patronStatus = member["attributes"]["patron_status"]
