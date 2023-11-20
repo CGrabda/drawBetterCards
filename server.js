@@ -177,7 +177,10 @@ var job1 = new CronJob(
 var job2 = new CronJob(
     '1 */10 * * * *',
     function() {
-        userFunctions.updateTiers();
+        userFunctions.updateTiers()
+        .catch(function() {
+            console.log("updateTiersError")
+        })
     },
     null,
     true,
@@ -190,7 +193,10 @@ var job2 = new CronJob(
 var job3 = new CronJob(
     '1 0 0 1 * *',
     function() {
-        userFunctions.monthlyImportHit();
+        userFunctions.monthlyImportHit()
+        .catch(function() {
+            console.log("Monthly Import Addition Error")
+        })
     },
     null,
     true,

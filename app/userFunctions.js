@@ -41,13 +41,13 @@ async function updateTiers(lookback_minutes = 131490) {
             }
         })
         .catch(e=> {
-            console.log(e)
+            //console.log(e)
             throw new Error('Error updating patreon tiers')
         })
     }
     catch (PythonShellError) {
-        console.log('Error updating patreon tiers')
-        console.log(PythonShellError)
+        console.log('PythonShellError updating patreon tiers')
+        //console.log(PythonShellError)
     }
 }
 
@@ -96,7 +96,8 @@ async function processRewards() {
         }
     })
     .catch(e=> {
-        console.log(e)
+        console.log('Error Processing Rewards')
+        //console.log(e)
     })
 }
 
