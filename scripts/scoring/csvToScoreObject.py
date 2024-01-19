@@ -90,30 +90,13 @@ def specialsAdjustment(scoreDict):
     '''
     Takes the score dictionary and adjusts the scores for each special card
     This needs to be done because the card full name is used for multiples but not score
-
-    NOT IMPLEMENTED: Anomalies, Evil Twins
     '''
-    # Anomalies, Ambassadors, Plants, Sins, Hybrid Mutants, Evil Twins
-
-    # Add thee value of each special mutant to its name
-    #prefixes = ["Daemo", "Dino", "Lyco", "Sacro", "Techno", "Umbra", "Xeno"]
-    #suffixes = ["Alien", "Beast", "Bot", "Fiend", "Knight", "Saurus", "Thief"]
-
-    #for suffix in suffixes:
-    #    cardScore = scoreDict["MM"].pop(suffix)["score"]
-
-    #    for prefix in prefixes:
-    #        try:
-    #            scoreDict["MM"][prefix + "-" + suffix]["score"] = cardScore
-    #        except KeyError:
-    #            scoreDict["MM"][prefix + "-" + suffix] = {"score": cardScore, "multiples": [0, 0, 0, 0, 0, "NO MULTIPLES"]}
-
-
     # Masters
     cardScore = scoreDict["COTA"].pop("Master of X")["score"]
     scoreDict["COTA"]["Master of 1"]["score"] = cardScore
     scoreDict["COTA"]["Master of 2"]["score"] = cardScore
     scoreDict["COTA"]["Master of 3"]["score"] = cardScore
+    
 
     # Ambassadors
     cardScore = scoreDict["AOA"].pop("Ambassador")["score"]
@@ -132,12 +115,6 @@ def specialsAdjustment(scoreDict):
     scoreDict["WC"]["Saurian Plant"]["score"] = cardScore
     scoreDict["WC"]["Star Alliance Plant"]["score"] = cardScore
     scoreDict["WC"]["Untamed Plant"]["score"] = cardScore
-
-    # Evil Twins
-    #evilTwinList = ["Evil Armadrone", "Evil Binary Moray", "Evil Captain Kresage", "Evil Old Egad", "Evil PI Sweven", "Evil Prof. Garwynne", "Evil Talmage Steelheart", "Evil Almsmaster", "Evil Grey Augur", "Evil Lærie of the Lake", "Evil Lightsmith Clariel", "Evil Seneschal Sargassa", "Evil Sir Bevor", "Evil Urien the Circumspect", "Evil Bestiarii Urso", "Evil Censor Philo", "Evil Eclectic Ambrosius", "Evil Lapisaurus", "Evil Magistra Vita", "Evil Physicus Felix", "Evil Undagnathus", "Evil Captain No-Beard", "Evil Freebooter Faye", "Evil Hard Simpson", "Evil Hobnobber", "Evil Monty Bank", "Evil One-Eyed Willa", "Evil Sea Urchin", "Evil 5C077", "Evil C.R. Officer Hawkins", "Evil CH-337A", "Evil Colonist Chapman", "Evil Operative Espion", "Evil Rocketeer Tryska", "Evil Shield-U-Later", "Evil Flamegill Enforcer", "Evil Giltspine Netcaster", "Evil Horrid Synan", "Evil Kaupe", "Evil Taniwha", "Evil Tomwa of the Glow", "Evil Wikolia", "Evil Æmberfin Shark", "Evil Chelonia", "Evil Mookling", "Evil Ol' Paddy", "Evil Sporegorger", "Evil Witch of the Dawn", "Evil Youngest Bear"]
-
-    #for evilTwin in evilTwinList:
-    #    scoreDict["DT"][evilTwin]["score"] = scoreDict["DT"][evilTwin[5:]]["score"]
 
 
 

@@ -571,7 +571,7 @@ Grommid,Mars,AOA,R,Creature,0,,,,,,,,,,,0,,-2,-4,-4,-4,,-2,-1,-6,-2.0,-10,-2.5,-
 Hypnotic Command,Mars,AOA,R,Action,6,1,1,,,,,,,,,1.5,,0,-2,-4,-4,,12,6,16,5.3,18,4.5,20,4
 Incubation Chamber,Mars,AOA,R,Artifact,5,,,,1,,,,,,,1.25,,0,-4,-4,-4,,10,5,11,3.7,12,3,13,2.6
 Invasion Portal,Mars,AOA,R,Artifact,2,,,,1,,,,,,,0.5,,1,1,1,1,,5,2.5,8,2.7,11,2.75,14,2.8
-Killzord Mk. 9001,Mars,AOA,R,Upgrade,1,,,,,,,,,,,0.25,,0,-1,-1,-1,,2,1,2,0.7,2,0.5,2,0.4
+Killzord mk. 9001,Mars,AOA,R,Upgrade,1,,,,,,,,,,,0.25,,0,-1,-1,-1,,2,1,2,0.7,2,0.5,2,0.4
 Martian Generosity,Mars,AOA,R,Action,6,1,,,1,,,,,,,1.5,,2,2,2,2,,14,7,22,7.3,30,7.5,38,7.6
 Martian Hounds,Mars,AOA,R,Action,1,,,,,,,,,,,0.25,,-1,-2,-2,-2,,1,0.5,0,0.0,-1,-0.25,-2,-0.4
 Qyxxlyx Plague Master,Mars,AOA,R,Creature,1,,,,,,,,,,,0.25,,-1,-2,-2,-2,,1,0.5,0,0.0,-1,-0.25,-2,-0.4
@@ -1810,7 +1810,7 @@ The Chosen One,Fish,DT,R,Creature,5,,,,,1,1,,,,,1.25,,0,0,0,0,,10,5,15,5.0,20,5,
 The Susurrus,Fish,DT,R,Artifact,2,,,,,,,,,,,0.5,,-1,-2,-2,-2,,3,1.5,3,1.0,3,0.75,3,0.6
 Voice of Rakuzel,Fish,DT,R,Creature,2,,,,,,1,,,,,0.5,,0,-1,-1,-1,,4,2,5,1.7,6,1.5,7,1.4
 Whirlpool,Fish,DT,R,Artifact,3,,,,,1,,,,,,0.75,,1,1,1,1,,7,3.5,11,3.7,15,3.75,19,3.8
-,Untamed,DT,,,,26,3,10,7,1,13,0,0,2,1,80.50,,,,,,,,,,,,,,
+,Untamed,DT,,,,26,3,10,7,1,13,0,0,2,1,80.00,,,,,,,,,,,,,,
 All Tide Up,Untamed,DT,C,Action,3,1,,,,,,,,,,3,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 Assert Dominance,Untamed,DT,C,Action,2,,,1,,,,,,,,2,,0,0,-1,-1,,4,2,6,2.0,7,1.75,8,1.6
 Chelonia,Untamed,DT,C,Creature,3,1,,,,,,,,,,3,,1,2,3,4,,7,3.5,12,4.0,18,4.5,25,5
@@ -1842,7 +1842,7 @@ Ol' Paddy,Untamed,DT,U,Creature,4,,,,1,,1,,,,,2,,0,0,0,0,,8,4,12,4.0,16,4,20,4
 Ritual of Balance,Untamed,DT,U,Artifact,3,1,1,,,,,,,,,1.5,,1,1,1,1,,7,3.5,11,3.7,15,3.75,19,3.8
 Sporegorger,Untamed,DT,U,Creature,3,,,1,,,1,,,,,1.5,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 Thin the Herd,Untamed,DT,U,Action,4,1,,1,,,,,,,,2,,0,0,0,0,,8,4,12,4.0,16,4,20,4
-Waste Not,Untamed,DT,U,Action,6,1,,,1,,,,,,,3,,0,0,0,0,,12,6,18,6.0,24,6,30,6
+Waste Not,Untamed,DT,U,Action,5,1,,,1,,,,,,,2.5,,0,0,0,0,,10,5,15,5.0,20,5,25,5
 Pokemon,Untamed,DT,R,Creature,1,1,,,,,,,,,,0.25,,1,2,2,2,,3,1.5,6,2.0,9,2.25,12,2.4
 AEmberfin Shark,Untamed,DT,R,Creature,3,1,,,,,,,,,,0.75,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 Blossom Drake,Untamed,DT,R,Creature,3,,,,,,1,,,,,0.75,,-1,-2,-2,-2,,5,2.5,6,2.0,7,1.75,8,1.6
@@ -2804,7 +2804,7 @@ Stealth Mode,Star Alliance,VM,C,Action,6,1,,,,1,,,,,,6,,1,1,1,1,,13,6.5,20,6.666
 Subject Kirby,Star Alliance,VM,C,Creature,6,,,,1,,,,,,,6,,0,0,0,0,,12,6,18,6,24,6,30,6
 Survey,Star Alliance,VM,C,Action,3,1,,,1,,,,,,,3,,0,0,0,0,,6,3,9,3,12,3,15,3
 Zap,Star Alliance,VM,C,Action,3,1,,1,,,,,,,,3,,0,-1,-1,-1,,6,3,8,2.666666667,10,2.5,12,2.4
-,Untamed,VM,,,,32,5,8,7,2,11,0,1,1,1,88.75,,,,,,,,,,,,,,
+,Untamed,VM,,,,32,5,8,7,2,11,0,1,1,1,88.25,,,,,,,,,,,,,,
 Blossom Drake,Untamed,VM,R,Creature,3,,,,,,1,,,,,0.75,,-1,-2,-2,-2,,5,2.5,6,2,7,1.75,8,1.6
 Pokemon,Untamed,VM,R,Creature,1,1,,,,,,,,,,0.25,,1,2,2,2,,3,1.5,6,2,9,2.25,12,2.4
 Chonkers,Untamed,VM,R,Creature,2,,,,,,,,,,,0.5,,-1,-2,-2,-2,,3,1.5,3,1,3,0.75,3,0.6
@@ -2841,7 +2841,7 @@ Nepenthe Seed,Untamed,VM,U,Artifact,4,,,,1,,,,,,,2,,0,0,0,0,,8,4,12,4,16,4,20,4
 "Panpaca, Jaga",Untamed,VM,U,Creature,2,,,,,,,,,,,1,,0,0,0,0,,4,2,6,2,8,2,10,2
 Ritual of Balance,Untamed,VM,U,Artifact,3,1,1,,,,,,,,,1.5,,1,1,1,1,,7,3.5,11,3.666666667,15,3.75,19,3.8
 Soldiers to Flowers,Untamed,VM,U,Action,4,1,,,,,,,,,,2,,-1,-2,-4,-4,,7,3.5,9,3,9,2.25,9,1.8
-Waste Not,Untamed,VM,U,Action,6,1,,,1,,,,,,,3,,0,0,0,0,,12,6,18,6,24,6,30,6
+Waste Not,Untamed,VM,U,Action,5,1,,,1,,,,,,,2.5,,0,0,0,0,,10,5,15,5,20,5,25,5
 Wild Bounty,Untamed,VM,U,Action,3,1,,,,,,,,,,1.5,,0,1,2,2,,6,3,10,3.333333333,15,3.75,20,4
 Wild Spirit,Untamed,VM,U,Upgrade,2,1,1,,,,,,,,,1,,0,-1,-1,-1,,4,2,5,1.666666667,6,1.5,7,1.4
 Cephaloist,Untamed,VM,C,Creature,3,,,,,,1,,,,,3,,0,0,-1,-1,,6,3,9,3,11,2.75,13,2.6
@@ -2956,7 +2956,7 @@ Talent Scout,Ekwidon,GR,R,Creature,6,1,,1,,1,,,,,,1.5,,0,0,0,0,,12,6,18,6.0,24,6
 Art Project,Ekwidon,GR,R,Action,6,1,1,,,,,1,,,,1.5,,0,0,0,0,,12,6,18,6.0,24,6,30,6
 Azuretooth,Ekwidon,GR,R,Creature,4,,1,,1,,1,,,,,1,,0,0,0,0,,8,4,12,4.0,16,4,20,4
 Curse of Spontaneity,Ekwidon,GR,R,Artifact,3,,,,,1,,,,,,0.75,,0,0,0,0,,6,3,9,3.0,12,3,15,3
-Ekwirrě's Fulcrum,Ekwidon,GR,R,Artifact,3,1,,,,,,,,,,0.75,,0,0,0,0,,6,3,9,3.0,12,3,15,3
+Ekwirre's Fulcrum,Ekwidon,GR,R,Artifact,3,1,,,,,,,,,,0.75,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 Envoy of Ekwirre,Ekwidon,GR,R,Creature,2,,,,,,1,,,,,0.5,,0,0,0,0,,4,2,6,2.0,8,2,10,2
 Flea Market,Ekwidon,GR,R,Artifact,2,,,,,,,,,,,0.5,,0,0,0,0,,4,2,6,2.0,8,2,10,2
 Freelancer,Ekwidon,GR,R,Upgrade,3,,,1,,,,,,,,0.75,,0,0,0,0,,6,3,9,3.0,12,3,15,3
@@ -2970,13 +2970,13 @@ Transitory Philosopher,Ekwidon,GR,R,Creature,3,,1,,,,1,,,,,0.75,,0,0,0,0,,6,3,9,
 "Zavel, ""Archaeologist""",Ekwidon,GR,R,Creature,4,1,,,,,1,,,,,1,,0,0,0,0,,8,4,12,4.0,16,4,20,4
 AEmbitrage,Ekwidon,GR,R,Artifact,4,,,,1,,,,,,,1,,0,-4,-4,-4,,8,4,8,2.7,8,2,8,1.6
 ,,GR,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
-,Geistoid,GR,,,,23,13,10,17,4,15,0,2,1,1,108,,,,,,,,,,,,,,
+,Geistoid,GR,,,,23,13,10,17,4,15,0,2,1,1,109,,,,,,,,,,,,,,
 Be Our Geist,Geistoid,GR,C,Action,5,1,,,,,1,,,,,5,,0,0,0,0,,10,5,15,5.0,20,5,25,5
 Boo!,Geistoid,GR,C,Action,4,1,,,,,,,,,,4,,0,0,0,0,,8,4,12,4.0,16,4,20,4
 Ecto-Charge,Geistoid,GR,C,Action,6,1,,,,,,,,,1,6,,0,0,0,0,,12,6,18,6.0,24,6,30,6
 Hallowed Eve Festival,Geistoid,GR,C,Action,3,1,1,,,,,,,,,3,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 Haunted House,Geistoid,GR,C,Artifact,6,1,,,,,,,,,,6,,1,1,1,1,,13,6.5,20,6.7,27,6.75,34,6.8
-In Here Somewhere...,Geistoid,GR,C,Action,4,,,,1,,,,,,,4,,0,0,0,0,,8,4,12,4.0,16,4,20,4
+In Here Somewhere...,Geistoid,GR,C,Action,5,,,,1,,,,,,,5,,0,0,0,0,,10,5,15,5.0,20,5,25,5
 Memette,Geistoid,GR,C,Creature,4,,,,1,,,,,,,4,,0,0,0,0,,8,4,12,4.0,16,4,20,4
 Snippy,Geistoid,GR,C,Creature,3,,,1,,,,,,,,3,,0,0,0,0,0,6,3,9,3.0,12,3,15,3
 The Grim Reaper,Geistoid,GR,C,Creature,4,1,,1,,,1,,,,,4,,1,1,1,1,,9,4.5,14,4.7,19,4.75,24,4.8
@@ -3005,7 +3005,7 @@ Soul Vial,Geistoid,GR,U,Artifact,4,1,,,1,,,,,,,2,,-1,-2,-2,-2,,7,3.5,9,3.0,11,2.
 Thoughtcatcher,Geistoid,GR,U,Creature,5,,1,,1,,1,,,,,2.5,,1,2,3,3,,11,5.5,18,6.0,26,6.5,34,6.8
 Tribute Collector,Geistoid,GR,U,Creature,3,,1,,,,1,,,,,1.5,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 Curse of Forgetfulness,Geistoid,GR,R,Artifact,2,,,,,1,,,,,,0.5,,-1,-1,-1,-1,,3,1.5,4,1.3,5,1.25,6,1.2
-Junkyard Cemetary,Geistoid,GR,R,Artifact,1,,,,,,,,,,,0.25,,-1,-1,-1,-1,,1,0.5,1,0.3,1,0.25,1,0.2
+Junkyard Cemetery,Geistoid,GR,R,Artifact,1,,,,,,,,,,,0.25,,-1,-1,-1,-1,,1,0.5,1,0.3,1,0.25,1,0.2
 A Strong Feeling,Geistoid,GR,R,Action,6,1,1,,,,,,,,,1.5,,0,0,0,0,,12,6,18,6.0,24,6,30,6
 Animating Force,Geistoid,GR,R,Upgrade,6,1,,,,,1,,,1,,1.5,,0,0,0,0,,12,6,18,6.0,24,6,30,6
 Call of Need,Geistoid,GR,R,Action,2,1,,,1,,,,,,,0.5,,0,0,0,0,,4,2,6,2.0,8,2,10,2
@@ -3064,12 +3064,12 @@ Extinction,Mars,GR,R,Action,4,,,1,,,,,,,,1,,-1,-2,-2,-2,,7,3.5,9,3.0,11,2.75,13,
 Aberrant Warp Event,Mars,GR,R,Action,3,,,1,1,,,,,,,0.75,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 Big Magnet,Mars,GR,R,Action,1,1,,,,,,,,,,0.25,,-1,-2,-2,-2,,1,0.5,0,0.0,-1,-0.25,-2,-0.4
 Destructive Analysis,Mars,GR,R,Action,2,1,,1,,,,,,,,0.5,,0,0,0,0,,4,2,6,2.0,8,2,10,2
-Elite Disruptzoid,Mars,GR,R,Creature,3,,,,,,1,,,,,0.75,,0,0,0,0,,6,3,9,3.0,12,3,15,3
+Elite Disruptzord,Mars,GR,R,Creature,3,,,,,,1,,,,,0.75,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 "Urxym the ""Diplomat""",Mars,GR,R,Creature,2,,,1,,,,,1,,,0.5,,-1,-2,-2,-2,,3,1.5,3,1.0,3,0.75,3,0.6
 Feeding Pit,Mars,GR,R,Artifact,3,1,,,1,,,,,,,0.75,,0,-3,-3,-3,,6,3,6,2.0,6,1.5,6,1.2
 Hypnotic Command,Mars,GR,R,Action,6,1,1,,,,,,,,,1.5,,0,-2,-4,-4,,12,6,16,5.3,18,4.5,20,4
 Ilxid Avenger,Mars,GR,R,Creature,3,,,,,,1,,,,,0.75,,0,0,0,0,,6,3,9,3.0,12,3,15,3
-Killzord Mk. 9001,Mars,GR,R,Upgrade,1,,,,,,,,,,,0.25,,0,-1,-1,-1,,2,1,2,0.7,2,0.5,2,0.4
+Killzord mk. 9001,Mars,GR,R,Upgrade,1,,,,,,,,,,,0.25,,0,-1,-1,-1,,2,1,2,0.7,2,0.5,2,0.4
 Mass Abduction,Mars,GR,R,Action,3,,,1,,,,,,,,0.75,,-1,-2,-2,-2,,5,2.5,6,2.0,7,1.75,8,1.6
 Mating Season,Mars,GR,R,Action,3,1,,,,,,,,,,0.75,,-1,-2,-2,-2,,5,2.5,6,2.0,7,1.75,8,1.6
 Phylyx the Disintegrator,Mars,GR,R,Creature,3,,1,,,,,,,,,0.75,,0,0,0,0,,6,3,9,3.0,12,3,15,3
@@ -3107,7 +3107,7 @@ Quintrino Warp,Star Alliance,GR,U,Action,4,,,1,,,,,,,,2,,-1,-2,-4,-4,,7,3.5,9,3.
 Staff Sergeant Rhea,Star Alliance,GR,U,Creature,3,1,,,,,,,,,,1.5,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 Séance Scanner,Star Alliance,GR,U,Artifact,5,1,,,1,,,,,,,2.5,,1,1,1,1,,11,5.5,17,5.7,23,5.75,29,5.8
 Near-Future Lens,Star Alliance,GR,U,Artifact,6,1,,,1,,,,,,,3,,1,1,1,1,,13,6.5,20,6.7,27,6.75,34,6.8
-3LL-10T,Star Alliance,GR,U,Creature,3,1,,,1,,,,,,,1.5,,0,0,0,0,,6,3,9,3.0,12,3,15,3
+3LL-I0T,Star Alliance,GR,U,Creature,3,1,,,1,,,,,,,1.5,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 Alien Horror,Star Alliance,GR,U,Creature,2,,,,,,1,,,,,1,,0,0,0,0,,4,2,6,2.0,8,2,10,2
 Bad Chemistry,Star Alliance,GR,U,Action,3,1,,1,,,,,,,,1.5,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 Camaraderie,Star Alliance,GR,U,Action,2,1,,,1,,,,,,,1,,-1,-1,-1,-1,,3,1.5,4,1.3,5,1.25,6,1.2
@@ -3194,7 +3194,7 @@ Unsettling Ancestry,Fish,GR,R,Action,2,,,1,,,,,,,,0.5,,1,1,1,1,,5,2.5,8,2.7,11,2
 The Susurrus,Fish,GR,R,Artifact,2,,,,,,,,,,,0.5,,-1,-2,-2,-2,,3,1.5,3,1.0,3,0.75,3,0.6
 Weak Link,Fish,GR,R,Upgrade,1,1,,,,,,,,,,0.25,,0,0,0,0,,2,1,3,1.0,4,1,5,1
 ,,GR,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
-,Untamed,GR,,,,25,4,7,16,3,12,0,0,1,1,96,,,,,,,,,,,,,,
+,Untamed,GR,,,,25,4,7,16,3,12,0,0,1,1,95,,,,,,,,,,,,,,
 Regrowth,Untamed,GR,C,Action,3,1,,,1,,,,,,,3,,0,-1,-1,-1,,6,3,8,2.7,10,2.5,12,2.4
 Grave Pixie,Untamed,GR,C,Creature,3,1,,,,,,,,,,3,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 Invigorating Shower,Untamed,GR,C,Action,5,,,,1,,,,,,,5,,0,0,0,0,,10,5,15,5.0,20,5,25,5
@@ -3226,7 +3226,7 @@ Fangtooth Cavern,Untamed,GR,U,Artifact,4,1,,1,,,,,,,,2,,1,2,2,2,,9,4.5,15,5.0,21
 Kangaphant,Untamed,GR,U,Creature,2,,,,,,1,,,,,1,,0,-1,-2,-2,,4,2,5,1.7,5,1.25,5,1
 Loyal Packmate,Untamed,GR,U,Creature,4,,,,,,1,,,,,2,,0,0,0,0,,8,4,12,4.0,16,4,20,4
 Nepenthe Seed,Untamed,GR,U,Artifact,4,,,,1,,,,,,,2,,0,0,0,0,,8,4,12,4.0,16,4,20,4
-Waste Not,Untamed,GR,U,Action,6,1,,,1,,,,,,,3,,0,0,0,0,,12,6,18,6.0,24,6,30,6
+Waste Not,Untamed,GR,U,Action,5,1,,,1,,,,,,,2.5,,0,0,0,0,,10,5,15,5.0,20,5,25,5
 Way of the Porcupine,Untamed,GR,U,Upgrade,1,1,,,,,,,,,,0.5,,-1,-2,-2,-2,,1,0.5,0,0.0,-1,-0.25,-2,-0.4
 Forgotten Guardian,Untamed,GR,R,Creature,4,,,,,1,1,,,,,1,,0,0,0,0,,8,4,12,4.0,16,4,20,4
 Witch Queen,Untamed,GR,R,Creature,6,1,,,1,,1,,,,,1.5,,1,2,2,2,,13,6.5,21,7.0,29,7.25,37,7.4
@@ -3262,7 +3262,7 @@ Phantom Drummernaut,All,GR,*,Creature,5,,,,1,,1,,,,,,,1,1,1,1,,11,5.5,17,5.7,23,
 Portalmonster,All,GR,*,Creature,4,,1,,,,,,,,,,,0,0,0,0,,8,4,12,4.0,16,4,20,4
 Qyxxlyxx Grave Master,All,GR,*,Creature,3,,,1,,,,,,,,,,0,0,0,0,,6,3,9,3.0,12,3,15,3
 Revived Za-Orha,All,GR,*,Creature,4,,,,,,1,,,,1,,,0,0,0,0,,8,4,12,4.0,16,4,20,4
-,,,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
+Encounter Golem,All,GR,*,Creature,3,,,,,,1,,,,,,,,,,,,6,3,9,3.0,12,3,15,3
 ,,,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
 ,,,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
 ,,,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
@@ -3277,11 +3277,11 @@ Chronometer,Geistoid,GR,*,Creature,2,,,,,,1,,,,,,,0,0,0,0,,4,2,6,2.0,8,2,10,2
 Precocious Fragment,Geistoid,GR,*,Creature,2,,,,,,,,,,,,,0,0,0,0,,4,2,6,2.0,8,2,10,2
 Purse-a-phone,Geistoid,GR,*,Creature,2,,,,,,1,,,,,,,0,0,0,0,,4,2,6,2.0,8,2,10,2
 Tick-Tock,Geistoid,GR,*,Creature,2,,,,1,,,,,,,,,0,0,0,0,,4,2,6,2.0,8,2,10,2
+Soultender,Geistoid,GR,*,Creature,4,,1,,,,,,,,,,,0,0,0,0,,8,4,12,4.0,16,4,20,4
 ,,,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
-,,,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
-,,,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
-,,,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
-,,,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
+Dark Discovery,Fish,GR,R,Action,6,1,,,,,,,,,1,1.5,,1,1,1,1,,13,6.5,20,6.7,27,6.75,34,6.8
+Dive Deep,Fish,GR,R,Action,4,,,1,,,,,,,,1,,1,1,1,1,,9,4.5,14,4.7,19,4.75,24,4.8
+Drawn Down,Fish,GR,R,Action,2,,,,,,,,,,,0.5,,1,1,1,1,,5,2.5,8,2.7,11,2.75,14,2.8
 ,,,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
 ,,,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0
 ,,,,,,,,,,,,,,,,,,,,,,,0,0,0,0.0,0,0,0,0

@@ -213,7 +213,7 @@ def parseDecklist(cardIdList, response):
     return (decklist, enhancements)
 
 
-def getScore(decklist, pods, deckInfo):
+def getScore(decklist, pods, deckInfo, enhancements):
     '''
     Takes the set of each card and finds the score of that card within its set
     Sums all of the scores and returns that value
@@ -238,6 +238,7 @@ def getScore(decklist, pods, deckInfo):
         try:
             # Create the card ID
             cardID = int(str(setNum) + str(card[0]["card_number"]))
+            originalCardID = cardID
 
 
             # retrieves the full scoring object of the card from the scoring dictionary
@@ -421,6 +422,29 @@ def getScore(decklist, pods, deckInfo):
                     cardName = "Ortannu's Binding"
                     cardSet = "AOA"
 
+                # Igon the Green/Terrible
+                elif firstWord == "igon":
+                    if tokens[2] == "green":
+                        cardName = oldCardName
+                        cardSet = "WC"
+                        cardID = 3039
+                    else:
+                        cardName = oldCardName
+                        cardSet = "WC"
+                        cardID = 3053
+
+                # Omnipus/Tentaclid
+                elif firstWord == "omnipus":
+                    cardName = oldCardName
+                    cardSet = "DT"
+                    cardID = 5316
+                
+                elif firstWord == "tentaclid":
+                    cardName = oldCardName
+                    cardSet = "DT"
+                    cardID = 5317
+                
+
                 # ---Vault Master Fixes--- #
                 elif firstWord == "chenille":
                     cardName = oldCardName
@@ -442,18 +466,28 @@ def getScore(decklist, pods, deckInfo):
                     cardName = oldCardName
                     cardSet = "MM"
 
+                elif firstWord == "master":
+                    cardName = oldCardName
+                    cardSet = "COTA"
+                    if tokens[2] == "1":
+                        cardID = 1089
+                    elif tokens[2] == "2":
+                        cardID = 1090
+                    elif tokens[2] == "3":
+                        cardID = 1091
+
 
                 # World's Collide variants
                 # Brobnar brews
                 elif len(tokens) > 1:
                     if tokens[1].lower() == "brew":
                         cardName = "Brew"
-                        cardDetails = scoreDict["WC"][cardName]
+                        cardSet = "WC"
 
                     # Dis banes
                     elif tokens[1].lower() == "bane":
                         cardName = "Bane"
-                        cardDetails = scoreDict["WC"][cardName]
+                        cardSet = "WC"
                     
             if cardName == None:
                 print("DeckImportError")
@@ -526,6 +560,11 @@ def getScore(decklist, pods, deckInfo):
                 cardID = -int(str(setNum) + str(card[0]["card_number"][1:]))
                 exceptionHandled = True
             elif cardName == "Duma the Returned":
+                setNum = 7
+                cardSet="GR"
+                cardID = -int(str(setNum) + str(card[0]["card_number"][1:]))
+                exceptionHandled = True
+            elif cardName == "Encounter Golem":
                 setNum = 7
                 cardSet="GR"
                 cardID = -int(str(setNum) + str(card[0]["card_number"][1:]))
@@ -645,6 +684,15 @@ def getScore(decklist, pods, deckInfo):
         # score/cardScore distinction is for debugging purposes
         score += cardScore
 
+        # FIGURE OUT HOW TO ALTER ENHANCEMENTS TO FOLLOW ID CHANGE
+        # if the card ID was changed, update the matching enhancements id to follow
+        # if cardID != originalCardID:
+        #     try:
+        #         extras = enhancements.pop(str(originalCardID))
+        #         enhancements[str(cardID)] = extras
+        #     except:
+        #         pass
+
     for pod in pods:
         for value in pods[pod]:
             if pods[pod][value] == 0:
@@ -727,7 +775,7 @@ def analyzeDeck(deckLink):
 
     deckInfo["token"] = None
     # Add the score of deck
-    score, scoredPods =  getScore(decklist, pods, deckInfo)
+    score, scoredPods =  getScore(decklist, pods, deckInfo, enhancements)
     deckInfo["score"] = score
 
     # Add the set of the deck
