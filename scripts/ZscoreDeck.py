@@ -443,6 +443,12 @@ def getScore(decklist, pods, deckInfo, enhancements):
                     cardName = oldCardName
                     cardSet = "DT"
                     cardID = 5317
+
+                # Killzord capitalization issues
+                elif firstWord == "killzord":
+                    cardName = "Killzord mk. 9001"
+                    cardSet = "GR"
+                    cardID = 7175
                 
 
                 # ---Vault Master Fixes--- #
