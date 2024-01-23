@@ -703,6 +703,13 @@ def getScore(decklist, pods, deckInfo, enhancements):
         for value in pods[pod]:
             if pods[pod][value] == 0:
                 pods[pod][value] = None
+
+        # Verification that each pod has 12 cards (or 0 for adj pod)
+        cardsInPod = len(pods[pod]["cards"])
+        if not (cardsInPod == 0 or cardsInPod == 12):
+            print("Deck does not have 12 cards in each pod")
+            exit()
+            
     
     return score, pods
 
