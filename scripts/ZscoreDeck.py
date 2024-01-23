@@ -402,25 +402,30 @@ def getScore(decklist, pods, deckInfo, enhancements):
                 elif firstWord == "dive":
                     cardName = "Dive Deep"
                     cardSet = "DT"
+                    cardDetails = scoreDict[cardSet][cardName]
 
                 # Drawn Down
                 elif firstWord == "drawn":
                     cardName = "Drawn Down"
                     cardSet = "DT"
+                    cardDetails = scoreDict[cardSet][cardName]
                 
                 elif firstWord == "dark":
                     cardName = "Dark Discovery"
                     cardSet = "DT"
+                    cardDetails = scoreDict[cardSet][cardName]
 
                 # Ortannu the Chained
                 elif firstWord == "ortannu":
                     cardName = "Ortannu the Chained"
                     cardSet = "AOA"
+                    cardDetails = scoreDict[cardSet][cardName]
                 
                 # Ortannu's Binding
                 elif firstWord == "ortannu's":
                     cardName = "Ortannu's Binding"
                     cardSet = "AOA"
+                    cardDetails = scoreDict[cardSet][cardName]
 
                 # Igon the Green/Terrible
                 elif firstWord == "igon":
@@ -428,27 +433,32 @@ def getScore(decklist, pods, deckInfo, enhancements):
                         cardName = oldCardName
                         cardSet = "WC"
                         cardID = 3039
+                        cardDetails = scoreDict[cardSet][cardName]
                     else:
                         cardName = oldCardName
                         cardSet = "WC"
                         cardID = 3053
+                    cardDetails = scoreDict[cardSet][cardName]
 
                 # Omnipus/Tentaclid
                 elif firstWord == "omnipus":
                     cardName = oldCardName
                     cardSet = "DT"
                     cardID = 5316
+                    cardDetails = scoreDict[cardSet][cardName]
                 
                 elif firstWord == "tentaclid":
                     cardName = oldCardName
                     cardSet = "DT"
                     cardID = 5317
+                    cardDetails = scoreDict[cardSet][cardName]
 
                 # Killzord capitalization issues
                 elif firstWord == "killzord":
                     cardName = "Killzord mk. 9001"
                     cardSet = "GR"
                     cardID = 7175
+                    cardDetails = scoreDict[cardSet][cardName]
                 
 
                 # ---Vault Master Fixes--- #
@@ -456,21 +466,25 @@ def getScore(decklist, pods, deckInfo, enhancements):
                     cardName = oldCardName
                     cardSet = "DT"
                     cardID = 5375
+                    cardDetails = scoreDict[cardSet][cardName]
                 
                 elif firstWord == "bombyx":
                     cardName = oldCardName
                     cardSet = "DT"
                     cardID = 5376
+                    cardDetails = scoreDict[cardSet][cardName]
                     
                 elif firstWord == "fifalde":
                     cardName = oldCardName
                     cardSet = "DT"
                     cardID = 5377
+                    cardDetails = scoreDict[cardSet][cardName]
 
 
                 elif firstWord == "monument":
                     cardName = oldCardName
                     cardSet = "MM"
+                    cardDetails = scoreDict[cardSet]["Monument"]
 
                 elif firstWord == "master":
                     cardName = oldCardName
@@ -481,6 +495,7 @@ def getScore(decklist, pods, deckInfo, enhancements):
                         cardID = 1090
                     elif tokens[2] == "3":
                         cardID = 1091
+                    cardDetails = scoreDict[cardSet][cardName]
 
 
                 # World's Collide variants
@@ -704,11 +719,12 @@ def getScore(decklist, pods, deckInfo, enhancements):
             if pods[pod][value] == 0:
                 pods[pod][value] = None
 
-        # Verification that each pod has 12 cards (or 0 for adj pod)
-        cardsInPod = len(pods[pod]["cards"])
-        if not (cardsInPod == 0 or cardsInPod == 12):
-            print("Deck does not have 12 cards in each pod")
-            exit()
+        # Verification that each pod has 12 cards (or None for adj pod '1')
+        if pod != '1':
+            cardsInPod = len(pods[pod]["cards"])
+            if cardsInPod != 12:
+                print("Deck does not have 12 cards in each pod")
+                return
             
     
     return score, pods
