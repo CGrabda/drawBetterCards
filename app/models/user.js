@@ -71,7 +71,7 @@ module.exports = function(sequelize, Sequelize) {
             type: DataTypes.BIGINT,
             defaultValue: null
         },
-  })
+    })
   
     User.prototype.validPassword = async function (password) {
         return bcrypt.compare(password, this.password);
