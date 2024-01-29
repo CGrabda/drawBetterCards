@@ -325,7 +325,7 @@ for id in cardIDToTraitDict:
     # Get the set of a card
     setId = id[:-3]
     if setId == "-":
-        if (scoreName[:3] == "Ect" or scoreName[0] == "C" or scoreName[:2] == "Ne"):
+        if (scoreName[:3] == "Ect" or scoreName[:3] == "Cur" or scoreName[:2] == "Ne"):
             cardSet = "WOE"
         # Revenants
         elif cardName == "Xenos Darkshadow":
@@ -345,6 +345,10 @@ for id in cardIDToTraitDict:
         elif cardName == "Duma the Returned":
             cardSet = "GR"
         elif cardName == "Encounter Golem":
+            cardSet = "GR"
+        elif cardName == "Ghostly Dr. Verokter":
+            cardSet = "GR"
+        elif cardName == "Cincinnatus Resurrexit":
             cardSet = "GR"
         else:
             cardSet = "WC"
