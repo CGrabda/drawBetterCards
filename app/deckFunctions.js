@@ -465,6 +465,52 @@ async function getStatsFromCard(card_name) {
     }
     // anomalies finished
 
+    // Revenants
+    else if (first_word == "Xenos") {
+        card_stats_ouptut = SCORING_DICT["GR"]["Xenos Darkshadow"]
+    }
+
+    else if (first_word == "Spectral") {
+        card_stats_ouptut = SCORING_DICT["GR"]["Spectral Ruth"]
+    }
+
+    else if (first_word == "Revived") {
+        card_stats_ouptut = SCORING_DICT["GR"]["Revived Za-Orha"]
+    }
+
+    else if (first_word == "Qyxxlyxx") {
+        card_stats_ouptut = SCORING_DICT["GR"]["Qyxxlyxx Grave Master"]
+    }
+    
+    else if (first_word == "Portalmonster") {
+        card_stats_ouptut = SCORING_DICT["GR"]["Portalmonster"]
+    }
+
+    else if (first_word == "Phantom") {
+        card_stats_ouptut = SCORING_DICT["GR"]["Phantom Drummernaut"]
+    }
+
+    else if (first_word == "Immortal") {
+        card_stats_ouptut = SCORING_DICT["GR"]["Immortal Greking"]
+    }
+
+    else if (first_word == "Ghostly") {
+        card_stats_ouptut = SCORING_DICT["GR"]["Ghostly Dr. Verokter"]
+    }
+
+    else if (first_word == "Encounter") {
+        card_stats_ouptut = SCORING_DICT["GR"]["Encounter Golem"]
+    }
+
+    else if (first_word == "Duma") {
+        card_stats_ouptut = SCORING_DICT["GR"]["Duma the Returned"]
+    }
+
+    else if (first_word == "Cincinnatus") {
+        card_stats_ouptut = SCORING_DICT["GR"]["Cincinnatus Resurrexit"]
+    }
+    // Revenants finished
+
     // World's Collide variants
     // Brobnar brews
     else if (tokens.length > 1) {
