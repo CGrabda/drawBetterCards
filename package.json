@@ -10,7 +10,7 @@
     "express": "^4.19.2",
     "express-flash": "^0.0.2",
     "express-rate-limit": "^6.11.2",
-    "express-session": "^1.17.3",
+    "express-session": "^1.18.0",
     "express-session-sequelize": "^2.3.0",
     "helmet": "^7.0.0",
     "hpp": "^0.2.3",
