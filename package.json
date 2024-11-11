@@ -6,7 +6,7 @@
     "cookie-parser": "^1.4.6",
     "cron": "^2.4.4",
     "ejs": "^3.1.10",
-    "ejs-lint": "^2.0.0",
+    "ejs-lint": "^2.0.1",
     "express": "^4.19.2",
     "express-flash": "^0.0.2",
     "express-rate-limit": "^6.11.2",
