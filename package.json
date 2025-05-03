@@ -21,7 +21,7 @@
     "passport-local": "^1.0.0",
     "pg": "^8.11.5",
     "python-shell": "^5.0.0",
-    "sequelize": "^6.37.3",
+    "sequelize": "^6.37.7",
     "svg-captcha-fixed": "^1.5.2",
     "toobusy-js": "^0.5.1"
   },
